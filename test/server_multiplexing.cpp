@@ -17,7 +17,7 @@ int main()
 
     server_fd = socket(AF_INET, SOCK_STREAM, 0); // 소켓 생성
     if (server_fd < 0)
-        exit(1);
+        return (1);
     std::cout << "Server socket created successfully." << std::endl;
 
     memset(&server_addr, 0, sizeof(server_addr));
@@ -28,22 +28,22 @@ int main()
     if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) // 소켓 주소 할당
     {
         close(server_fd);
-        exit(1);
+        return (1);
     }
     std::cout << "Server address structure created successfully." << std::endl;
 
     if (listen(server_fd, 5) < 0){                                                  // 소켓 연결요청
         close(server_fd);
-        exit(1);
+        return (1);
     }
     std::cout << "Server listening on port 6667." << std::endl;
-    fcntl(server_fd, F_SETFL, O_NONBLOCK);
-
+    fcntl(server_fd, F_SETFL, O_NONBLOCK); // 서버가 여러 클라이언트와 동시에 통신해야 하는 경우, 비차단 모드는 필수적
+    // 하나의 클라이언트 작업이 완료될 때까지 기다리지 않고 다른 클라이언트의 요청을 처리할 수 있습니다. 이를 통해 CPU 사용률을 최적화하고 응답성을 높일 수 있습니다.
     int kq = kqueue();
     if (kq < 0)
     {
         close(server_fd);
-        exit(1);
+        return(1);
     }
     std::vector<struct kevent> changeList; // vector로 안해도 될듯
     std::vector<struct kevent> eventList(100);
@@ -77,7 +77,7 @@ int main()
                 if (eventList[i].ident == server_fd) // server socket
                 {
                     socklen_t   client_len = sizeof(client_addr);
-                    client_fd = accept(server_fd,(struct sockaddr*)&client_addr, &client_len);  // 클라이언트 연결 허용
+                    client_fd = accept(server_fd,(struct sockaddr*)&client_addr, &client_len);  // 클라이언트 연결 허용 
                     if (client_fd < 0)
                         continue;
                     fcntl(client_fd, F_SETFL, O_NONBLOCK);
@@ -85,19 +85,19 @@ int main()
                     struct kevent event_tmp;
                     EV_SET(&event_tmp, client_fd, EVFILT_READ, EV_ADD, 0, 0, NULL);
                     changeList.push_back(event_tmp);
-                    std::cout << "Client connected: " << inet_ntoa(client_addr.sin_addr) << std::endl;
-                    const char* welcome = ":localhost 001 : Welcome to the Localnet IRC Network\n";
-                    send(client_fd, welcome, strlen(welcome), 0);
-                    const char* two = ":localhost 002 :Your host is irc.local, running version one!\n";
-                    send(client_fd, two, strlen(two), 0);
-                    const char* three = ":localhost 003 :This server was created ?!?!\n";
-                    send(client_fd, three, strlen(three), 0);
-                    const char* four = ":localhost 004 :localhost IRC_SERVER iosw biklmnopstv :bklov\n";
-                    send(client_fd, four, strlen(four), 0);
-                    const char* startt = ":localhost 375 :localhost message of the day\n";
-                    send(client_fd, startt, strlen(startt), 0);
-                    const char* endd = ":localhost 376 a :End of message of the day.\n";
-                    send(client_fd, endd, strlen(endd), 0);
+                    // std::cout << "Client connected: " << inet_ntoa(client_addr.sin_addr) << std::endl;
+                    // const char* welcome = ":localhost 001 : Welcome to the Localnet IRC Network\n";
+                    // send(client_fd, welcome, strlen(welcome), 0);
+                    // const char* two = ":localhost 002 :Your host is irc.local, running version one!\n";
+                    // send(client_fd, two, strlen(two), 0);
+                    // const char* three = ":localhost 003 :This server was created ?!?!\n";
+                    // send(client_fd, three, strlen(three), 0);
+                    // const char* four = ":localhost 004 :localhost IRC_SERVER iosw biklmnopstv :bklov\n";
+                    // send(client_fd, four, strlen(four), 0);
+                    // const char* startt = ":localhost 375 :localhost message of the day\n";
+                    // send(client_fd, startt, strlen(startt), 0);
+                    // const char* endd = ":localhost 376 :End of message of the day.\n";
+                    // send(client_fd, endd, strlen(endd), 0);
                 }
 
                 else // client socket
