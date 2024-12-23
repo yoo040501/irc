@@ -1,4 +1,5 @@
 #pragma once
+/* 서버에서 클라이언트한테 보내는 메세지 넘버 */
 
 // PASS, NICK, USER 입력후 서버 접속 메세지
 #define W() (":localhost 001 : Welcome to the Localnet IRC Network\r\n")
