@@ -1,6 +1,6 @@
 #include "../includes/Server.hpp"
 
-bool Server::isPort(char *pt) // 0 ~ 65535
+bool Server::isPort(char *pt) // 1 ~ 65535
 {
     std::string tmp(pt);
 	std::istringstream iss(tmp);
@@ -8,7 +8,7 @@ bool Server::isPort(char *pt) // 0 ~ 65535
 	std::cout << port << std::endl;
     if (!iss.eof() || iss.fail())
         return false;
-    if (port < 0 || port > 65535)
+    if (port < 1 || port > 65535)
         return false;
     return true;
 }
@@ -37,5 +37,7 @@ bool	Server::generateClient(){
 	fcntl(cl.getfd(), F_SETFL, O_NONBLOCK);
 	createEvent(cl.getfd());
 	client.insert(std::make_pair(cl.getfd(), cl));
+	std::string errMsg = WAITING();
+	send(cl.getfd(), errMsg.c_str(), errMsg.length(), 0);
 	return true;
 }

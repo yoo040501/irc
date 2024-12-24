@@ -66,9 +66,7 @@ void	Server::active(){	//멀티플렉싱
                 if (eventList[i].ident == static_cast<unsigned long>(server_fd)) // client와 처음 연결됬을때
                 {
 					if (generateClient() == false)
-						continue; 
-					// 클라이언트는 생성했으니 그후에 필요한 PASS, NICK, USER 설정 -> 밑에 else문에서   (NICK, USER를 먼저 설정하고 PASS를 설정하면 에러)
-        			std::cout << "Client connected: " << inet_ntoa(client_addr.sin_addr) << std::endl; // 통신되는지 확인문구(삭제예정)
+						continue;
                 }
                 else // client socket
                 {
@@ -80,22 +78,26 @@ void	Server::active(){	//멀티플렉싱
                     {
                         close(eventList[i].ident);
                         createEvent(eventList[i].ident);
+						client.erase(eventList[i].ident);
                         std::cout << "Client disconnected." << std::endl;
                     }
                     else
                     {
-						send(eventList[i].ident, buffer, recv_len, 0); // 에코서버
-						checkCommand(buffer, client[eventList[i].ident]); // 명령어 확인 / 인자로 클라이언트 정보 넣어줌
+					//	send(eventList[i].ident, buffer, recv_len, 0); // 에코서버
+						try{
+							checkCommand(buffer, client[eventList[i].ident]); // 명령어 확인 / 인자로 클라이언트 정보 넣어줌
+						} catch(const std::exception& e){
+							std::cerr << e.what() << std::endl;
+						}
                     }
                 }
             }
-            else if (eventList[i].filter == EVFILT_WRITE) // 아마 쓸일은 없을듯 함
-            {
-                //write event
-            }
+            // else if (eventList[i].filter == EVFILT_WRITE) // 아마 쓸일은 없을듯 함
+            // {
+            //     //write event
+            // }
         }
         if (static_cast<int>(eventList.size()) == new_events) // eventList가 꽉 찼을 때
             eventList.resize(eventList.size() * 2);
     }
 }
-

@@ -1,33 +1,28 @@
 #pragma once
-/* 서버에서 클라이언트한테 보내는 메세지 넘버 */
 
-// PASS, NICK, USER 입력후 서버 접속 메세지
-#define W() (":localhost 001 : Welcome to the Localnet IRC Network\r\n")
-#define E() (":localhost 002 : Your host is localhost, running version one!\r\n")
-#define L(time) (":localhost 003 :This server was created " + time + "\r\n")
-#define C() (":localhost 004 :localhost IRC_SERVER iosw biklmnopstv :bklov\r\n") // 마지막 저거 뭔지 모름 (iosw biklmnopstv :bklov)
-#define O() (":localhost 375 :localhost message of the day.\r\n")
-#define M() (":localhost 376 :End of message of the day.\r\n")
+#include <iostream>
 
-#define ERR_UNKNOWNCOMMAND(command, nickname) (":localhost 421 " + nickname + " " + command + " :Unknown command\r\n")
+#define WAITING() (":localhost NOTICE * :*** Looking up your hostname...\r\n")
+
+#define ERR_UNKNOWNCOMMAND(nickname, command) (":localhost 421 " + nickname + " " + command + " :Unknown command\r\n")
 // NICK
-#define ERR_NONICKNAMEGIVEN(client) (":localhost 431 " + client + " :No nickname given\r\n")
-#define ERR_ERRONEUSNICKNAME(client, nickname) (":localhost 432 " + client + " " + nickname + " :Erroneus nickname\r\n")
-#define ERR_NICKNAMEINUSE(client, nickname) (":localhost 433 " + client + " " + nickname + " :Nickname is already in use.\r\n")
+#define ERR_NONICKNAMEGIVEN(nickname) (":localhost 431 " + nickname + " :No nickname given\r\n")
+#define ERR_ERRONEUSNICKNAME(nickname, command) (":localhost 432 " + nickname + " " + command + " :Erroneus nickname\r\n")
+#define ERR_NICKNAMEINUSE(nickname, command) (":localhost 433 " + nickname + " " + command + " :Nickname is already in use.\r\n")
 
 // PASS, USER
-#define ERR_NEEDMOREPARAMS(command) (":localhost 461 " + command + " :Not enough parameters\r\n")
-#define ERR_ALREADYREGISTRED() (":localhost 462 : You may not reregister\r\n")
+#define ERR_NEEDMOREPARAMS(nickname, command) (":localhost 461 " + nickname + " " + command + " :Not enough parameters\r\n")
+#define ERR_ALREADYREGISTRED(nickname) (":localhost 462 " + nickname + " : You may not reregister\r\n")
 
 //PRIVMEG
-#define ERR_NORECIPIENT
-#define ERR_NOTEXTTOSEND
-#define ERR_CANNOTSENDTOCHAN
-#define ERR_NOTOPLEVEL
-#define ERR_WILDTOPLEVEL
-#define ERR_TOOMANYTARGETS
-#define ERR_NOSUCHNICK
-#define RPL_AWAY
+#define ERR_NORECIPIENT(nickname, command) (":localhost 411 " + nickname + " :No recipient given (" + command + ")\r\n")
+#define ERR_NOTEXTTOSEND(nickname) (":localhost 412 " + nickname + " :No text to send\r\n")
+#define ERR_CANNOTSENDTOCHAN(nickname, channel) (":localhost 404 " + nickname + " " + channel + " :Cannot send to channel\r\n")
+#define ERR_NOTOPLEVEL(nickname, mask) (413"<mask> :No toplevel domain specified")
+#define ERR_WILDTOPLEVEL(nickname, mask) (414"<mask> :Wildcard in toplevel domain")
+#define ERR_TOOMANYTARGETS(nickname, target) (407"<target> :Duplicate recipients. No message delivered")
+#define ERR_NOSUCHNICK(nickname) (401"<nickname> :No such nick/channel")
+#define RPL_AWAY(nickname, command) (301"<nick> :<away message>")
 
 // JOIN
 #define ERR_BANNEDFROMCHAN
@@ -58,3 +53,18 @@
 #define ERR_USERSDONTMATCH
 #define RPL_UMODEIS
 #define ERR_UMODEUNKNOWNFLAG
+
+// PASS, NICK, USER 입력후 서버 접속 메세지
+#define MSG_WELCOME(Time, nickname) (":localhost 001 " + nickname + " : Welcome to the Localnet IRC Network\r\n" + \
+						":localhost 002 " + nickname + " : Your host is localhost!\r\n" + \
+						":localhost 003 " + nickname + " :This server was created " + Time + "\r\n" + \
+						":localhost 004 " + nickname + " :localhost IRC_SERVER iosw biklmnopstv :bklov\r\n" + \
+						":localhost 375 " + nickname + " :localhost message of the day.\r\n" + \
+						":localhost 372 " + nickname + " :- **************************************************\r\n" + \
+						":localhost 372 " + nickname + " :- *             H    E    L    L    O              *\r\n" + \
+						":localhost 372 " + nickname + " :- *  This is a irc subject server. Please don`t    *\r\n" + \
+						":localhost 372 " + nickname + " :- *  contact the admin of the server for any       *\r\n" + \
+						":localhost 372 " + nickname + " :- *  questions or issues.                          *\r\n" + \
+						":localhost 372 " + nickname + " :- **************************************************\r\n" + \
+						":localhost 376 " + nickname + " :End of message of the day.\r\n")
+

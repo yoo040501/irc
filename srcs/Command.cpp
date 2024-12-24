@@ -1,9 +1,26 @@
 #include "../includes/Server.hpp"
 
-void	Server::checkCommand(char *buffer, Client cl){ //ctrl + D 는 아직 생각 안함
+std::string	trimSpace(std::string str){
+    std::string::iterator it = str.begin();				// 앞 공백 제거
+    while (it != str.end() && (*(it) == ' ')) {
+        ++it;
+    }
+    str.erase(str.begin(), it);
+
+    it = str.end();										// 뒤 공백 제거
+    while (it != str.begin() && (*(it) == ' ')) {
+        --it;
+    }
+    str.erase(it, str.end());
+	return str;
+}
+
+void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D 는 아직 생각 안함
 	std::string str(buffer);
+	std::string::iterator it = std::find(str.begin(), str.end(), '\n'); //개행문자 삭제
+	if (it != str.end())
+		str.erase(it, str.end());
 	std::string	tmp;
-	str.erase(str.end() - 1);
 	std::istringstream iss(str);
 
 	// std::string::size_type del = str.find(' ');
@@ -11,15 +28,12 @@ void	Server::checkCommand(char *buffer, Client cl){ //ctrl + D 는 아직 생각
 	getline(iss, tmp, ' '); // 스페이스바로 나누고 첫 문장 가져옴
 	std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper); //tmp 대문자 변환
 
-	if (tmp == "PASS") {
-		std::cout << "This is Pass cmd\n";
-    }
-	else if (tmp == "NICK") {
-    
-    }
-	else if (tmp == "USER") {
-    
-    }
+	if (tmp == "PASS")
+		passCheck(trimSpace(str.substr(tmp.size())), cl);
+	else if (tmp == "NICK")
+		nickCheck(trimSpace(str.substr(tmp.size())), cl);
+	else if (tmp == "USER") 
+		userCheck(trimSpace(str.substr(tmp.size())), cl);
 	else if (tmp == "PRIVMSG") {
     
     }
@@ -32,14 +46,13 @@ void	Server::checkCommand(char *buffer, Client cl){ //ctrl + D 는 아직 생각
 	else if (tmp == "INVITE") {
 
     }
-	else if (tmp == "MODE") {
-
-    }
 	else {
-		if (cl.getPass() != false && cl.getNick() != "" && cl.getUser() != ""){ //인증 절차가 끝난뒤에만 전송
-			std::string errMsg = ERR_UNKNOWNCOMMAND(tmp, cl.getNick());
+		if (cl.getAuth() == true && str != "\r"){ //인증 절차가 끝난뒤에만 전송
+			std::string errMsg = ERR_UNKNOWNCOMMAND(cl.getNick(), tmp);
 			send(cl.getfd(), errMsg.c_str(), errMsg.length(), 0);
 		}
     }
+	// else if (tmp == "MODE") {
 
+    // }
 }

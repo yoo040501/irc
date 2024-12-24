@@ -7,6 +7,7 @@
 #include <sys/time.h>
 #include <arpa/inet.h>
 #include <cstring>
+#include <ctime>
 #include <cstdlib>
 #include <unistd.h>
 #include <netinet/in.h>
@@ -18,8 +19,10 @@
 #include <sstream>
 #include "Client.hpp"
 #include "Message.hpp"
+#include "Channel.hpp"
 
 class Client;
+class Channel;
 
 class Server
 {
@@ -33,6 +36,7 @@ class Server
         std::vector<struct kevent>	eventList;
         std::map<int, Client>		client;
         std::vector<std::string>	nick;
+		std::vector<Channel>		channel;
 		// enum commands { // 스위치문으로 하려다 관둠
 		// PASS,
 		// NICK,
@@ -47,7 +51,13 @@ class Server
 		void	setSockaddr();
 		void	createEvent(int fd);
 		bool	generateClient();
-		void	checkCommand(char *buffer, Client cl);
+
+		void	checkCommand(char *buffer, Client &cl);
+		void	nickCheck(std::string str, Client &cl);
+		void	passCheck(std::string str, Client &cl);
+		void	passFail(Client cl);
+		void	userCheck(std::string str, Client &cl);
+
         Server();
         Server(Server const& copy);
         Server& operator=(Server const& oth);
@@ -58,3 +68,5 @@ class Server
         void	openSocket();
         void	active();
 };
+
+std::string	trimSpace(std::string str);

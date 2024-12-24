@@ -1,7 +1,8 @@
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++98 
 
-SRCS =	$(wildcard srcs/*.cpp)
+SRCS =	$(wildcard srcs/*.cpp		\
+				   srcs/command/*.cpp)
 
 OBJS = $(SRCS:.cpp=.o)
 DEPS = $(SRCS:.cpp=.d)
