@@ -1,7 +1,7 @@
 #include "../../includes/Server.hpp"
 
 /* nick, user가 등록되있을때 pass등록하면 에러나야함 아직 미구현 or pass가 틀렸을때 나오는 문구*/
-void	Server::passFail(Client cl){
+void	Server::passFail(Client &cl){
 		std::string errMsg = "ERROR :Closing link: (a@127.0.0.1) [Access denied by configuration]";
 		send(cl.getfd(), errMsg.c_str(), errMsg.length(), 0);
 		close(cl.getfd());

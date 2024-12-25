@@ -55,7 +55,7 @@ class Server
 		void	checkCommand(char *buffer, Client &cl);
 		void	nickCheck(std::string str, Client &cl);
 		void	passCheck(std::string str, Client &cl);
-		void	passFail(Client cl);
+		void	passFail(Client &cl);
 		void	userCheck(std::string str, Client &cl);
 
         Server();

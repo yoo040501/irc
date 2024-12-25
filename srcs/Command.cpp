@@ -55,4 +55,16 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D 는 아직 생�
 	// else if (tmp == "MODE") {
 
     // }
+	if (cl.getPassCheck() == true && cl.getUser() != "" && cl.getNick() != "*") //절차를 다 했을경우
+	{
+		if (cl.getPass() == false){
+			passFail(cl);
+			return ;
+		}
+		else if (cl.getAuth() == false){
+			errMsg = MSG_WELCOME("", cl.getNick());
+			send(cl.getfd(), errMsg.c_str(), errMsg.length(), 0);
+			cl.setAuth(true);
+		}
+	}
 }
