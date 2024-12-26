@@ -27,23 +27,17 @@ void	splitString(std::string str, std::vector<std::string> &usertmp){
 }
 
 void	Server::userCheck(std::string str, Client &cl){
-	std::string 				errMsg;
 	std::vector<std::string>	usertmp; //username hostname servername realname
 
 	splitString(str, usertmp);
-
-	if (usertmp.size() < 4){
-		errMsg = ERR_NEEDMOREPARAMS(cl.getNick(), "USER");
-		send(cl.getfd(), errMsg.c_str(), errMsg.length(), 0);
-	}
-	else if (cl.getAuth() == true){
-		errMsg = ERR_ALREADYREGISTRED(cl.getNick());
-		send(cl.getfd(), errMsg.c_str(), errMsg.length(), 0);
-	}
+	if (usertmp.size() < 4)
+		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "USER"), cl.getfd());
+	else if (cl.getUser() != "")
+		sendMsg(ERR_ALREADYREGISTRED(cl.getNick()), cl.getfd());
 	else{
-		if(isValidUserInput(usertmp) == false){  //user값에 \n \r \0이 들어가면안됨 , 에러 문구 확인 안함
-
-		}
-		cl.setUser(usertmp[0], usertmp[1], usertmp[2], usertmp[3]);
+		if(isValidUserInput(usertmp) == false)//user값에 \n \r \0이 들어가면안됨 , 에러 문구 확인 안함
+			sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "USER"), cl.getfd());
+		else
+			cl.setUser(usertmp[0], usertmp[1], usertmp[2], usertmp[3]);
 	}
 }

@@ -37,7 +37,6 @@ bool	Server::generateClient(){
 	fcntl(cl.getfd(), F_SETFL, O_NONBLOCK);
 	createEvent(cl.getfd());
 	client.insert(std::make_pair(cl.getfd(), cl));
-	std::string errMsg = WAITING();
-	send(cl.getfd(), errMsg.c_str(), errMsg.length(), 0);
+	sendMsg(WAITING(), cl.getfd());
 	return true;
 }

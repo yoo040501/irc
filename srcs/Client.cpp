@@ -1,12 +1,24 @@
 #include "../includes/Client.hpp"
 
-Client::Client(): fd(-1), pass(false), passcheck(false), auth(false), nick("*"), username(""), hostname(""), 
+Client::Client(): fd(-1), ch_cnt(0), pass(false), passcheck(false), auth(false), nick("*"), username(""), hostname(""), 
 					servername(""), realname(""), mode(""), addr(), len(0){
 }
 
-Client::Client(Client const& copy): fd(copy.fd), pass(copy.pass), passcheck(copy.passcheck), auth(copy.auth), nick(copy.nick),
+Client::Client(Client const& copy): fd(copy.fd), ch_cnt(copy.ch_cnt), pass(copy.pass), passcheck(copy.passcheck), auth(copy.auth), nick(copy.nick),
 									username(copy.username), hostname(copy.hostname), servername(copy.servername),
 									realname(copy.realname), mode(copy.mode), addr(copy.addr), len(copy.len){
+}
+
+Client&	Client::operator=(Client const& oth){
+	if (this != &oth){
+		this->fd = oth.fd; this->ch_cnt = oth.ch_cnt;
+		this->pass = oth.pass; this->passcheck = oth.passcheck;
+		this->auth = oth.auth; this->nick = oth.nick;
+		this->username = oth.username; this->hostname = oth.hostname;
+		this->servername = oth.servername; this->realname = oth.realname;
+		this->mode = oth.mode; this->addr = oth.addr; this->len = oth.len;
+	}
+	return *this;
 }
 
 Client::~Client(){}
