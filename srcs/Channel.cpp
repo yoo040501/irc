@@ -22,6 +22,11 @@ void	Channel::setName(std::string &n){ ch_name = n;}
 void	Channel::setTopic(std::string &top){ topic = top; }
 void	Channel::setKey(std::string &k){ key = k; }
 void	Channel::setMode(std::string &flag){ mode.push_back(flag); }
+void	Channel::removeOper(std::string &oper) {
+	std::vector<std::string>::iterator it = std::find(ch_operator.begin(), ch_operator.end(), oper);
+	if (it != ch_operator.end())
+		ch_operator.erase(it);
+}
 
 int		Channel::getClientfd(int const fd) {
 	std::map<int, Client>::iterator it = client.find(fd);
@@ -37,6 +42,7 @@ bool	Channel::isOper(std::string &oper) {
 	return false;
 }
 
+std::map<int, Client>	Channel::getClient() const {return this->client;}
 std::string	Channel::getName() const {return this->ch_name;}
 std::string Channel::getTopic() const {return this->topic;}
 std::string Channel::getKey() const {return this->key;}

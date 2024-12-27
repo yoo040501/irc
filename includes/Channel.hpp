@@ -42,13 +42,15 @@ class Channel
 
 		void	addClient(Client &cl);
 		void	addOper(std::string &oper);
+		void	removeOper(std::string &oper);
 		void	setName(std::string &n);
 		void	setTopic(std::string &top);
 		void	setKey(std::string &k);
 		void	setMode(std::string &flag);
 
-		int			getClientfd(int const fd);
+		int			getClientfd(int fd);
 		bool		isOper(std::string &oper);
+		std::map<int, Client> getClient() const;
 		std::string getName() const;
 		std::string getTopic() const;
 		std::string getKey() const;

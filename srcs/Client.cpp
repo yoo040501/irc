@@ -50,6 +50,6 @@ bool	Client::getPass() const {return this->pass;}
 bool	Client::getPassCheck() const {return this->passcheck;}
 bool	Client::getAuth() const {return this->auth;}
 std::string	Client::getNick() const {return this->nick;}
-std::string	Client::getOldnick() const {return this->oldnick;}
+std::string	Client::getOldnick() {return this->oldnick;}
 std::string	Client::getUser() const {return this->username;}
 struct sockaddr_in	Client::getaddr() const { return this->addr;}
