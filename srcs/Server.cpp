@@ -85,6 +85,8 @@ void	Server::active(){	//멀티플렉싱
                     {
 					//	send(eventList[i].ident, buffer, recv_len, 0); // 에코서버
 						try{
+							if (client.find(eventList[i].ident) == client.end())
+    							client[eventList[i].ident] = Client(); // Client 객체를 생성
 							checkCommand(buffer, client[eventList[i].ident]); // 명령어 확인 / 인자로 클라이언트 정보 넣어줌
 						} catch(const std::exception& e){
 							std::cerr << e.what() << std::endl;

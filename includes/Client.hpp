@@ -17,6 +17,7 @@ class Client
 {
     private:
         int         		fd;
+		int					ch_cnt;
 		bool				pass;		// pass가 맞으면 true
 		bool				passcheck; //pass를 한번이라도 건들였으면 true
 		bool				auth;
@@ -29,10 +30,10 @@ class Client
 		struct sockaddr_in	addr;
 		socklen_t			len;
 
-		Client& operator=(Client const& oth);
     public:
 		Client();
         Client(Client const& copy);
+		Client& operator=(Client const& oth);
         ~Client();
 
 		void	setfd(int f);

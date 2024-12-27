@@ -27,16 +27,16 @@ class Channel;
 class Server
 {
     private:
-        int							server_fd;
-        struct  sockaddr_in			server_addr;
-		struct	sockaddr_in			client_addr;
-        std::string					password;
-        int							port;
-        std::vector<struct kevent>	changeList; // vector로 안해도 될듯
-        std::vector<struct kevent>	eventList;
-        std::map<int, Client>		client;
-        std::vector<std::string>	nick;
-		std::vector<Channel>		channel;
+        int								server_fd;
+        struct  sockaddr_in				server_addr;
+		struct	sockaddr_in				client_addr;
+        std::string						password;
+        int								port;
+        std::vector<struct kevent>		changeList; // vector로 안해도 될듯
+        std::vector<struct kevent>		eventList;
+        std::map<int, Client>			client;
+        std::map<std::string, int>		nick;
+		std::map<std::string, Channel>	channel;
 		// enum commands { // 스위치문으로 하려다 관둠
 		// PASS,
 		// NICK,
@@ -55,8 +55,10 @@ class Server
 		void	checkCommand(char *buffer, Client &cl);
 		void	nickCheck(std::string str, Client &cl);
 		void	passCheck(std::string str, Client &cl);
-		void	passFail(Client cl);
+		void	passFail(Client &cl);
 		void	userCheck(std::string str, Client &cl);
+		void	msgCheck(std::string str, Client &cl);
+		void	channelCheck(std::string str, Client &cl);
 
         Server();
         Server(Server const& copy);

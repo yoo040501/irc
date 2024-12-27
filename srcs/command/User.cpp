@@ -1,9 +1,21 @@
 #include "../../includes/Server.hpp"
 
-void	Server::userCheck(std::string str, Client &cl){
-	std::string 				errMsg;
+bool	isValidUserInput(std::vector<std::string> &usertmp){
+	bool	flag = true;
+
+	for (size_t i = 0; i < 4; i++){
+		 if (usertmp[i].find('\r') != std::string::npos || 
+                usertmp[i].find('\n') != std::string::npos || 
+                usertmp[i].find('\0') != std::string::npos) {
+                flag = false;
+				break;
+				}
+	}
+	return flag;
+}
+
+void	splitString(std::string str, std::vector<std::string> &usertmp){
 	std::string					tmp;
-	std::vector<std::string>	usertmp; //username hostname servername realname
 	std::istringstream 			iss(str);
 
 	while(getline(iss, tmp, ' '))
@@ -12,27 +24,20 @@ void	Server::userCheck(std::string str, Client &cl){
 			continue;
 		usertmp.push_back(tmp);		
 	}
-	if (usertmp.size() < 4){
-		errMsg = ERR_NEEDMOREPARAMS(cl.getNick(), "USER");
-		send(cl.getfd(), errMsg.c_str(), errMsg.length(), 0);
-	}
-	else if (cl.getUser() != ""){
-		errMsg = ERR_ALREADYREGISTRED(cl.getNick());
-		send(cl.getfd(), errMsg.c_str(), errMsg.length(), 0);
-	}
+}
+
+void	Server::userCheck(std::string str, Client &cl){
+	std::vector<std::string>	usertmp; //username hostname servername realname
+
+	splitString(str, usertmp);
+	if (usertmp.size() < 4)
+		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "USER"), cl.getfd());
+	else if (cl.getUser() != "")
+		sendMsg(ERR_ALREADYREGISTRED(cl.getNick()), cl.getfd());
 	else{
-		cl.setUser(usertmp[0], usertmp[1], usertmp[2], usertmp[3]); //user값에 \n \r \0이 들어가면안됨 아직 미구현
-		if (cl.getPassCheck() == true && cl.getNick() != "*") //절차를 다 했을경우
-		{
-			if (cl.getPass() == false){
-				passFail(cl);
-				return ;
-			}
-			else if (cl.getAuth() == false) {
-				errMsg = MSG_WELCOME("", cl.getNick());
-				send(cl.getfd(), errMsg.c_str(), errMsg.length(), 0);
-				cl.setAuth(true);
-			}
-		}
+		if(isValidUserInput(usertmp) == false)//user값에 \n \r \0이 들어가면안됨 , 에러 문구 확인 안함
+			sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "USER"), cl.getfd());
+		else
+			cl.setUser(usertmp[0], usertmp[1], usertmp[2], usertmp[3]);
 	}
 }
