@@ -50,13 +50,13 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D 는 아직 생�
 	else if (tmp == "INVITE" && cl.getAuth() == true) {
 
     }
+	else if (tmp == "MODE") {
+
+    }
 	else {
 		if (cl.getAuth() == true && !str.empty()) //인증 절차가 끝난뒤에만 전송 10.15.3.7
 			sendMsg(ERR_UNKNOWNCOMMAND(cl.getNick(), tmp), cl.getfd());
     }
-	// else if (tmp == "MODE") {
-
-    // }
 	if (cl.getPassCheck() == true && cl.getUser() != "" && cl.getNick() != "*") //절차를 다 했을경우
 	{
 		if (cl.getPass() == false){
