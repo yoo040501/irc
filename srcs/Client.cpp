@@ -1,6 +1,6 @@
 #include "../includes/Client.hpp"
 
-Client::Client(): fd(-1), ch_cnt(0), pass(false), passcheck(false), auth(false), nick("*"), oldnick(""), username(""), hostname(""), 
+Client::Client(): fd(-1), ch_cnt(0), pass(false), passcheck(false), auth(false),nick("*"), oldnick(""), username(""), hostname(""), 
 					servername(""), realname(""), mode(""), addr(), len(0){
 }
 
@@ -23,21 +23,10 @@ Client&	Client::operator=(Client const& oth){
 
 Client::~Client(){}
 
-void	Client::setfd(int f){
-	fd = f;
-}
-
-void	Client::setPass(bool flag){
-	pass = flag;
-}
-
-void	Client::setPassCheck(bool flag){
-	passcheck = flag;
-}
-
-void	Client::setAuth(bool flag){
-	auth = flag;
-}
+void	Client::setfd(int f) {fd = f;}
+void	Client::setPass(bool flag) {pass = flag;}
+void	Client::setPassCheck(bool flag) {passcheck = flag;}
+void	Client::setAuth(bool flag) {auth = flag;}
 
 void	Client::setNick(std::string const &ni){
 	oldnick = nick;

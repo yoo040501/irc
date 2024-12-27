@@ -10,6 +10,7 @@ void	getReceiver(std::string str, std::vector<std::string> &receiver){
 	{
 		while (1){}
 	}
+	receiver[0] = "a";
 }
 
 

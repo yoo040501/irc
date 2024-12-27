@@ -47,7 +47,7 @@ class Channel
 		void	setKey(std::string &k);
 		void	setMode(std::string &flag);
 
-		int			getClientfd(int fd);
+		int			getClientfd(int const fd);
 		bool		isOper(std::string &oper);
 		std::string getName() const;
 		std::string getTopic() const;

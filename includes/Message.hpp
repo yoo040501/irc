@@ -35,8 +35,12 @@
 #define ERR_NOSUCHCHANNEL(nickname, channel) (":localhost 403 " + nickname + " " + channel + " :No such channel\r\n")
 #define ERR_TOOMANYCHANNELS(nickname, channel) (":localhost 405 " + nickname + " " + channel + " :you have joined too many channels\r\n")
 #define RPL_TOPIC(nickname, username, ipaddr, channel, topic) (":" + nickname + "!" + username + "@" + ipaddr + " " + channel + " :" + topic + "\r\n")
-#define RPL_NAMREPLY() 353
-#define RPL_ENDOFNAMES() 366
+#define RPL_NAMREPLY(nickname, type, channel, nick) (":localhost 353 " + nickname + " " + type + " " + channel + " :" + nick + "\r\n") 
+/*=: 채널 타입
+	=: 공개 채널(public channel).
+	*: 비밀 채널(secret channel).
+	@: 비공개 채널(private channel).*/
+#define RPL_ENDOFNAMES(nickname, channel) (":localhost 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n")
 
 // INVITE
 #define ERR_USERONCHANNEL

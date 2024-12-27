@@ -21,9 +21,12 @@ std::string	trimSpace(std::string str){
 
 void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D 는 아직 생각 안함
 	std::string str(buffer);
-	size_t pos = str.find("\r\n");
-	if (pos != std::string::npos)
-		str.erase(str.find("\r\n"), 2); //개행문자 삭제
+
+	while (str.find("\n") != std::string::npos) //mac환경 클라이언트는 \n으로 전송시킴
+		str.erase(str.find("\n"), 1);
+	while (str.find("\r\n") != std::string::npos) //docker linux환경 클라이언트는 \r\n으로 전송시킴
+		str.erase(str.find("\r\n"), 2);
+
 	std::string	tmp;
 	std::istringstream iss(str);
 

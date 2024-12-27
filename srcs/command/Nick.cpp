@@ -14,6 +14,7 @@ bool	isValidNickname(std::string str){
 	for (size_t i=0;i < str.length();i++)
 	{
 		if (!isalpha(tmp[i]) && !isnumber(tmp[i]) && !isSpecial(tmp[i])){
+			std::cout << tmp[i] << std::endl;
 			flag = false; break;
 		}
 	}
@@ -33,12 +34,12 @@ void	Server::nickCheck(std::string str, Client &cl){
 	else{
 		if (cl.getNick() == str)
 			return;
-		std::map<std::string, int>::iterator it = find(nick.begin(), nick.end(), str);
+		std::map<std::string, int>::iterator it = nick.find(str);
 		if (it != nick.end()) // 닉이 중복되는 값이 있으면 에러
 			sendMsg(ERR_NICKNAMEINUSE(cl.getNick(), str), cl.getfd());
 		else{
 			if (cl.getNick() != "*"){
-				std::map<std::string, int>::iterator it = find(nick.begin(), nick.end(), cl.getNick());
+				std::map<std::string, int>::iterator it = nick.find(cl.getNick());
 				nick.erase(it);
 			}
 			if (cl.getAuth() == true){
