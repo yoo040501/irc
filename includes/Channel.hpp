@@ -21,9 +21,6 @@
 
 class Client;
 
-
-/* 첫 방 생성자는 무조건 오퍼레이터, 오퍼레이터가 다른 유저에게 오퍼레이터 권한을 줄수 있음
-	인자를 뭐로 설정해야될지*/
 class Channel
 {
 	private:
@@ -42,13 +39,15 @@ class Channel
 
 		void	addClient(Client &cl);
 		void	addOper(std::string &oper);
+		void	removeOper(std::string &oper);
 		void	setName(std::string &n);
 		void	setTopic(std::string &top);
 		void	setKey(std::string &k);
 		void	setMode(std::string &flag);
 
-		int			getClientfd(int const fd);
+		int			getClientfd(int fd);
 		bool		isOper(std::string &oper);
+		std::map<int, Client> getClient() const;
 		std::string getName() const;
 		std::string getTopic() const;
 		std::string getKey() const;

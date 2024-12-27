@@ -6,6 +6,7 @@ void	Server::passFail(Client &cl){
 	close(cl.getfd());
 	createEvent(cl.getfd());
 	client.erase(cl.getfd());
+	nick.erase(cl.getNick());
 }
 
 void	Server::passCheck(std::string str, Client &cl){

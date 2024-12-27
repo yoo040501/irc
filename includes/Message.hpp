@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <cstdarg>
+#include <vector>
 
 #define WAITING() (":localhost NOTICE * :*** Looking up your hostname...\r\n")
 
@@ -35,7 +37,7 @@
 #define ERR_NOSUCHCHANNEL(nickname, channel) (":localhost 403 " + nickname + " " + channel + " :No such channel\r\n")
 #define ERR_TOOMANYCHANNELS(nickname, channel) (":localhost 405 " + nickname + " " + channel + " :you have joined too many channels\r\n")
 #define RPL_TOPIC(nickname, username, ipaddr, channel, topic) (":" + nickname + "!" + username + "@" + ipaddr + " " + channel + " :" + topic + "\r\n")
-#define RPL_NAMREPLY(nickname, type, channel, nick) (":localhost 353 " + nickname + " " + type + " " + channel + " :" + nick + "\r\n") 
+std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, const std::string &channel, const std::vector<std::string>& nick);
 /*=: 채널 타입
 	=: 공개 채널(public channel).
 	*: 비밀 채널(secret channel).
