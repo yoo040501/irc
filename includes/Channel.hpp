@@ -23,15 +23,15 @@ class Client;
 
 
 /* 첫 방 생성자는 무조건 오퍼레이터, 오퍼레이터가 다른 유저에게 오퍼레이터 권한을 줄수 있음
-	인자를 뭐로 설정해야될지 머리 터지겠ddarjwleryt*/
+	인자를 뭐로 설정해야될지*/
 class Channel
 {
 	private:
-		std::map<int, Client>		client;
+		std::map<int, Client>		client; 
 		std::string					ch_name;
 		std::string					topic;
 		std::string					key;
-		std::vector<Client>			ch_operator;
+		std::vector<std::string>	ch_operator; //string으로 하면 nick변경될때 server의 channel iterator로 돌면서 client의 oldnick확인
 		std::vector<std::string>	mode; // o|p|s|i|t|n|b|v
 		Channel& operator=(Channel const& oth);
 	public:
@@ -40,14 +40,14 @@ class Channel
 		Channel(Channel const &copy);
 		~Channel();
 
-		void	addClient(int fd);
+		void	addClient(Client &cl);
 		void	addOper(std::string &oper);
 		void	setName(std::string &n);
 		void	setTopic(std::string &top);
 		void	setKey(std::string &k);
 		void	setMode(std::string &flag);
 
-		int			getClient(int fd);
+		int			getClientfd(int fd);
 		bool		isOper(std::string &oper);
 		std::string getName() const;
 		std::string getTopic() const;

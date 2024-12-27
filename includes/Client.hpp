@@ -22,6 +22,7 @@ class Client
 		bool				passcheck; //pass를 한번이라도 건들였으면 true
 		bool				auth;
         std::string 		nick;
+		std::string			oldnick;
         std::string 		username;
         std::string 		hostname;
         std::string 		servername;
@@ -49,6 +50,7 @@ class Client
 		bool				getPassCheck() const;
 		bool				getAuth() const;
 		std::string			getNick() const;
+		std::string			getOldnick() const;
 		std::string			getUser() const;
 		struct sockaddr_in	getaddr() const;
 };

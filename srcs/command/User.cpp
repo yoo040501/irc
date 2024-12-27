@@ -4,12 +4,10 @@ bool	isValidUserInput(std::vector<std::string> &usertmp){
 	bool	flag = true;
 
 	for (size_t i = 0; i < 4; i++){
-		 if (usertmp[i].find('\r') != std::string::npos || 
-                usertmp[i].find('\n') != std::string::npos || 
-                usertmp[i].find('\0') != std::string::npos) {
-                flag = false;
-				break;
-				}
+		 if (usertmp[i].find_first_of("\r\n\0") != std::string::npos) {
+            flag = false;
+			break;
+		}
 	}
 	return flag;
 }
