@@ -34,9 +34,9 @@ class Server
         int								port;
         std::vector<struct kevent>		changeList; // vector로 안해도 될듯
         std::vector<struct kevent>		eventList;
-        std::map<int, Client>			client;
-        std::map<std::string, int>		nick;
-		std::map<std::string, Channel>	channel;
+        std::map<int, Client>			client; // clientfd , Client
+        std::map<std::string, int>		nick;   // nickname, clientfd
+		std::map<std::string, Channel>	channel; //channelname , Channel
 		// enum commands { // 스위치문으로 하려다 관둠
 		// PASS,
 		// NICK,

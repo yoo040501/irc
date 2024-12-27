@@ -22,7 +22,7 @@ class Client
 		bool				passcheck; //pass를 한번이라도 건들였으면 true
 		bool				auth;
         std::string 		nick;
-		std::string			oldnick;
+		std::string			oldnick; //nick변경할때 channel operator 권한 변경때문에 사용했음
         std::string 		username;
         std::string 		hostname;
         std::string 		servername;
