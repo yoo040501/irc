@@ -33,8 +33,10 @@
 #define ERR_BADCHANNELKEY(nickname, channel) (":localhost 475 " + nickname + " " + channel + ":Cannot join channel (incorrect channel key)\r\n")
 #define ERR_BADCHANMASK
 #define ERR_NOSUCHCHANNEL(nickname, channel) (":localhost 403 " + nickname + " " + channel + " :No such channel\r\n")
-#define ERR_TOOMANYCHANNELS(nickname, channel) (":localhost 405 " + nickname + " " + channel + " :ou have joined too many channels\r\n")
+#define ERR_TOOMANYCHANNELS(nickname, channel) (":localhost 405 " + nickname + " " + channel + " :you have joined too many channels\r\n")
 #define RPL_TOPIC(nickname, username, ipaddr, channel, topic) (":" + nickname + "!" + username + "@" + ipaddr + " " + channel + " :" + topic + "\r\n")
+#define RPL_NAMREPLY() 353
+#define RPL_ENDOFNAMES() 366
 
 // INVITE
 #define ERR_USERONCHANNEL

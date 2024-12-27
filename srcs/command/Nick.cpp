@@ -21,13 +21,14 @@ bool	isValidNickname(std::string str){
 		flag = false;
 	return flag;
 }
+
 void	Server::nickCheck(std::string str, Client &cl){
-	if (str.size() < 1) //	//ERR_NONICKNAMEGIVEN로 irc프로토콜문서에는 적혀있는데 nc에서는 ERR_NEEDMOREPARAMS에러로 나옴
+	if (str.size() < 1) //	//ERR_NONICKNAMEGIVEN로 irc프로토콜문서에는 적혀있는데 inspircd에서는 ERR_NEEDMOREPARAMS에러로 나옴
 	{
 		//errMsg = ERR_NEEDMOREPARAMS(cl.getNick(), "NICK");
 		sendMsg(ERR_NONICKNAMEGIVEN(cl.getNick()), cl.getfd());
 	}
-	else if (isValidNickname(str) == false || str.size() > 29) //nickname은 최대29자, (문서에서는 9자라고 되있는데 실제로는 29개까지 받음)
+	else if (isValidNickname(str) == false || str.size() > 29) //nickname은 최대29자, (문서에서는 9자라고 되있는데 inspircd는 29개까지 받음)
 		sendMsg(ERR_ERRONEUSNICKNAME(cl.getNick(), str), cl.getfd());
 	else{
 		if (cl.getNick() == str)
@@ -41,8 +42,7 @@ void	Server::nickCheck(std::string str, Client &cl){
 				nick.erase(it);
 			}
 			if (cl.getAuth() == true){
-				std::string rplMsg = RPL_NICK(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), str);
-				send(cl.getfd(), rplMsg.c_str(), rplMsg.length(), 0);
+				sendMsg(RPL_NICK(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), str), cl.getfd());
 			}
 			nick[str] = cl.getfd();
 			cl.setNick(str);

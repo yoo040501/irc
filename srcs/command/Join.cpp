@@ -39,9 +39,16 @@ void	Server::channelCheck(std::string str, Client &cl){
 	
 	for (size_t i=0; i < CH_name.size(); i++){
 		if (CH_name[i].empty()) continue;
-		else if (channel.find(CH_name[i]) == channel.end()){ // 방이 처음 만들어질때 key값 필없음
-			Channel CH(CH_name[i], cl);
-			channel.insert(std::make_pair(CH_name[i], CH));
+		else{
+			std::map<std::string, Channel>::iterator it = channel.find(CH_name[i]);
+			if (it == channel.end()){ // 방이 처음 만들어질때 key값 필없음
+				Channel CH(CH_name[i], cl);
+				channel.insert(std::make_pair(CH_name[i], CH));
+			}
+			else { //채널이 있을 경우 client만 저장
+				// mode는 나중에
+				it->second.addClient(cl);
+			}
 		}
 	}
 }
