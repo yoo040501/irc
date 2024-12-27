@@ -27,7 +27,6 @@ void	Server::channelCheck(std::string str, Client &cl){
 			CH_name.push_back(channel_tmp);
 		}
 		else {
-			channel_tmp.erase(0); // #, & 제거하고 임시 저장
 			CH_name.push_back(channel_tmp);
 		}
 	}
@@ -44,6 +43,8 @@ void	Server::channelCheck(std::string str, Client &cl){
 			if (it == channel.end()){ // 방이 처음 만들어질때 key값 필없음
 				Channel CH(CH_name[i], cl);
 				channel.insert(std::make_pair(CH_name[i], CH));
+				sendMsg(RPL_NAMREPLY(cl.getNick(), "=", CH.getName(), "@" + cl.getNick()), cl.getfd());
+				sendMsg(RPL_ENDOFNAMES(cl.getNick(), CH.getName()), cl.getfd());
 			}
 			else { //채널이 있을 경우 client만 저장
 				// mode는 나중에

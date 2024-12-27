@@ -23,8 +23,8 @@ void	Channel::setTopic(std::string &top){ topic = top; }
 void	Channel::setKey(std::string &k){ key = k; }
 void	Channel::setMode(std::string &flag){ mode.push_back(flag); }
 
-int		Channel::getClientfd(int fd) {
-	std::map<int, Client>::iterator it = std::find(client.begin(), client.end(), fd);
+int		Channel::getClientfd(int const fd) {
+	std::map<int, Client>::iterator it = client.find(fd);
 	if (it != client.end())
 		return it->first;
 	return -1;	
@@ -41,5 +41,5 @@ std::string	Channel::getName() const {return this->ch_name;}
 std::string Channel::getTopic() const {return this->topic;}
 std::string Channel::getKey() const {return this->key;}
 std::string Channel::getMode(std::string &flag) {
-
+	return flag;
 }

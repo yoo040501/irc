@@ -5,7 +5,6 @@ bool Server::isPort(char *pt) // 1 ~ 65535
     std::string tmp(pt);
 	std::istringstream iss(tmp);
 	iss >> std::noskipws >> port;
-	std::cout << port << std::endl;
     if (!iss.eof() || iss.fail())
         return false;
     if (port < 1 || port > 65535)

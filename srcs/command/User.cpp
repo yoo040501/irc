@@ -5,9 +5,9 @@ bool	isValidUserInput(std::vector<std::string> &usertmp){
 
 	for (size_t i = 0; i < 4; i++){
 		 if (usertmp[i].find_first_of("\r\n\0") != std::string::npos) {
-            flag = false;
-			break;
-		}
+                flag = false;
+				break;
+				}
 	}
 	return flag;
 }
