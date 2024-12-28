@@ -59,6 +59,7 @@ class Server
 		void	userCheck(std::string str, Client &cl);
 		void	msgCheck(std::string str, Client &cl);
 		void	channelCheck(std::string str, Client &cl);
+		void	kickCheck(std::string str, Client &cl);
 
         Server();
         Server(Server const& copy);
@@ -72,3 +73,4 @@ class Server
 };
 
 std::string	trimSpace(std::string str);
+void		getCHName(std::istringstream &iss, std::vector<std::string> &CH_name, Client &cl);

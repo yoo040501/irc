@@ -49,12 +49,10 @@ void	Server::nickCheck(std::string str, Client &cl){
 			cl.setNick(str);
 			std::map<std::string, Channel>::iterator it = channel.begin(); // channel 내부에 있는 client 값도 변경
 			while (it != channel.end()){
-				std::string ni = cl.getOldnick();
-				if (it->second.isOper(ni) == true){
-					it->second.removeOper(ni);
-					ni = cl.getNick();
-					it->second.addOper(ni);
-					it->second.addClient(cl);
+				if (it->second.isOper(cl.getOldnick()) == true){
+					it->second.removeOper(cl.getOldnick());
+					it->second.addOper(cl.getNick());
+					it->second.setClient(cl.getfd(), cl);
 				}
 				it++;
 			}

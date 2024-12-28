@@ -31,7 +31,7 @@ void	Server::msgCheck(std::string str, Client &cl){ // ,이랑 공백이 :보다
 			sendMsg(ERR_NORECIPIENT(cl.getNick(), str), cl.getfd());
 		else if (str[pos - 1] != ' '){ // 없는 nick이나 channel일 경우
 					// receiver : <message>      없는 nick이나 channel일 경우, mask는 아직 잘 모르겠음
-			sendMsg(ERR_NOSUCHNICK(cl.getNick()), cl.getfd());
+			sendMsg(ERR_NOSUCHNICK(cl.getNick(), str), cl.getfd());
 		}
 		// else if (asd){ // send msg가 없을 경우  :앞에 공백이 없어도 error
 		// 	sendMsg(ERR_NOTEXTTOSEND(cl.getNick()), cl.getfd());
