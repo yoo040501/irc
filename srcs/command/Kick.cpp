@@ -28,6 +28,18 @@ following:
 <channel>{,<channel>} <user>{,<user>} [<comment>]
 상용 서버에서는  channel값을 한개만 받음*/
 
+int	checkParam(std::string str){
+	std::istringstream	iss(str);
+	std::string			tmp;
+	int					cnt = 0;
+
+	while (getline(iss, tmp, ' ')){
+		if (tmp.empty())	continue;
+		cnt++;
+	}
+	return cnt;
+}
+
 bool	inCH(Channel &CH, std::string user){
 	bool	flag = false;
 	std::map<int, Client> tmp = CH.getClient();
@@ -61,11 +73,13 @@ void	kickUser(Channel &CH, std::string user, std::string str){
 		}
 		++it;
 	}
-	if (str.c_str()[0] == ':') // 공백 포함 전송
+	if (str.c_str()[0] == ':') {// 공백 포함 전송
+		str.erase(0);
 		sendKickMsg(CH, it->second, str);
+	}
 	else{
 		if (str.find(':') != std::string::npos) // 처음 나오는 : 삭제
-			str.erase(str.find(':'));
+			str.erase(str.find(':'), 1);
 		std::vector<std::string> cmd;
 		std::istringstream	iss(str);
 		std::string			tmp;
@@ -109,6 +123,10 @@ void	Server::kickCheck(std::string str, Client &cl){
 	std::vector<std::string> CH_name;
 	std::vector<std::string> USER;
 
+	if (checkParam(str) < 2){
+		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), str), cl.getfd());
+		return ;
+	}
 	iss.str(str);
 	getline(iss, tmp, ' ');
 	str.erase(0, tmp.size());

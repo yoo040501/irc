@@ -11,14 +11,14 @@ static int isValidChannelFlag(char c){
         return 0;
 }
 
-static bool isValidUserFlag(char c){
-    if (c == '+' || c == '-')
-        return true;
-    else if (c == 'o' || c == 's' || c == 'i' || c == 'w')
-        return true;
-    else
-        return false;
-}
+// static bool isValidUserFlag(char c){
+//     if (c == '+' || c == '-')
+//         return true;
+//     else if (c == 'o' || c == 's' || c == 'i' || c == 'w')
+//         return true;
+//     else
+//         return false;
+// }
 
 static void channelMode(std::map<std::string, Channel>::iterator &it, std::istringstream& iss, Client &cl){
     char        oper = '+';
@@ -27,7 +27,7 @@ static void channelMode(std::map<std::string, Channel>::iterator &it, std::istri
     std::string argv;
 
     while (getline(iss, target, ' ')){
-        for (int i = 0; i < target.size(); i++){
+        for (size_t i = 0; i < target.size(); i++){
             result = isValidChannelFlag(target[i]);
             if (result == 1)
                 oper = target[i];
@@ -52,7 +52,7 @@ static void channelMode(std::map<std::string, Channel>::iterator &it, std::istri
                 }
             }
             else
-                sendMsg(ERR_UNKNOWNMODE(target[i]), cl.getfd());
+                sendMsg(ERR_UNKNOWNMODE(std::string(1, target[i])), cl.getfd());
         }
     }
 }
@@ -63,8 +63,8 @@ void Server::modeCmd(std::string str, Client &cl){
 	
     iss.str(str);
     getline(iss, tmp, ' ');
-    if (tmp == cl.getNick())
-        userMode(tmp, iss);
+    if (tmp == cl.getNick()){}
+        //userMode(tmp, iss);
     else if (tmp[0] == '#'){
         tmp.erase(0, 1);
         std::map<std::string, Channel>::iterator it = channel.find(tmp);
@@ -73,5 +73,5 @@ void Server::modeCmd(std::string str, Client &cl){
         channelMode(it, iss, cl);
     }
     else
-        sendMsg(ERR_NOSUCHNICK(cl.getNick()), cl.getfd());
+        sendMsg(ERR_NOSUCHNICK(cl.getNick(), str), cl.getfd());
 } 
