@@ -22,10 +22,10 @@
 #define ERR_NORECIPIENT(nickname, command) (":localhost 411 " + nickname + " :No recipient given (" + command + ")\r\n")
 #define ERR_NOTEXTTOSEND(nickname) (":localhost 412 " + nickname + " :No text to send\r\n")
 #define ERR_CANNOTSENDTOCHAN(nickname, channel) (":localhost 404 " + nickname + " " + channel + " :Cannot send to channel\r\n")
-#define ERR_NOTOPLEVEL(nickname, mask) (":localhost 413 " + nickname + "<mask> :No toplevel domain specified")
-#define ERR_WILDTOPLEVEL(nickname, mask) (":localhost 414 " + nickname + "<mask> :Wildcard in toplevel domain")
-#define ERR_TOOMANYTARGETS(nickname, target) (":localhost 407 " + nickname +"<target> :Duplicate recipients. No message delivered")
-#define ERR_NOSUCHNICK(nickname) (":localhost 401 " + nickname + " :No such nick/channel")
+#define ERR_NOTOPLEVEL(nickname, mask) (":localhost 413 " + nickname + "<mask> :No toplevel domain specified\r\n")
+#define ERR_WILDTOPLEVEL(nickname, mask) (":localhost 414 " + nickname + "<mask> :Wildcard in toplevel domain\r\n")
+#define ERR_TOOMANYTARGETS(nickname, target) (":localhost 407 " + nickname +"<target> :Duplicate recipients. No message delivered\r\n")
+#define ERR_NOSUCHNICK(nickname, nick) (":localhost 401 " + nickname + " " + nick + " :No such nick/channel\r\n")
 #define RPL_AWAY(nickname, username, ipaddr, message) (":" + nickname + "!" + username + "@" + ipaddr + " PRIVMSG" + nickname + " :" + message + "\r\n")
 
 // JOIN
@@ -33,7 +33,6 @@
 #define ERR_INVITEONLYCHAN(nickname, channel) (":localhost 473 " + nickname + " " + channel + ":Cannot join channel (i)\r\n")
 #define ERR_BANNEDFROMCHAN(nickname, channel) (":localhost 474 " + nickname + " " + channel + ":Cannot join channel (b)\r\n")
 #define ERR_BADCHANNELKEY(nickname, channel) (":localhost 475 " + nickname + " " + channel + ":Cannot join channel (incorrect channel key)\r\n")
-#define ERR_BADCHANMASK
 #define ERR_NOSUCHCHANNEL(nickname, channel) (":localhost 403 " + nickname + " " + channel + " :No such channel\r\n")
 #define ERR_TOOMANYCHANNELS(nickname, channel) (":localhost 405 " + nickname + " " + channel + " :you have joined too many channels\r\n")
 #define RPL_TOPIC(nickname, username, ipaddr, channel, topic) (":" + nickname + "!" + username + "@" + ipaddr + " " + channel + " :" + topic + "\r\n")
@@ -46,17 +45,20 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 	*/
 
 #define RPL_ENDOFNAMES(nickname, channel) (":localhost 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n")
-
+#define ERR_USERNOTINCHANNEL(nickname, user, channel) (":localhost 441 " + nickname + " " + user + " " + channel + " :They aren't on that channel\r\n")
+#define	RPL_JOIN(nickname, username, ipaddr, channel) (":" + nickname + "!" + username + "@" + ipaddr + " JOIN :" + channel + "\r\n")
+#define RPL_KICK(nickname, username, ipaddr, channel, user, msg) (":" + nickname + "!" + username + "@" + ipaddr + " KICK " + channel + " " + user + " :" + msg + "\r\n")
 // PING
-# define MSG_PONG() (":irc.local PONG irc.local :irc.local")
+# define MSG_PONG(cmd) (":irc.local PONG irc.local :" + cmd + "\r\n")
 
 // INVITE
 #define ERR_USERONCHANNEL
 #define RPL_INVITING
 
 // TOPIC
-#define ERR_NOTONCHANNEL
+#define ERR_NOTONCHANNEL(nickname, channel) (":localhost 442 " + nickname + " " + channel + " :You're not on that channel\r\n")
 #define RPL_NOTOPIC
+#define ERR_CHANOPRIVSNEEDED(nickname, channel) (":localhost 482 " + nickname + " " + channel + " :You're not channel operator\r\n")
 
 // MODE
 #define RPL_CHANNELMODEIS

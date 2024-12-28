@@ -86,15 +86,17 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D 는 아직 생�
 		else if (tmp == "JOIN")
 			channelCheck(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "PING")
-			sendMsg(MSG_PONG(), cl.getfd());
-		else if (tmp == "KICK") {
-
-		}
+			sendMsg(MSG_PONG(trimSpace(str.substr(tmp.size()))), cl.getfd());
+		else if (tmp == "KICK")
+			kickCheck(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "INVITE") {
 
 		}
 		else if (tmp == "MODE") {
 			modeCmd(trimSpace(str.substr(tmp.size())), cl);
+		}
+		else if (tmp == "TOPIC"){
+			
 		}
 		else {
 			if (!str.empty()) //인증 절차가 끝난뒤에만 전송 10.15.3.7

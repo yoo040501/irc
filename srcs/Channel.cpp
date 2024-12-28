@@ -22,10 +22,21 @@ void	Channel::setName(std::string &n){ ch_name = n;}
 void	Channel::setTopic(std::string &top){ topic = top; }
 void	Channel::setKey(std::string &k){ key = k; }
 void	Channel::setMode(std::string &flag){ mode.push_back(flag); }
+void	Channel::setClient(int fd, Client &cl){ client[fd] = cl; }
 void	Channel::removeOper(std::string &oper) {
 	std::vector<std::string>::iterator it = std::find(ch_operator.begin(), ch_operator.end(), oper);
 	if (it != ch_operator.end())
 		ch_operator.erase(it);
+}
+void	Channel::removeClient(std::string nick){
+	std::map<int, Client>::iterator it = client.begin();
+	while (it != client.end()){
+		if (it->second.getNick() == nick){
+			client.erase(it);
+			break;
+		}
+		++it;
+	}
 }
 
 int		Channel::getClientfd(int const fd) {

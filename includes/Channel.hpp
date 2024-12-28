@@ -41,6 +41,8 @@ class Channel
 		void	addClient(Client &cl);
 		void	addOper(std::string &oper);
 		void	removeOper(std::string &oper);
+		void	removeClient(std::string nick);
+		void	setClient(int fd, Client &cl);
 		void	setName(std::string &n);
 		void	setTopic(std::string &top);
 		void	setKey(std::string &k);
