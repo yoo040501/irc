@@ -10,6 +10,8 @@ Server::~Server(){}
 
 void	Server::openSocket(){
     server_fd = socket(AF_INET, SOCK_STREAM, 0); // 소켓 생성
+    int optval = 1; //sockopt 포트 재사용
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     if (server_fd < 0)
 		throw std::bad_exception();
     std::cout << "Server socket created successfully." << std::endl;

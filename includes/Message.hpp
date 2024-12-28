@@ -44,6 +44,9 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 	@: 비공개 채널(private channel).*/
 #define RPL_ENDOFNAMES(nickname, channel) (":localhost 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n")
 
+// PING
+# define MSG_PONG() (":irc.local PONG irc.local :irc.local")
+
 // INVITE
 #define ERR_USERONCHANNEL
 #define RPL_INVITING

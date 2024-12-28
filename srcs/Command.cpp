@@ -85,6 +85,8 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D 는 아직 생�
 			msgCheck(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "JOIN")
 			channelCheck(trimSpace(str.substr(tmp.size())), cl);
+		else if (tmp == "PING")
+			sendMsg(MSG_PONG(), cl.getfd());
 		else if (tmp == "KICK") {
 
 		}
