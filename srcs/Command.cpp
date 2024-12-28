@@ -95,6 +95,9 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D 는 아직 생�
 		else if (tmp == "MODE") {
 
 		}
+		else if (tmp == "TOPIC"){
+			
+		}
 		else {
 			if (!str.empty()) //인증 절차가 끝난뒤에만 전송 10.15.3.7
 				sendMsg(ERR_UNKNOWNCOMMAND(cl.getNick(), tmp), cl.getfd());
