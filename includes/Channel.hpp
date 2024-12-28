@@ -29,7 +29,8 @@ class Channel
 		std::string					topic;
 		std::string					key;
 		std::vector<std::string>	ch_operator; //string으로 하면 nick변경될때 server의 channel iterator로 돌면서 client의 oldnick확인
-		std::vector<std::string>	mode; // o|p|s|i|t|n|b|v
+		std::vector<std::string>	mode; // o|p|s|i|t|n|b|v|l
+		int 						limit;
 		Channel& operator=(Channel const& oth);
 	public:
 		Channel();

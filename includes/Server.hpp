@@ -59,6 +59,8 @@ class Server
 		void	userCheck(std::string str, Client &cl);
 		void	msgCheck(std::string str, Client &cl);
 		void	channelCheck(std::string str, Client &cl);
+		
+		void	modeCmd(std::string str, Client &cl);
 
         Server();
         Server(Server const& copy);

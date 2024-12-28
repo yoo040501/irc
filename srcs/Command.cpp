@@ -94,7 +94,7 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D 는 아직 생�
 
 		}
 		else if (tmp == "MODE") {
-
+			modeCmd(trimSpace(str.substr(tmp.size())), cl);
 		}
 		else {
 			if (!str.empty()) //인증 절차가 끝난뒤에만 전송 10.15.3.7

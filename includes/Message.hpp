@@ -6,7 +6,7 @@
 
 #define WAITING() (":localhost NOTICE * :*** Looking up your hostname...\r\n")
 
-#define RPL_CAPLS(nickname) (":localhost 410 " + nickname +  "LS :Invalid CAP command")
+#define RPL_CAPLS(nickname) (":localhost 410 " + nickname +  "LS :Invalid CAP command\r\n")
 
 #define ERR_UNKNOWNCOMMAND(nickname, command) (":localhost 421 " + nickname + " " + command + " :Unknown command\r\n")
 // NICK
@@ -40,8 +40,11 @@
 std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, const std::string &channel, const std::vector<std::string>& nick);
 /*=: 채널 타입
 	=: 공개 채널(public channel).
-	*: 비밀 채널(secret channel).
-	@: 비공개 채널(private channel).*/
+	*: 비밀 채널(private channel).
+	@: 비공개 채널(secret channel).
+	private && secret -> @	
+	*/
+
 #define RPL_ENDOFNAMES(nickname, channel) (":localhost 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n")
 
 // PING
@@ -54,18 +57,19 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 // TOPIC
 #define ERR_NOTONCHANNEL
 #define RPL_NOTOPIC
-#define ERR_CHANOPRIVSNEEDED
 
 // MODE
 #define RPL_CHANNELMODEIS
 #define ERR_KEYSET
 #define RPL_BANLIST
 #define RPL_ENDOFBANLIST
-#define ERR_UNKNOWNMODE
-
+#define ERR_UNKNOWNMODE(c) (c + " :is unknown mode char to me\r\n") 
+#define ERR_CHANOPRIVSNEEDED(nickname, channel) (":localhost 482 " + nickname + " #" + channel + " :You're not channel operator\r\n")
+#define ERR_NOPARAMETER(nickname, channel, mode, parameter) (":localhost 696 " + nickname + " #" + channel + ":You must specify a parameter for the " + mode + " mode. Syntax:" + parameter + "\r\n")
 #define ERR_USERSDONTMATCH
 #define RPL_UMODEIS
 #define ERR_UMODEUNKNOWNFLAG
+
 
 // PASS, NICK, USER 입력후 서버 접속 메세지
 #define MSG_WELCOME(Time, nickname) (":localhost 001 " + nickname + " : Welcome to the Localnet IRC Network\r\n" + \

@@ -49,7 +49,7 @@ class Client
 		bool				getPass() const;
 		bool				getPassCheck() const;
 		bool				getAuth() const;
-		std::string			getNick() const;
+		std::string&		getNick() const;
 		std::string			getOldnick() ;
 		std::string			getUser() const;
 		struct sockaddr_in	getaddr() const;
