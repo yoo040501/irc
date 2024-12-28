@@ -4,33 +4,40 @@ CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++98
 SRCS =	$(wildcard srcs/*.cpp		\
 				   srcs/command/*.cpp)
 
-OBJS = $(SRCS:.cpp=.o)
+OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.cpp=.o))
+OBJ_DIR = obj
+
 DEPS = $(SRCS:.cpp=.d)
 NAME = ircserv
 
 RMF = rm -rf
-TOUCH = touch
-MAKE = make
 
 all : $(NAME)
 
 $(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
-%.o: %.cpp
+
+$(OBJ_DIR) :
+	mkdir -p $(OBJ_DIR)
+	mkdir -p $(OBJ_DIR)/srcs
+	mkdir -p $(OBJ_DIR)/srcs/command
+
+$(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -MMD -c -o $@ $<
 
 -include $(DEPS)
 
 clean:
-	$(RMF) $(OBJS) $(DEPS)
+	$(RMF) $(OBJ_DIR)
+
 
 fclean:
-	$(MAKE) clean
+	make clean
 	$(RMF) $(NAME)
 
 re:
-	$(MAKE) fclean
-	$(MAKE) all
+	make fclean
+	make all
 
 .PHONY: all clean fclean re
