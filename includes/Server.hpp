@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <vector>
 #include <map>
+#include <queue>
 #include <algorithm>
 #include <fstream>
 #include <sstream>
@@ -37,16 +38,8 @@ class Server
         std::map<int, Client>			client; // clientfd , Client
         std::map<std::string, int>		nick;   // nickname, clientfd
 		std::map<std::string, Channel>	channel; //channelname , Channel
-		// enum commands { // 스위치문으로 하려다 관둠
-		// PASS,
-		// NICK,
-		// USER,
-		// PRIVMSG,
-		// JOIN,
-		// KICK,
-		// INVITE,
-		// MODE
-		// };
+		std::stack<std::string>			rebuffer;
+
         bool	isPort(char *pt);
 		void	setSockaddr();
 		void	createEvent(int fd);

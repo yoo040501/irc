@@ -2,6 +2,17 @@
 
 void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D 는 아직 생각 안함
 	std::string str(buffer);
+	
+	// if (str.find_first_of("\r\n") == std::string::npos){
+	// 	std::cout << "push\n";
+	// 	rebuffer.push(str);
+	// 	return ;
+	// }
+
+	// while (!rebuffer.empty()){
+	// 	str = rebuffer.top() + str;
+	// 	rebuffer.pop();
+	// }
 	while (str.find("\n") != std::string::npos) //mac환경 클라이언트는 \n으로 전송시킴
 		str.erase(str.find("\n"), 1);
 	while (str.find("\r") != std::string::npos) //docker linux환경 클라이언트는 \r\n으로 전송시킴
