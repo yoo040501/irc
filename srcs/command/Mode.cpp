@@ -20,6 +20,30 @@ static int isValidChannelFlag(char c){
 //         return false;
 // }
 
+static void changeMode(Channel &ch, std::string &successFlag, char op, char c){
+    std::string flag;
+    bool        isSet;
+    size_t      pos;
+    
+    flag += c;
+    isSet = ch.alreadySetMode(flag);
+    pos = successFlag.find_last_of("+-");
+    if (op == '+' && !isSet){
+        ch.setMode(flag);
+        if (pos == std::string::npos || successFlag[pos] != op)
+            successFlag += ('+' + flag);
+        else
+            successFlag += flag;
+    }
+    else if (op == '-' && isSet){ 
+        ch.removeMode(flag);
+        if (successFlag[pos] != op)
+            successFlag += ('-' + flag);
+        else
+            successFlag += flag;
+    }
+}
+
 static void channelMode(std::map<std::string, Channel>::iterator &it, std::istringstream& iss, Client &cl){
     char        oper = '+';
     int         result;
@@ -27,10 +51,12 @@ static void channelMode(std::map<std::string, Channel>::iterator &it, std::istri
     std::string argv;
 
     while (getline(iss, target, ' ')){
+        std::string successFlag;
         for (size_t i = 0; i < target.size(); i++){
             result = isValidChannelFlag(target[i]);
-            if (result == 1)
+            if (result == 1){
                 oper = target[i];
+            }
             else if (result == 2){
                 if (!getline(iss, argv, ' ')){
                     if (target[i] == 'l')
@@ -41,20 +67,25 @@ static void channelMode(std::map<std::string, Channel>::iterator &it, std::istri
                         sendMsg(ERR_NOPARAMETER(cl.getNick(), it->first, "op", "<nick>"), cl.getfd());
                 }
                 else{
-                    // 옵션 저장
+                    changeMode(it->second, successFlag, oper, target[i]);
                 }
             }
             else if (result == 3){
-                if (!it->second.isOper(cl.getNick()))
-                    sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), it->first), cl.getfd());
-                else{
-                    //각 옵션저장
+                std::cout << cl.getNick() << std::endl;
+                if (!it->second.isOper(cl.getNick())){
+                    sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), it->first), cl.getfd()); 
                 }
+                else
+                    changeMode(it->second, successFlag, oper, target[i]); 
             }
-            else
-                sendMsg(ERR_UNKNOWNMODE(std::string(1, target[i])), cl.getfd());
+            else{
+                sendMsg(ERR_UNKNOWNMODE(std::string(1, target[i])), cl.getfd()); 
+            }
         }
+        if (!successFlag.empty())
+            sendMsg(RPL_MODE(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), it->second.getName(), cl.getUser(), successFlag), cl.getfd());
     }
+    it->second.printMode();
 }
 
 void Server::modeCmd(std::string str, Client &cl){
@@ -66,12 +97,15 @@ void Server::modeCmd(std::string str, Client &cl){
     if (tmp == cl.getNick()){}
         //userMode(tmp, iss);
     else if (tmp[0] == '#'){
-        tmp.erase(0, 1);
         std::map<std::string, Channel>::iterator it = channel.find(tmp);
         if (it == channel.end())
 			sendMsg(ERR_NOSUCHCHANNEL(cl.getNick(), tmp), cl.getfd());
-        channelMode(it, iss, cl);
+        else
+            channelMode(it, iss, cl);
     }
     else
         sendMsg(ERR_NOSUCHNICK(cl.getNick(), str), cl.getfd());
 } 
+
+//ban list확인
+//limit 뒷 인자 파싱

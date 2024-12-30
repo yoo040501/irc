@@ -29,7 +29,7 @@ class Channel
 		std::string					topic;
 		std::string					key;
 		std::vector<std::string>	ch_operator; //string으로 하면 nick변경될때 server의 channel iterator로 돌면서 client의 oldnick확인
-		std::vector<std::string>	mode; // o|p|s|i|t|n|b|v|l
+		std::vector<std::string>	mode; // o|p|s|i|t|n|b|v|l|k
 		int 						limit;
 		Channel& operator=(Channel const& oth);
 	public:
@@ -46,7 +46,11 @@ class Channel
 		void	setName(std::string &n);
 		void	setTopic(std::string &top);
 		void	setKey(std::string &k);
+
 		void	setMode(std::string &flag);
+		void	removeMode(std::string &flag);
+		bool	alreadySetMode(std::string &flag);
+		void	printMode();
 
 		int			getClientfd(int fd);
 		bool		isOper(std::string &oper);

@@ -21,8 +21,31 @@ void	Channel::addOper(std::string &oper){ ch_operator.push_back(oper); }
 void	Channel::setName(std::string &n){ ch_name = n;}
 void	Channel::setTopic(std::string &top){ topic = top; }
 void	Channel::setKey(std::string &k){ key = k; }
-void	Channel::setMode(std::string &flag){ mode.push_back(flag); }
-void	Channel::setClient(int fd, Client &cl){ client[fd] = cl; }
+
+void	Channel::setMode(std::string &flag){
+    std::vector<std::string>::iterator it = std::find(mode.begin(), mode.end(), flag);
+	if (it == mode.end())
+		mode.push_back(flag); 
+}
+
+void	Channel::removeMode(std::string &flag){
+	std::vector<std::string>::iterator it = std::find(mode.begin(), mode.end(), flag);
+	if (it != mode.end())
+		mode.erase(it);
+}
+
+void	Channel::printMode(){
+	std::cout << "channel mode" << std::endl;
+	for(std::vector<std::string>::iterator it = mode.begin(); it < mode.end(); it++){
+		std::cout << *it << " ";
+	}
+	std::cout << std::endl;
+}
+
+void	Channel::setClient(int fd, Client &cl){
+	client[fd] = cl;
+}
+
 void	Channel::removeOper(std::string &oper) {
 	std::vector<std::string>::iterator it = std::find(ch_operator.begin(), ch_operator.end(), oper);
 	if (it != ch_operator.end())
@@ -46,7 +69,7 @@ int		Channel::getClientfd(int const fd) {
 	return -1;	
 }
 
-bool	Channel::isOper(std::string &oper) {
+bool	Channel::isOper(std::string &oper){
 	std::vector<std::string>::iterator it = std::find(ch_operator.begin(), ch_operator.end(), oper);
 	if (it != ch_operator.end())
 		return true;
@@ -57,6 +80,15 @@ std::map<int, Client>	Channel::getClient() const {return this->client;}
 std::string	Channel::getName() const {return this->ch_name;}
 std::string Channel::getTopic() const {return this->topic;}
 std::string Channel::getKey() const {return this->key;}
+
 std::string Channel::getMode(std::string &flag) {
 	return flag;
+}
+
+bool Channel::alreadySetMode(std::string &flag){
+    std::vector<std::string>::iterator it = std::find(mode.begin(), mode.end(), flag);
+	if (it == mode.end())
+		return false;
+	else
+		return true;
 }

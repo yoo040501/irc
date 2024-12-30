@@ -75,6 +75,7 @@ void	Server::channelCheck(std::string str, Client &cl){
 			std::map<std::string, Channel>::iterator it = channel.find(CH_name[i]);
 			if (it == channel.end()){ // 방이 처음 만들어질때 key값 필없음
 				Channel CH(CH_name[i], cl);
+				std::cout << "chName: " << CH_name[i] << std::endl;
 				channel.insert(std::make_pair(CH_name[i], CH));
 				client_nick.push_back("@" + cl.getNick());
 				sendMsg(RPL_JOIN(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), CH.getName()), cl.getfd());

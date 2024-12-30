@@ -1,5 +1,5 @@
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++98 
+CXXFLAGS = -Wall -Wextra -Werror -pedantic -std=c++98 -fsanitize=address -g3
 
 SRCS =	$(wildcard srcs/*.cpp		\
 				   srcs/command/*.cpp)
