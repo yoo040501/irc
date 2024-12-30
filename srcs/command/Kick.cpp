@@ -33,6 +33,8 @@ int	checkParam(std::string str){
 	std::string			tmp;
 	int					cnt = 0;
 
+	if (str[0] == ':')
+		return 0;
 	while (getline(iss, tmp, ' ')){
 		if (tmp.empty())	continue;
 		cnt++;
@@ -74,7 +76,7 @@ void	kickUser(Channel &CH, std::string user, std::string str){
 		++it;
 	}
 	if (str.c_str()[0] == ':') {// 공백 포함 전송
-		str.erase(0);
+		str.erase(0, 1);
 		sendKickMsg(CH, it->second, str);
 	}
 	else{
@@ -109,14 +111,6 @@ bool	isExistUSER(std::string name, std::map<std::string, int>&nick){
 	return flag;
 }
 
-bool	isExistCH(std::string name, std::map<std::string, Channel> &channel){
-	bool	flag = true;
-	std::map<std::string, Channel>::iterator it = channel.find(name);
-	if (it == channel.end())
-		flag = false;
-	return flag;
-}
-
 void	Server::kickCheck(std::string str, Client &cl){
 	std::istringstream	iss;
 	std::string			tmp;
@@ -124,7 +118,7 @@ void	Server::kickCheck(std::string str, Client &cl){
 	std::vector<std::string> USER;
 
 	if (checkParam(str) < 2){
-		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), str), cl.getfd());
+		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "KICK"), cl.getfd());
 		return ;
 	}
 	iss.str(str);

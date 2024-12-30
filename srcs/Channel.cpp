@@ -19,7 +19,7 @@ Channel::~Channel() {
 void	Channel::addClient(Client &cl){ client[cl.getfd()] = cl; }
 void	Channel::addOper(std::string &oper){ ch_operator.push_back(oper); }
 void	Channel::setName(std::string &n){ ch_name = n;}
-void	Channel::setTopic(std::string &top){ topic = top; }
+void	Channel::setTopic(std::string &top, int fd){ topic = top; topic_time = time(NULL); topic_user = fd;}
 void	Channel::setKey(std::string &k){ key = k; }
 
 void	Channel::setMode(std::string &flag){
@@ -79,6 +79,8 @@ bool	Channel::isOper(std::string &oper){
 std::map<int, Client>	Channel::getClient() const {return this->client;}
 std::string	Channel::getName() const {return this->ch_name;}
 std::string Channel::getTopic() const {return this->topic;}
+std::time_t	const &Channel::getTPTime() const {return this->topic_time;}
+int			Channel::getTPUser() const {return this->topic_user;}
 std::string Channel::getKey() const {return this->key;}
 
 std::string Channel::getMode(std::string &flag) {

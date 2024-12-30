@@ -1,28 +1,4 @@
 #include "../../includes/Server.hpp"
-/*operator 닉바뀔때는 아직 안함 ex)a라는 닉네임유저가 권한이 있었는데 b로 닉변한거 적용x*/
-bool	isValidCHname(std::string str){
-	bool	flag = true;
-	if (str.find_first_of("\r\n\a\0, ") != std::string::npos) // except SPACE, BELL, NUL, CR, LF and comma (',')
-		flag = false;
-	if (str[0] != '#' && str[0] != '&') //채널 앞에 #or&
-		flag = false;
-	return flag;
-}
-
-void	getCHName(std::istringstream &iss, std::vector<std::string> &CH_name, Client &cl){
-	std::string			channel_tmp;
-	while (getline(iss, channel_tmp, ',')){ //channel name 검사  name과 pass 위치가 같아야되서 빈문자열이나 에러도 일단 저장
-		if (channel_tmp.empty())
-			CH_name.push_back(channel_tmp);
-		else if (isValidCHname(channel_tmp) == false){
-			sendMsg(ERR_NOSUCHCHANNEL(cl.getNick(), channel_tmp), cl.getfd());
-			CH_name.push_back("");
-		}
-		else {
-			CH_name.push_back(channel_tmp);
-		}
-	}
-}
 
 void	getClientnick(std::vector<std::string> &client_nick, Channel &CH){
 	std::map<int, Client> tmp = CH.getClient();
@@ -88,6 +64,8 @@ void	Server::channelCheck(std::string str, Client &cl){
 				it->second.addClient(cl);
 				getClientnick(client_nick, it->second);
 				sendJoinMsg(it->second, cl);
+				if (it->second.getTopic() != "")
+					sendTopic(it->second, cl, client);
 				sendMsg(RPL_NAMREPLY(cl.getNick(), "=", it->second.getName(), client_nick), cl.getfd());
 				sendMsg(RPL_ENDOFNAMES(cl.getNick(), it->second.getName()), cl.getfd());
 			}

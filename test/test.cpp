@@ -2,8 +2,8 @@
 
 int main(int ac, char **av)
 {
-	char *buffer = av[1];
-	std::string str(buffer);
+	// char *buffer = av[1];
+	// std::string str(buffer);
 	// std::string	tmp;
 	// //str.erase(str.end()); //개행삭제
 	// std::istringstream iss(str);
@@ -18,8 +18,10 @@ int main(int ac, char **av)
 	// // std::cout << tmp << std::endl;
 	// //std::cout << str.substr(tmp.size() + 1) << std::endl;
 	// trimSpace(str.substr(3));
-	if (str.size() > 9)
-		str = str.substr(0,9);
-	std::cout << str << std::endl;
+	// if (str.size() > 9)
+	// 	str = str.substr(0,9);
+	std::string str = "abcd";
+
+	std::cout << str.substr(1) << std::endl;
 	return 0;
 }
