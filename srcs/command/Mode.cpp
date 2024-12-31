@@ -136,8 +136,9 @@ void Server::operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::
 }
 
 void    sendToChannelClient(Channel &ch, Client &cl, std::string& successFlag){
-    std::map<int, Client>::iterator it = ch.getClient().begin();
-    while (it != ch.getClient().end()){
+	std::map<int, Client>	tmp = ch.getClient();
+    std::map<int, Client>::iterator it = tmp.begin();
+    while (it != tmp.end()){
         sendMsg(RPL_MODE(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), ch.getName(), cl.getUser(), successFlag), it->second.getfd());
         ++it;
     }
