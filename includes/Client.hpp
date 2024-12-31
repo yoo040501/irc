@@ -51,6 +51,6 @@ class Client
 		bool				getAuth() const;
 		std::string&		getNick();
 		std::string&		getOldnick();
-		std::string			getUser() const;
-		struct sockaddr_in	getaddr() const;
+		std::string&		getUser();
+		struct sockaddr_in	getaddr();
 };

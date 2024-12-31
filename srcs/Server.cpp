@@ -101,3 +101,13 @@ void	Server::active(){	//멀티플렉싱
             eventList.resize(eventList.size() * 2);
     }
 }
+
+bool Server::isServerUser(std::string &user){
+    std::map<int, Client>::iterator it;
+
+    for (it = client.begin(); it != client.end(); ++it){
+        if (it->second.getNick() == user)
+            return true;
+    }
+    return false;
+}

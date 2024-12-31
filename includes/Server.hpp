@@ -61,8 +61,12 @@ class Server
 		void	channelCheck(std::string str, Client &cl);
 		void	kickCheck(std::string str, Client &cl);
 		
+		void	voiceFlag(Channel &ch, Client &cl, std::istringstream& iss, std::string &successFlag, char op);
+		void	operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::string &successFlag, char op);
 		void	modeCmd(std::string str, Client &cl);
-
+		
+		void	channelMode(std::map<std::string, Channel>::iterator &it, std::istringstream& iss, Client &cl);
+		bool	isServerUser(std::string &user);
         Server();
         Server(Server const& copy);
         Server& operator=(Server const& oth);

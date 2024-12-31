@@ -29,8 +29,9 @@ class Channel
 		std::string					topic;
 		std::string					key;
 		std::vector<std::string>	ch_operator; //string으로 하면 nick변경될때 server의 channel iterator로 돌면서 client의 oldnick확인
+		std::vector<std::string>	voiceUser; //string으로 하면 nick변경될때 server의 channel iterator로 돌면서 client의 oldnick확인
 		std::vector<std::string>	mode; // o|p|s|i|t|n|b|v|l|k
-		int 						limit;
+		long						limit;
 		Channel& operator=(Channel const& oth);
 	public:
 		Channel();
@@ -40,24 +41,33 @@ class Channel
 
 		void	addClient(Client &cl);
 		void	addOper(std::string &oper);
+		void	addVoiceUser(std::string &user);
 		void	removeOper(std::string &oper);
 		void	removeClient(std::string nick);
+		bool	removeVoiceUser(std::string &user);
 		void	setClient(int fd, Client &cl);
 		void	setName(std::string &n);
 		void	setTopic(std::string &top);
 		void	setKey(std::string &k);
-
+		void	setLimit(long value);
 		void	setMode(std::string &flag);
 		void	removeMode(std::string &flag);
-		bool	alreadySetMode(std::string &flag);
+		
+		bool	findMode(std::string &flag);
 		void	printMode();
+		
+		bool	isChannelUser(std::string &user);
+		bool	isVoiceUser(std::string &user);
+		bool	isOperator(std::string &user);
 
-		int			getClientfd(int fd);
-		bool		isOper(std::string &oper);
+		int		getClientfd(int fd);
+		bool	isOper(std::string &oper);
 		std::map<int, Client> getClient() const;
 		std::string getName() const;
 		std::string getTopic() const;
 		std::string getKey() const;
 		std::string getMode(std::string &flag);
+		long		getLimit();
+
 
 };

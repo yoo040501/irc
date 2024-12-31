@@ -1,10 +1,12 @@
 #include "../includes/Channel.hpp"
 
-Channel::Channel() : ch_name(""), topic(""), key(""){}
+Channel::Channel() : ch_name(""), topic(""), key(""), limit(-1){
+}
 
 Channel::Channel(std::string name, Client &cl) : ch_name(name), topic(""), key(""){
 	client[cl.getfd()] = cl;
 	ch_operator.push_back(cl.getNick());
+	limit = -1;
 }
 
 Channel::Channel(Channel const& copy): client(copy.client), ch_name(copy.ch_name),
@@ -17,14 +19,33 @@ Channel::~Channel() {
 }
 
 void	Channel::addClient(Client &cl){ client[cl.getfd()] = cl; }
-void	Channel::addOper(std::string &oper){ ch_operator.push_back(oper); }
+
+void	Channel::addOper(std::string &oper){
+	ch_operator.push_back(oper); 
+}
+
+void	Channel::addVoiceUser(std::string &user){
+	voiceUser.push_back(user);
+}
+
 void	Channel::setName(std::string &n){ ch_name = n;}
 void	Channel::setTopic(std::string &top){ topic = top; }
 void	Channel::setKey(std::string &k){ key = k; }
 
-void	Channel::setMode(std::string &flag){
+void	Channel::setLimit(long value){
+	limit = value;
+}
+
+bool	Channel::findMode(std::string &flag){
     std::vector<std::string>::iterator it = std::find(mode.begin(), mode.end(), flag);
-	if (it == mode.end())
+	if (it != mode.end())
+		return true;
+	else
+		return false;
+}
+
+void	Channel::setMode(std::string &flag){
+	if (findMode(flag) == false)
 		mode.push_back(flag); 
 }
 
@@ -51,15 +72,51 @@ void	Channel::removeOper(std::string &oper) {
 	if (it != ch_operator.end())
 		ch_operator.erase(it);
 }
-void	Channel::removeClient(std::string nick){
+
+bool	Channel::removeVoiceUser(std::string &user){
+	std::vector<std::string>::iterator it = std::find(voiceUser.begin(), voiceUser.end(), user);
+	if (it != voiceUser.end()){
+		voiceUser.erase(it);
+		return true;
+	}
+	else
+		return false;
+}
+
+void	Channel::removeClient(std::string user){
 	std::map<int, Client>::iterator it = client.begin();
 	while (it != client.end()){
-		if (it->second.getNick() == nick){
+		if (it->second.getNick() == user){
 			client.erase(it);
 			break;
 		}
 		++it;
 	}
+}
+
+bool	Channel::isChannelUser(std::string &user){
+    std::map<int, Client>::iterator it;
+	for (it = client.begin(); it != client.end(); ++it){
+		if (it->second.getNick() == user)
+			return true;
+	}
+	return false;
+}
+
+bool	Channel::isVoiceUser(std::string &user){
+	std::vector<std::string>::iterator it = find(voiceUser.begin(), voiceUser.end(), user);
+	if (it != voiceUser.end())
+		return true;
+	else
+		return false;
+}
+
+bool	Channel::isOperator(std::string &user){
+	std::vector<std::string>::iterator it = find(ch_operator.begin(), ch_operator.end(), user);
+	if (it != ch_operator.end())
+		return true;
+	else
+		return false;
 }
 
 int		Channel::getClientfd(int const fd) {
@@ -77,18 +134,21 @@ bool	Channel::isOper(std::string &oper){
 }
 
 std::map<int, Client>	Channel::getClient() const {return this->client;}
-std::string	Channel::getName() const {return this->ch_name;}
+
+std::string	Channel::getName() const {
+	return this->ch_name;
+}
+
 std::string Channel::getTopic() const {return this->topic;}
-std::string Channel::getKey() const {return this->key;}
+
+std::string Channel::getKey() const {
+	return this->key;
+}
 
 std::string Channel::getMode(std::string &flag) {
 	return flag;
 }
 
-bool Channel::alreadySetMode(std::string &flag){
-    std::vector<std::string>::iterator it = std::find(mode.begin(), mode.end(), flag);
-	if (it == mode.end())
-		return false;
-	else
-		return true;
+long	Channel::getLimit(){
+	return limit;
 }
