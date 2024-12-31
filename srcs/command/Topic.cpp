@@ -1,27 +1,5 @@
 #include "../../includes/Server.hpp"
 
-/*
- Command: TOPIC
-   Parameters: <channel> [<topic>]
-
-   The TOPIC message is used to change or view the topic of a channel.
-   The topic for channel <channel> is returned if there is no <topic>
-   given.  If the <topic> parameter is present, the topic for that
-   channel will be changed, if the channel modes permit this action.
-
-   Numeric Replies:
-           ERR_NEEDMOREPARAMS              ERR_NOTONCHANNEL //no channel
-           RPL_NOTOPIC                     RPL_TOPIC
-           ERR_CHANOPRIVSNEEDED //no operator
-
-   Examples:
-
-   :Wiz TOPIC #test :New topic     ;User Wiz setting the topic.
-
-   TOPIC #test :another topic      ;set the topic on #test to "another
-                                   topic".
-   TOPIC #test                     ; check the topic for #test.*/
-
 void	sendTopic(Channel &CH, Client &cl, std::map<int, Client> cl_tmp){
 		std::ostringstream oss;
         oss << CH.getTPTime();

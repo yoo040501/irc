@@ -15,15 +15,15 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 		return;
 	while (str.find_first_of("\r\n") != std::string::npos) //개행문자 제거 \n으로 전송시킴
 		str.erase(str.find_first_of("\r\n"), 1);
-	std::cout << "str:" << str << std::endl;
 
 	std::string	tmp;
 	std::istringstream iss(str);
-
 	if (cl.getAuth() == false){ //초기에 인증 절차 진행
 		std::string::size_type del = str.find(' ');
 		tmp = str.substr(0, del);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
+		if (tmp == "CAP")
+			sendMsg(RPL_CAPLS(cl.getNick()), cl.getfd());
 		if (tmp == "PASS"){
 			if (del != std::string::npos)
 				str.erase(0, del);
@@ -54,7 +54,7 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 		if (cl.getPassCheck() == true && cl.getUser() != "" && cl.getNick() != "*") //절차를 다 했을경우
 		{
 			if (cl.getPass() == false){
-				passFail(cl);
+				closeClient(ERR_CLOSE(), cl);
 				return ;
 			}
 			else if (cl.getAuth() == false){
@@ -67,9 +67,7 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 		getline(iss, tmp, ' '); // 스페이스바로 나누고 첫 문장 가져옴
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper); //tmp 대문자 변환
 		
-		if (tmp == "CAP")
-			sendMsg(RPL_CAPLS(cl.getNick()), cl.getfd());
-		else if (tmp == "PASS")
+		if (tmp == "PASS")
 			passCheck(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "NICK")
 			nickCheck(trimSpace(str.substr(tmp.size())), cl);

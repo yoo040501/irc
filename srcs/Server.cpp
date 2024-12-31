@@ -78,9 +78,7 @@ void	Server::active(){	//멀티플렉싱
                     int recv_len = recv(eventList[i].ident, buffer, sizeof(buffer), 0);
                     if (recv_len <= 0)
                     {
-                        close(eventList[i].ident);
-                        createEvent(eventList[i].ident);
-						client.erase(eventList[i].ident);
+						closeClient("disconnected", client[eventList[i].ident]);
                         std::cout << "Client disconnected." << std::endl;
                     }
                     else

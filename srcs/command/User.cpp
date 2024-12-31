@@ -23,10 +23,10 @@ void	splitName(std::string str, std::vector<std::string> &usertmp){
 	std::istringstream 			iss(str);
 	bool						colon = false;
 
-	while(getline(iss, tmp, ' ')) // a :b dasd eqw
+	while(getline(iss, tmp, ' ')) //ex) a :b dasd eqw
 	{
-		if (tmp.empty()){tmp.erase(0, 1); continue;}
-		str.erase(0, tmp.size());
+		if (tmp.empty()){str.erase(0, 1); continue;} // 공백이면 지움
+		str.erase(0, tmp.size());					 // delete a
 		if (tmp[0] == ':'){colon = true; break;}
 		str = trimSpace(str);
 		usertmp.push_back(tmp);		
@@ -46,7 +46,7 @@ void	Server::userCheck(std::string str, Client &cl){
 	else if (cl.getUser() != "")
 		sendMsg(ERR_ALREADYREGISTRED(cl.getNick()), cl.getfd());
 	else{
-		if(isValidUserInput(usertmp) == false)//user값에 \n \r \0이 들어가면안됨 :irc.local 468 ggg USER :Your username is not valid
+		if(isValidUserInput(usertmp) == false)
 			sendMsg(ERR_ERRONEUSUSER(cl.getNick()), cl.getfd());
 		else
 			cl.setUser(usertmp[0], usertmp[1], usertmp[2], usertmp[3]);

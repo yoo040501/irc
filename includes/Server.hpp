@@ -48,7 +48,7 @@ class Server
 		void	checkCommand(char *buffer, Client &cl);
 		void	nickCheck(std::string str, Client &cl);
 		bool	passCheck(std::string str, Client &cl);
-		void	passFail(Client &cl);
+		void	closeClient(std::string msg, Client &cl);
 		void	userCheck(std::string str, Client &cl);
 		void	msgCheck(std::string str, Client &cl);
 		void	channelCheck(std::string str, Client &cl);
@@ -68,7 +68,8 @@ class Server
 };
 
 std::string	trimSpace(std::string str);
-void		getCHName(std::istringstream &iss, std::vector<std::string> &CH_name, Client &cl);
+void		getCHName(std::string &str, std::vector<std::string> &CH_name, Client &cl);
+void		getUserName(std::string &str, std::vector<std::string> &USER);
 std::string	getCMD(std::string &str);
 void		sendMsg(std::string msg, int fd);
 void		sendTopic(Channel &CH, Client &cl, std::map<int, Client> cl_tmp);

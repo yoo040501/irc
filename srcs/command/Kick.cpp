@@ -1,29 +1,6 @@
 #include "../../includes/Server.hpp"
 
 /*
- The KICK command can be  used  to  forcibly  remove  a  user  from  a
-   channel.   It  'kicks  them  out'  of the channel (forced PART).
-
-   Only a channel operator may kick another user out of a  channel.
-   Each  server that  receives  a KICK message checks that it is valid
-   (ie the sender is actually a  channel  operator)  before  removing
-   the  victim  from  the channel.
-
-   Numeric Replies:
-           ERR_NEEDMOREPARAMS // 인자값 부족              ERR_NOSUCHCHANNEL //찾을수 없는 ch
-        	ERR_CHANOPRIVSNEEDED // 권한 x			ERR_NOTONCHANNEL // channel에 안들어가있을떄
-			ERR_USERNOTINCHANNEL // kick하려는 유저가 채널에 없을때
-   Examples:
-KICK &Melbourne Matthew         ; Kick Matthew from &Melbourne
-
-KICK #Finnish John :Speaking English
-                                ; Kick John from #Finnish using
-                                "Speaking English" as the reason
-                                (comment).
-:WiZ KICK #Finnish John         ; KICK message from WiZ to remove John
-                                from channel #Finnish
-NOTE:
-     It is possible to extend the KICK command parameters to the
 following:
 <channel>{,<channel>} <user>{,<user>} [<comment>]
 상용 서버에서는  channel값을 한개만 받음*/
@@ -40,20 +17,6 @@ int	checkParam(std::string str){
 		cnt++;
 	}
 	return cnt;
-}
-
-bool	inCH(Channel &CH, std::string user){
-	bool	flag = false;
-	std::map<int, Client> tmp = CH.getClient();
-	std::map<int, Client>::iterator it = tmp.begin();
-	while (it != tmp.end()){
-		if (it->second.getNick() == user){
-			flag = true;
-			break;
-		}
-		++it;
-	}
-	return flag;
 }
 
 void	sendKickMsg(Channel &CH, Client &cl, std::string msg){
@@ -103,14 +66,6 @@ void	kickUser(Channel &CH, std::string user, std::string str){
 	CH.removeOper(user);
 }
 
-bool	isExistUSER(std::string name, std::map<std::string, int>&nick){
-	bool	flag = true;
-	std::map<std::string, int>::iterator it = nick.find(name);
-	if (it == nick.end())
-		flag = false;
-	return flag;
-}
-
 void	Server::kickCheck(std::string str, Client &cl){
 	std::istringstream	iss;
 	std::string			tmp;
@@ -121,22 +76,9 @@ void	Server::kickCheck(std::string str, Client &cl){
 		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "KICK"), cl.getfd());
 		return ;
 	}
-	iss.str(str);
-	getline(iss, tmp, ' ');
-	str.erase(0, tmp.size());
-	iss.clear();
-	iss.str(tmp);
-	getCHName(iss, CH_name, cl);
-
+	getCHName(str, CH_name, cl);
 	str = trimSpace(str);
-	iss.clear();
-	iss.str(str);
-	getline(iss, tmp, ' ');
-	str.erase(0, tmp.size());
-	iss.clear();
-	iss.str(tmp);
-	while (getline(iss, tmp, ','))
-		USER.push_back(tmp);
+	getUserName(str, USER);
 	str = trimSpace(str);
 	for (std::vector<std::string>::iterator it = USER.begin(); it != USER.end();) { // nick검사
 		if (it->empty())	it = USER.erase(it);

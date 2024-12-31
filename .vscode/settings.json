@@ -68,6 +68,7 @@
 		"vector": "cpp",
 		"filesystem": "cpp",
 		"__functional_03": "cpp",
-		"queue": "cpp"
+		"queue": "cpp",
+		"memory_resource": "cpp"
 	}
 }

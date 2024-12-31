@@ -1,8 +1,8 @@
 #include "../../includes/Server.hpp"
 
 /* nick, user가 등록되있을때 pass등록하면 에러나야함 or pass가 틀렸을때 나오는 문구*/
-void	Server::passFail(Client &cl){
-	sendMsg("ERROR :Closing link: (a@127.0.0.1) [Access denied by configuration]", cl.getfd());
+void	Server::closeClient(std::string msg, Client &cl){
+	sendMsg(msg, cl.getfd());
 	close(cl.getfd());
 	createEvent(cl.getfd());
 	nick.erase(cl.getNick());
@@ -12,17 +12,17 @@ void	Server::passFail(Client &cl){
 bool	Server::passCheck(std::string str, Client &cl){
 	std::string pass = getCMD(str);
 
-	if (cl.getAuth() == true)
+	if (cl.getAuth() == true) // 이미 서버 접속 후
 		sendMsg(ERR_ALREADYREGISTRED(cl.getNick()), cl.getfd());
-	else if (pass.size() < 1)
+	else if (pass.size() < 1) // no param
 		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "PASS"), cl.getfd());
 	else{
 		if (cl.getUser() != "" && cl.getNick() != "*") // user와 nick이 우선 등록되있을 경우
 		{
-			passFail(cl);
+			closeClient(ERR_CLOSE(), cl);
 			return false;
 		}
-		cl.setPassCheck(true);
+		cl.setPassCheck(true); //pass 입력을 한번이라도 할 경우 true
 		if (pass == password)
 			cl.setPass(true);
 		else
