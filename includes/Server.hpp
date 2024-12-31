@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <vector>
 #include <map>
+#include <queue>
 #include <algorithm>
 #include <fstream>
 #include <sstream>
@@ -37,16 +38,8 @@ class Server
         std::map<int, Client>			client; // clientfd , Client
         std::map<std::string, int>		nick;   // nickname, clientfd
 		std::map<std::string, Channel>	channel; //channelname , Channel
-		// enum commands { // 스위치문으로 하려다 관둠
-		// PASS,
-		// NICK,
-		// USER,
-		// PRIVMSG,
-		// JOIN,
-		// KICK,
-		// INVITE,
-		// MODE
-		// };
+		std::stack<std::string>			rebuffer;
+
         bool	isPort(char *pt);
 		void	setSockaddr();
 		void	createEvent(int fd);
@@ -54,13 +47,13 @@ class Server
 
 		void	checkCommand(char *buffer, Client &cl);
 		void	nickCheck(std::string str, Client &cl);
-		void	passCheck(std::string str, Client &cl);
-		void	passFail(Client &cl);
+		bool	passCheck(std::string str, Client &cl);
+		void	closeClient(std::string msg, Client &cl);
 		void	userCheck(std::string str, Client &cl);
 		void	msgCheck(std::string str, Client &cl);
 		void	channelCheck(std::string str, Client &cl);
 		void	kickCheck(std::string str, Client &cl);
-		
+		void	topicCheck(std::string str, Client &cl);
 		void	voiceFlag(Channel &ch, Client &cl, std::istringstream& iss, std::string &successFlag, char op);
 		void	operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::string &successFlag, char op);
 		void	modeCmd(std::string str, Client &cl);
@@ -79,4 +72,10 @@ class Server
 };
 
 std::string	trimSpace(std::string str);
-void		getCHName(std::istringstream &iss, std::vector<std::string> &CH_name, Client &cl);
+void		getCHName(std::string &str, std::vector<std::string> &CH_name, Client &cl);
+void		getUserName(std::string &str, std::vector<std::string> &USER);
+std::string	getCMD(std::string &str);
+void		sendMsg(std::string msg, int fd);
+void		sendTopic(Channel &CH, Client &cl, std::map<int, Client> cl_tmp);
+bool		isExistCH(std::string name, std::map<std::string, Channel> &channel);
+bool		isExistUSER(std::string name, std::map<std::string, int>&nick);

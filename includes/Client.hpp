@@ -54,3 +54,5 @@ class Client
 		std::string&		getUser();
 		struct sockaddr_in	getaddr();
 };
+
+int	isSpecial(char c);

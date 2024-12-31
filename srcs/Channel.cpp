@@ -29,7 +29,7 @@ void	Channel::addVoiceUser(std::string &user){
 }
 
 void	Channel::setName(std::string &n){ ch_name = n;}
-void	Channel::setTopic(std::string &top){ topic = top; }
+void	Channel::setTopic(std::string &top, int fd){ topic = top; topic_time = time(NULL); topic_user = fd;}
 void	Channel::setKey(std::string &k){ key = k; }
 
 void	Channel::setLimit(long value){
@@ -140,6 +140,8 @@ std::string	Channel::getName() const {
 }
 
 std::string Channel::getTopic() const {return this->topic;}
+std::time_t	const &Channel::getTPTime() const {return this->topic_time;}
+int			Channel::getTPUser() const {return this->topic_user;}
 
 std::string Channel::getKey() const {
 	return this->key;

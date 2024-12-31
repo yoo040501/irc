@@ -56,6 +56,7 @@ void	Server::active(){	//멀티플렉싱
             throw std::bad_exception();
         }
         changeList.clear(); //kevent 함수를 호출할 때마다 changeList를 비워줘야 함
+		//비우지않으면 이전에 등록된 이벤트가 다시 등록될수 있음
         for (int i = 0; i < new_events; i++)
         {
             if (eventList[i].flags & EV_ERROR) // error
@@ -78,24 +79,17 @@ void	Server::active(){	//멀티플렉싱
                     int recv_len = recv(eventList[i].ident, buffer, sizeof(buffer), 0);
                     if (recv_len <= 0)
                     {
-                        close(eventList[i].ident);
-                        createEvent(eventList[i].ident);
-						client.erase(eventList[i].ident);
+						closeClient("disconnected", client[eventList[i].ident]);
                         std::cout << "Client disconnected." << std::endl;
                     }
                     else
                     {
-					//	send(eventList[i].ident, buffer, recv_len, 0); // 에코서버
 						if (client.find(eventList[i].ident) == client.end())
 							client[eventList[i].ident] = Client(); // Client 객체를 생성
 						checkCommand(buffer, client[eventList[i].ident]); // 명령어 확인 / 인자로 클라이언트 정보 넣어줌
                     }
                 }
             }
-            // else if (eventList[i].filter == EVFILT_WRITE) // 아마 쓸일은 없을듯 함
-            // {
-            //     //write event
-            // }
         }
         if (static_cast<int>(eventList.size()) == new_events) // eventList가 꽉 찼을 때
             eventList.resize(eventList.size() * 2);

@@ -15,9 +15,10 @@
 #define ERR_NICKNAMEINUSE(nickname, command) (":localhost 433 " + nickname + " " + command + " :Nickname is already in use.\r\n")
 #define RPL_NICK(oldnick, username, ipaddr, newnick) (":" + oldnick + "!" + username + "@"+ ipaddr + " NICK :" + newnick + "\r\n")
 // PASS, USER
+#define ERR_CLOSE() ("ERROR :Closing link: (a@127.0.0.1) [Access denied by configuration]\r\n")
 #define ERR_NEEDMOREPARAMS(nickname, command) (":localhost 461 " + nickname + " " + command + " :Not enough parameters\r\n")
 #define ERR_ALREADYREGISTRED(nickname) (":localhost 462 " + nickname + " : You may not reregister\r\n")
-
+#define ERR_ERRONEUSUSER(nickname) (":localhost 468 " + nickname + " :Your username is not valid\r\n")
 //PRIVMEG
 #define ERR_NORECIPIENT(nickname, command) (":localhost 411 " + nickname + " :No recipient given (" + command + ")\r\n")
 #define ERR_NOTEXTTOSEND(nickname) (":localhost 412 " + nickname + " :No text to send\r\n")
@@ -35,7 +36,7 @@
 #define ERR_BADCHANNELKEY(nickname, channel) (":localhost 475 " + nickname + " " + channel + ":Cannot join channel (incorrect channel key)\r\n")
 #define ERR_NOSUCHCHANNEL(nickname, channel) (":localhost 403 " + nickname + " " + channel + " :No such channel\r\n")
 #define ERR_TOOMANYCHANNELS(nickname, channel) (":localhost 405 " + nickname + " " + channel + " :you have joined too many channels\r\n")
-#define RPL_TOPIC(nickname, username, ipaddr, channel, topic) (":" + nickname + "!" + username + "@" + ipaddr + " " + channel + " :" + topic + "\r\n")
+#define RPL_SETTOPIC(nickname, username, ipaddr, channel, topic) (":" + nickname + "!" + username + "@" + ipaddr + " TOPIC " + channel + " :" + topic + "\r\n")
 std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, const std::string &channel, const std::vector<std::string>& nick);
 /*=: 채널 타입
 	=: 공개 채널(public channel).
@@ -58,7 +59,9 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 
 // TOPIC
 #define ERR_NOTONCHANNEL(nickname, channel) (":localhost 442 " + nickname + " " + channel + " :You're not on that channel\r\n")
-#define RPL_NOTOPIC
+#define RPL_NOTOPIC(nickname, channel) (":localhost 331 " + nickname + " " + channel + " :No topic is set.\r\n")
+#define RPL_TOPIC(nickname, channel, topic) (":localhost 332 " + nickname + " " + channel + " :" + topic + "\r\n") //:irc.local 333 hello #ch1 aaaa!1@127.0.0.1 :1735550135
+#define	RPL_TIMETOPIC(nickname, channel, setnick, setuser, ipaddr, settime) (":localhost 333 " + nickname + " " + channel + " " + setnick + "!" + setuser + "@" + ipaddr + " :" + settime + "\r\n")
 #define ERR_CHANOPRIVSNEEDED(nickname, channel) (":localhost 482 " + nickname + " " + channel + " :You're not channel operator\r\n")
 
 // MODE
@@ -86,5 +89,3 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 						":localhost 372 " + nickname + " :- *  questions or issues.                          *\r\n" + \
 						":localhost 372 " + nickname + " :- **************************************************\r\n" + \
 						":localhost 376 " + nickname + " :End of message of the day.\r\n")
-
-void	sendMsg(std::string msg, int fd);
