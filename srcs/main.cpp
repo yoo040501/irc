@@ -2,6 +2,7 @@
 
 int main(int ac, char **av)
 {
+	// std::time_t a = std::time(NULL); 유닉스 타임스탬프
     if (ac == 3)
     {
         try
