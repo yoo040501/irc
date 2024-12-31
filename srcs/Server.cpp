@@ -56,6 +56,7 @@ void	Server::active(){	//멀티플렉싱
             throw std::bad_exception();
         }
         changeList.clear(); //kevent 함수를 호출할 때마다 changeList를 비워줘야 함
+		//비우지않으면 이전에 등록된 이벤트가 다시 등록될수 있음
         for (int i = 0; i < new_events; i++)
         {
             if (eventList[i].flags & EV_ERROR) // error
