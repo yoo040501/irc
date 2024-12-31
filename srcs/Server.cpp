@@ -85,17 +85,12 @@ void	Server::active(){	//멀티플렉싱
                     }
                     else
                     {
-					//	send(eventList[i].ident, buffer, recv_len, 0); // 에코서버
 						if (client.find(eventList[i].ident) == client.end())
 							client[eventList[i].ident] = Client(); // Client 객체를 생성
 						checkCommand(buffer, client[eventList[i].ident]); // 명령어 확인 / 인자로 클라이언트 정보 넣어줌
                     }
                 }
             }
-            // else if (eventList[i].filter == EVFILT_WRITE) // 아마 쓸일은 없을듯 함
-            // {
-            //     //write event
-            // }
         }
         if (static_cast<int>(eventList.size()) == new_events) // eventList가 꽉 찼을 때
             eventList.resize(eventList.size() * 2);

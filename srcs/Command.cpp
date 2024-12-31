@@ -1,22 +1,22 @@
 #include "../includes/Server.hpp"
 
-void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D 는 아직 생각 안함
+void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 	std::string str(buffer);
 	
-	// if (str.find_first_of("\r\n") == std::string::npos){
-	// 	std::cout << "push\n";
-	// 	rebuffer.push(str);
-	// 	return ;
-	// }
+	rebuffer.push(str); //일단 스택에 저장 -> 개행문자가 있다? 합침
+	if (str.find_first_of("\r\n") != std::string::npos){
+		str.clear();
+		while (!rebuffer.empty()){
+			str = rebuffer.top() + str;
+			rebuffer.pop();
+		}
+	}
+	else //없으면 리턴
+		return;
+	while (str.find_first_of("\r\n") != std::string::npos) //개행문자 제거 \n으로 전송시킴
+		str.erase(str.find_first_of("\r\n"), 1);
+	std::cout << "str:" << str << std::endl;
 
-	// while (!rebuffer.empty()){
-	// 	str = rebuffer.top() + str;
-	// 	rebuffer.pop();
-	// }
-	while (str.find("\n") != std::string::npos) //mac환경 클라이언트는 \n으로 전송시킴
-		str.erase(str.find("\n"), 1);
-	while (str.find("\r") != std::string::npos) //docker linux환경 클라이언트는 \r\n으로 전송시킴
-		str.erase(str.find("\r"), 1);
 	std::string	tmp;
 	std::istringstream iss(str);
 
