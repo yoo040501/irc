@@ -148,22 +148,18 @@ void Server::channelMode(std::map<std::string, Channel>::iterator &it, std::istr
     char        oper = '+';
     int         result;
     std::string target;
-    std::string argv;
 
     while (getline(iss, target, ' ')){
         std::string successFlag;
         for (size_t i = 0; i < target.size(); i++){
             result = isValidChannelFlag(target[i]);
-            if (result == 1){
+            if (result == 1)
                 oper = target[i];
-            }
             else if (result == 2){
                 if (target[i] == 'l')
                     limitFlag(it->second, cl, iss, successFlag, oper);
                 else if (target[i] == 'k')
                     keyFlag(it->second, cl, iss, successFlag, oper);
-                //else if (target[i] == 'v')
-                //    voiceFlag(it->second, cl, iss, successFlag, oper);
                 else if (target[i] == 'o')
                     operateFlag(it->second, cl, iss, successFlag, oper);
             }
@@ -194,9 +190,7 @@ void Server::modeCmd(std::string str, Client &cl){
 	
     iss.str(str);
     getline(iss, tmp, ' ');
-    if (tmp == cl.getNick()){}
-        //userMode(tmp, iss);
-    else if (tmp[0] == '#'){
+    if (tmp[0] == '#'){
         std::map<std::string, Channel>::iterator it = channel.find(tmp);
         if (it == channel.end())
 			sendMsg(ERR_NOSUCHCHANNEL(cl.getNick(), tmp), cl.getfd());
@@ -206,6 +200,3 @@ void Server::modeCmd(std::string str, Client &cl){
     else
         sendMsg(ERR_NOSUCHNICK(cl.getNick(), str), cl.getfd());
 } 
-
-//ban list확인
-//limit 뒷 인자 파싱
