@@ -9,7 +9,7 @@ bool	isValidUserInput(std::vector<std::string> &usertmp){
 			break;
 		}
 		for (size_t j = 0; j < usertmp[i].length(); j++){
-			if (!isalpha(usertmp[i][j]) && !isnumber(usertmp[i][j]) && !isSpecial(usertmp[i][j]) && usertmp[i][j] != ' '){
+			if (!isalpha(usertmp[i][j]) && !isnumber(usertmp[i][j]) && !isSpecial(usertmp[i][j]) && usertmp[i][j] != ' ' && usertmp[i][j] != '.'){
 				flag = false;
 				break;
 			}

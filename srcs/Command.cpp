@@ -15,15 +15,13 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 		return;
 	while (str.find_first_of("\r\n") != std::string::npos) //개행문자 제거 \n으로 전송시킴
 		str.erase(str.find_first_of("\r\n"), 1);
-
 	std::string	tmp;
 	std::istringstream iss(str);
 	if (cl.getAuth() == false){ //초기에 인증 절차 진행
 		std::string::size_type del = str.find(' ');
 		tmp = str.substr(0, del);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
-		if (tmp == "CAP")
-			sendMsg(RPL_CAPLS(cl.getNick()), cl.getfd());
+
 		if (tmp == "PASS"){
 			if (del != std::string::npos)
 				str.erase(0, del);
@@ -48,6 +46,7 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 		}
 		if (tmp == "USER"){
 			str.erase(0, tmp.size());
+			std::cout << "user:" << str << std::endl;
 			userCheck(trimSpace(str), cl);
 		}
 
