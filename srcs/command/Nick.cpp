@@ -24,7 +24,7 @@ bool	isValidNickname(std::string str){
 void	channelSet(std::map<std::string, Channel> &channel, Client &cl){
 	std::map<std::string, Channel>::iterator it = channel.begin(); // channel 내부에 있는 client 값도 변경
 	while (it != channel.end()){
-		if (it->second.isOper(cl.getOldnick()) == true){
+		if (it->second.isOperator(cl.getOldnick()) == true){
 			it->second.removeOper(cl.getOldnick());
 			it->second.addOper(cl.getNick());
 			it->second.setClient(cl.getfd(), cl);

@@ -113,13 +113,14 @@ bool	Channel::isVoiceUser(std::string &user){
 		return false;
 }
 
-bool	Channel::isOperator(std::string &user){
+bool	Channel::isOperatorator(std::string &user){
 	std::vector<std::string>::iterator it = find(ch_operator.begin(), ch_operator.end(), user);
 	if (it != ch_operator.end())
 		return true;
 	else
 		return false;
 }
+
 
 int		Channel::getClientfd(int const fd) {
 	std::map<int, Client>::iterator it = client.find(fd);
@@ -128,12 +129,6 @@ int		Channel::getClientfd(int const fd) {
 	return -1;	
 }
 
-bool	Channel::isOper(std::string &oper){
-	std::vector<std::string>::iterator it = std::find(ch_operator.begin(), ch_operator.end(), oper);
-	if (it != ch_operator.end())
-		return true;
-	return false;
-}
 
 std::map<int, Client>	Channel::getClient() const {return this->client;}
 
