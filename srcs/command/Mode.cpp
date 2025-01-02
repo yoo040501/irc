@@ -6,7 +6,7 @@ static int isValidChannelFlag(char c){
     else if (c == 'o' || c == 'l' || c == 'k')
         return 2; //뒷 인자 확인
     else if (c == 'i' || c == 't')
-        return 3; //operator 권한확인
+        return 3; //operator 권한확인 
     else
         return 0;
 }
@@ -35,16 +35,36 @@ static void changeMode(Channel &ch, std::string &successFlag, char op, char c){
     }
 }
 
+static bool checkColon(std::istringstream& iss, std::string &argv){
+    bool flag = false;
+    std::string     tmp;
+
+    if (argv[0] == ':'){
+        while (getline(iss, tmp, ' '))      
+            flag = true;
+        if (flag)
+            return false;
+        argv.erase(0, 1);
+        if (argv.empty() || argv[0] == ':')
+            return false;
+    }
+    return true;
+}
+
 static void keyFlag(Channel &ch, Client &cl, std::istringstream& iss, std::string &successFlag, char op){
     std::string argv;
 
     if (op == '+'){
-        if (!getline(iss, argv, ' '))
+        getline(iss, argv, ' ');
+        if (argv.empty() || argv == ":")
             sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), "key", "<key>"), cl.getfd());
-        else if (ch.getKey().empty())
+        else if (!checkColon(iss, argv))
+            return ;
+        else if (ch.getKey().empty()){
             changeMode(ch, successFlag, op, 'k');
             ch.setKey(argv);
             successFlag += (' ' + argv);
+        }
     }
     else{
         std::string flag = "k";
@@ -139,7 +159,7 @@ void    sendToChannelClient(Channel &ch, Client &cl, std::string& successFlag){
 	std::map<int, Client>	tmp = ch.getClient();
     std::map<int, Client>::iterator it = tmp.begin();
     while (it != tmp.end()){
-        sendMsg(RPL_MODE(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), ch.getName(), cl.getUser(), successFlag), it->second.getfd());
+        sendMsg(RPL_MODE(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), ch.getName(), successFlag), it->second.getfd());
         ++it;
     }
 }
