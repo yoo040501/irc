@@ -21,7 +21,7 @@ void	getClientnick(std::vector<std::string> &client_nick, Channel &CH){
 
 	while (it != tmp.end()){
 		nick = it->second.getNick();
-		if (CH.isOper(nick) == true)
+		if (CH.isOperator(nick) == true)
 			client_nick.push_back("@" + nick);
 		else
 			client_nick.push_back(nick);	

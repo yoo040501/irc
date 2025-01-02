@@ -98,7 +98,7 @@ void	Server::kickCheck(std::string str, Client &cl){
 		else{
 			if (!inCH(channel[*it], cl.getNick())) // client가 채널에 있는지 확인
 				sendMsg(ERR_NOTONCHANNEL(cl.getNick(), *it), cl.getfd());
-			else if (!channel[*it].isOper(cl.getNick())) //ERR_CHANOPRIVSNEEDED 채널에 들어가있는데 권한이 있는지 확인
+			else if (!channel[*it].isOperator(cl.getNick())) //ERR_CHANOPRIVSNEEDED 채널에 들어가있는데 권한이 있는지 확인
 				sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), *it), cl.getfd());
 			else {
 				for (std::vector<std::string>::iterator i = USER.begin(); i != USER.end();++i){

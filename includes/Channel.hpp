@@ -61,10 +61,10 @@ class Channel
 		
 		bool	isChannelUser(std::string &user);
 		bool	isVoiceUser(std::string &user);
-		bool	isOperator(std::string &user);
+		bool	isOperatorator(std::string &user);
 
 		int		getClientfd(int fd);
-		bool	isOper(std::string &oper);
+		bool	isOperator(std::string &oper);
 		std::map<int, Client> getClient() const;
 		std::string getName() const;
 		std::string getTopic() const;
