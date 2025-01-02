@@ -73,6 +73,8 @@ class Channel
 		std::string getKey() const;
 		std::string getMode(std::string &flag);
 		long		getLimit();
+		void 		inviteClient(int fd); // 초대 클라이언트 관리용 메서드 추가
+
 
 
 };

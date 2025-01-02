@@ -63,6 +63,11 @@ class Server
 		
 		void	channelMode(std::map<std::string, Channel>::iterator &it, std::istringstream& iss, Client &cl);
 		bool	isServerUser(std::string &user);
+
+		// Invite
+		void	handleInviteErrors(Client &inviter, Channel *channel, Client *invitee, const std::string &chanName, const std::string &inviteeName);
+		void	sendInviteMsg(Channel &channel, Client &inviter, Client &invitee);
+
         Server();
         Server(Server const& copy);
         Server& operator=(Server const& oth);
@@ -72,6 +77,7 @@ class Server
 
         void	openSocket();
         void	active();
+		void	inviteCommand(Client &cl, const std::string &params);
 };
 
 std::string	trimSpace(std::string str);

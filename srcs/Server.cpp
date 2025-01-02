@@ -107,3 +107,30 @@ bool Server::isServerUser(std::string &user){
     }
     return false;
 }
+
+void Server::sendInviteMsg(Channel &channel, Client &inviter, Client &invitee) {
+    sendMsg(RPL_INVITING(inviter.getNick(), invitee.getNick(), channel.getName()), inviter.getfd());
+    sendMsg(":localhost INVITE " + invitee.getNick() + " " + channel.getName() + "\r\n", invitee.getfd());
+    channel.addClient(invitee);
+}
+
+void Server::handleInviteErrors(Client &inviter, Channel *channel, Client *invitee, const std::string &chanName, const std::string &inviteeName) {
+    if (!inviter.getPass() || inviter.getUser().empty() || inviter.getNick() == "*") {
+        throw std::logic_error(ERR_NOTREGISTERED(inviter.getNick()));
+    }
+    if (!channel) {
+        throw std::logic_error(ERR_NOSUCHCHANNEL(inviter.getNick(), chanName));
+    }
+    if (!invitee) {
+        throw std::logic_error(ERR_NOSUCHNICK(inviter.getNick(), inviteeName));
+    }
+    if (!channel->isChannelUser(inviter.getNick())) {
+        throw std::logic_error(ERR_NOTONCHANNEL(inviter.getNick(), chanName));
+    }
+    if (!channel->isOperator(inviter.getNick())) {
+        throw std::logic_error(ERR_CHANOPRIVSNEEDED(inviter.getNick(), chanName));
+    }
+    if (channel->isChannelUser(invitee->getNick())) {
+        throw std::logic_error(ERR_USERONCHANNEL(inviter.getNick(), inviteeName, chanName));
+    }
+}
