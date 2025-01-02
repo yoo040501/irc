@@ -56,6 +56,7 @@ class Server
 		void	channelCheck(std::string str, Client &cl);
 		void	kickCheck(std::string str, Client &cl);
 		void	topicCheck(std::string str, Client &cl);
+		void	partCheck(std::string str, Client &cl);
 		void	voiceFlag(Channel &ch, Client &cl, std::istringstream& iss, std::string &successFlag, char op);
 		void	operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::string &successFlag, char op);
 		void	modeCmd(std::string str, Client &cl);

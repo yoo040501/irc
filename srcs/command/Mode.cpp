@@ -203,7 +203,11 @@ void Server::channelMode(std::map<std::string, Channel>::iterator &it, std::istr
 void Server::modeCmd(std::string str, Client &cl){
     std::string         tmp;
 	std::istringstream	iss;
-	
+
+	if (str.empty()){
+		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "MODE"), cl.getfd());
+		return ;
+	}
     iss.str(str);
     getline(iss, tmp, ' ');
     if (tmp[0] == '#'){

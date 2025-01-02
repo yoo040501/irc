@@ -61,7 +61,6 @@ void	Server::channelCheck(std::string str, Client &cl){
 	for (size_t i=0; i < CH_name.size(); i++){
 		if (CH_name[i].empty()) continue;
 		else{
-			//:b!b@127.0.0.1 JOIN :#ch1
 			std::vector<std::string> client_nick;
 			std::map<std::string, Channel>::iterator it = channel.find(CH_name[i]);
 			if (it == channel.end()){ // 방이 처음 만들어질때 key값 필없음
@@ -73,24 +72,16 @@ void	Server::channelCheck(std::string str, Client &cl){
 				sendMsg(RPL_ENDOFNAMES(cl.getNick(), CH.getName()), cl.getfd());
 			}
 			else { //채널이 있을 경우 client만 저장
-				// mode는 나중에
 				if (it->second.getClientfd(cl.getfd()) > 0) continue; // 이미 들어가있는 경우 넘어감
 				if (it->second.findMode("k")) {// channel에 key값이 없을 경우 그냥 들어감
-					std::cout << "CHkey:" << CH_key[i] << std::endl;
-					if (it->second.getKey() == CH_key[i])
-						joinChannel(it->second, cl, client_nick, client);
-					else
+					if (CH_key.empty() || CH_key[i].empty() || it->second.getKey() != CH_key[i])
 						sendMsg(ERR_BADCHANNELKEY(cl.getNick(), CH_name[i]), cl.getfd());
+					else
+						joinChannel(it->second, cl, client_nick, client);
 				}
+				else if (it->second.findMode("i")){} //invite mode 활성화
 				else
 					joinChannel(it->second, cl, client_nick, client);
-				// it->second.addClient(cl);
-				// getClientnick(client_nick, it->second);
-				// sendJoinMsg(it->second, cl);
-				// if (it->second.getTopic() != "")
-				// 	sendTopic(it->second, cl, client);
-				// sendMsg(RPL_NAMREPLY(cl.getNick(), "=", it->second.getName(), client_nick), cl.getfd());
-				// sendMsg(RPL_ENDOFNAMES(cl.getNick(), it->second.getName()), cl.getfd());}
 			}
 		}
 	}

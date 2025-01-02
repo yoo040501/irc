@@ -59,7 +59,7 @@ void	getReceiver(std::string str, std::vector<std::string> &receiver){
 void	Server::msgCheck(std::string str, Client &cl){ // ,이랑 공백이 :보다 우선순위
 	std::vector<std::string> receiver;
 	size_t	pos;
-
+	return ;
 	// pos = str.find_first_of(" ,"); // a, b : he
 	pos = str.find(':');
 	if (pos != std::string::npos){ // :<text to be sent> :있으면 공백도 포함해서 다 보냄

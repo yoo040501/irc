@@ -30,10 +30,10 @@
 #define RPL_AWAY(nickname, username, ipaddr, message) (":" + nickname + "!" + username + "@" + ipaddr + " PRIVMSG" + nickname + " :" + message + "\r\n")
 
 // JOIN
-#define ERR_CHANNELISFULL(nickname, channel) (":localhost 471 " + nickname + " " + channel + ":Cannot join channel (l)\r\n")
-#define ERR_INVITEONLYCHAN(nickname, channel) (":localhost 473 " + nickname + " " + channel + ":Cannot join channel (i)\r\n")
-#define ERR_BANNEDFROMCHAN(nickname, channel) (":localhost 474 " + nickname + " " + channel + ":Cannot join channel (b)\r\n")
-#define ERR_BADCHANNELKEY(nickname, channel) (":localhost 475 " + nickname + " " + channel + ":Cannot join channel (incorrect channel key)\r\n")
+#define ERR_CHANNELISFULL(nickname, channel) (":localhost 471 " + nickname + " " + channel + " :Cannot join channel (l)\r\n")
+#define ERR_INVITEONLYCHAN(nickname, channel) (":localhost 473 " + nickname + " " + channel + " :Cannot join channel (i)\r\n")
+#define ERR_BANNEDFROMCHAN(nickname, channel) (":localhost 474 " + nickname + " " + channel + " :Cannot join channel (b)\r\n")
+#define ERR_BADCHANNELKEY(nickname, channel) (":localhost 475 " + nickname + " " + channel + " :Cannot join channel (incorrect channel key)\r\n")
 #define ERR_NOSUCHCHANNEL(nickname, channel) (":localhost 403 " + nickname + " " + channel + " :No such channel\r\n")
 #define ERR_TOOMANYCHANNELS(nickname, channel) (":localhost 405 " + nickname + " " + channel + " :you have joined too many channels\r\n")
 #define RPL_SETTOPIC(nickname, username, ipaddr, channel, topic) (":" + nickname + "!" + username + "@" + ipaddr + " TOPIC " + channel + " :" + topic + "\r\n")
@@ -80,7 +80,7 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 #define MSG_WELCOME(Time, nickname) (":localhost 001 " + nickname + " : Welcome to the Localnet IRC Network\r\n" + \
 						":localhost 002 " + nickname + " : Your host is localhost!\r\n" + \
 						":localhost 003 " + nickname + " :This server was created " + Time + "\r\n" + \
-						":localhost 004 " + nickname + " :localhost IRC_SERVER iosw biklmnopstv :bklov\r\n" + \
+						":localhost 004 " + nickname + " :localhost IRC_SERVER none iklot :klo\r\n" +/*<version> <user_modes> <channel_modes> :<channel_modes_with_params>*/\
 						":localhost 375 " + nickname + " :localhost message of the day.\r\n" + \
 						":localhost 372 " + nickname + " :- **************************************************\r\n" + \
 						":localhost 372 " + nickname + " :- *             H    E    L    L    O              *\r\n" + \
