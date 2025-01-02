@@ -52,9 +52,10 @@ void	Server::topicCheck(std::string str, Client &cl){
 			}
 		}
 	}
+	std::transform(CH.begin(), CH.end(), CH.begin(), ::tolower);
 	if (isExistCH(CH, channel) == false) // Channel Check
 		sendMsg(ERR_NOSUCHCHANNEL(cl.getNick(), CH), cl.getfd());
-	else if(!inCH(channel[CH], cl.getNick())) // User in Channel Check
+	else if(!inCH(channel[CH], cl.getLowNick())) // User in Channel Check
 		sendMsg(ERR_NOTONCHANNEL(cl.getNick(), CH), cl.getfd());
 	else
 	{

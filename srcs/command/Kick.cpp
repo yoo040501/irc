@@ -30,10 +30,11 @@ void	sendKickMsg(Channel &CH, Client &cl, std::string msg){
 }
 
 void	kickUser(Channel &CH, std::string user, std::string str){
+	std::transform(user.begin(), user.end(), user.begin(), ::tolower);
 	std::map<int, Client> cl_tmp = CH.getClient();
 	std::map<int, Client>::iterator it = cl_tmp.begin();
 	while (it != cl_tmp.end()){
-		if (it->second.getNick() == user){
+		if (it->second.getLowNick() == user){
 			break;
 		}
 		++it;
@@ -96,7 +97,8 @@ void	Server::kickCheck(std::string str, Client &cl){
 			it = CH_name.erase(it);
 		}
 		else{
-			if (!inCH(channel[*it], cl.getNick())) // client가 채널에 있는지 확인
+			std::transform(it->begin(), it->end(), it->begin(), ::tolower);
+			if (!inCH(channel[*it], cl.getLowNick())) // client가 채널에 있는지 확인
 				sendMsg(ERR_NOTONCHANNEL(cl.getNick(), *it), cl.getfd());
 			else if (!channel[*it].isOperator(cl.getNick())) //ERR_CHANOPRIVSNEEDED 채널에 들어가있는데 권한이 있는지 확인
 				sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), *it), cl.getfd());

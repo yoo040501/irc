@@ -8,7 +8,7 @@ Channel::Channel() : ch_name(""), topic(""), key(""), limit(-1){
 Channel::Channel(std::string name, Client &cl) : ch_name(name), topic(""), key(""){
 	channel_time = time(NULL);
 	client[cl.getfd()] = cl;
-	ch_operator.push_back(cl.getNick());
+	ch_operator.push_back(cl.getLowNick());
 	mode.push_back("t");
 	limit = -1;
 }
@@ -25,6 +25,7 @@ Channel::~Channel() {
 void	Channel::addClient(Client &cl){ client[cl.getfd()] = cl; }
 
 void	Channel::addOper(std::string &oper){
+	std::transform(oper.begin(), oper.end(), oper.begin(), ::tolower);
 	ch_operator.push_back(oper); 
 }
 
@@ -72,6 +73,7 @@ void	Channel::setClient(int fd, Client &cl){
 }
 
 void	Channel::removeOper(std::string &oper) {
+	std::transform(oper.begin(), oper.end(), oper.begin(), ::tolower);
 	std::vector<std::string>::iterator it = std::find(ch_operator.begin(), ch_operator.end(), oper);
 	if (it != ch_operator.end())
 		ch_operator.erase(it);
@@ -89,8 +91,9 @@ bool	Channel::removeVoiceUser(std::string &user){
 
 void	Channel::removeClient(std::string user){
 	std::map<int, Client>::iterator it = client.begin();
+	std::transform(user.begin(), user.end(), user.begin(), ::tolower);
 	while (it != client.end()){
-		if (it->second.getNick() == user){
+		if (it->second.getLowNick() == user){
 			client.erase(it);
 			break;
 		}
@@ -99,9 +102,10 @@ void	Channel::removeClient(std::string user){
 }
 
 bool	Channel::isChannelUser(std::string &user){
+	std::transform(user.begin(), user.end(), user.begin(), ::tolower);
     std::map<int, Client>::iterator it;
 	for (it = client.begin(); it != client.end(); ++it){
-		if (it->second.getNick() == user)
+		if (it->second.getLowNick() == user)
 			return true;
 	}
 	return false;
@@ -115,7 +119,8 @@ bool	Channel::isVoiceUser(std::string &user){
 		return false;
 }
 
-bool	Channel::isOperatorator(std::string &user){
+bool	Channel::isOperator(std::string &user){
+	std::transform(user.begin(), user.end(), user.begin(), ::tolower);
 	std::vector<std::string>::iterator it = find(ch_operator.begin(), ch_operator.end(), user);
 	if (it != ch_operator.end())
 		return true;

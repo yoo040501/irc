@@ -1,17 +1,17 @@
 #include "../includes/Client.hpp"
 
-Client::Client(): fd(-1), ch_cnt(0), pass(false), passcheck(false), auth(false),nick("*"), oldnick(""), username(""), hostname(""), 
+Client::Client(): fd(-1), ch_cnt(0), pass(false), passcheck(false), auth(false),nick("*"), lownick("*") ,oldnick(""), username(""), hostname(""), 
 					servername(""), realname(""), mode(""), addr(), len(0){
 }
 
 Client::Client(Client const& copy): fd(copy.fd), ch_cnt(copy.ch_cnt), pass(copy.pass), passcheck(copy.passcheck), auth(copy.auth), nick(copy.nick),
-									oldnick(copy.oldnick), username(copy.username), hostname(copy.hostname), servername(copy.servername),
+									lownick(copy.lownick), oldnick(copy.oldnick), username(copy.username), hostname(copy.hostname), servername(copy.servername),
 									realname(copy.realname), mode(copy.mode), addr(copy.addr), len(copy.len){
 }
 
 Client&	Client::operator=(Client const& oth){
 	if (this != &oth){
-		this->fd = oth.fd; this->ch_cnt = oth.ch_cnt;
+		this->fd = oth.fd; this->ch_cnt = oth.ch_cnt; this->lownick = oth.lownick;
 		this->pass = oth.pass; this->passcheck = oth.passcheck;
 		this->auth = oth.auth; this->nick = oth.nick; ; this->oldnick = oth.oldnick;
 		this->username = oth.username; this->hostname = oth.hostname;
@@ -31,6 +31,8 @@ void	Client::setAuth(bool flag) {auth = flag;}
 void	Client::setNick(std::string const &ni){
 	oldnick = nick;
 	nick = ni;
+	lownick = ni;
+	std::transform(lownick.begin(), lownick.end(), lownick.begin(), ::tolower);
 }
 
 void	Client::setUser(std::string const &us, std::string const &hs, std::string const &sn, std::string const &rn){
@@ -50,6 +52,7 @@ bool	Client::getPass() const {return this->pass;}
 bool	Client::getPassCheck() const {return this->passcheck;}
 bool	Client::getAuth() const {return this->auth;}
 std::string& Client::getNick() {return this->nick;}
+std::string& Client::getLowNick() {return this->lownick;}
 std::string& Client::getOldnick() {return this->oldnick;}
 std::string& Client::getUser() {return this->username;}
 struct sockaddr_in	Client::getaddr() { return this->addr;}
