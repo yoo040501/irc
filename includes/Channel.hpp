@@ -27,6 +27,7 @@ class Channel
 	private:
 		std::map<int, Client>		client; 
 		std::string					ch_name;
+		std::string					low_name;
 		std::time_t					channel_time;
 		std::time_t					topic_time;
 		std::string					topic;
@@ -61,6 +62,8 @@ class Channel
 		
 		bool	isChannelUser(std::string &user);
 		bool	isVoiceUser(std::string &user);
+		bool	isOperatorator(std::string &user);
+
 		int		getClientfd(int fd);
 		bool	isOperator(std::string &oper);
 		std::map<int, Client> getClient() const;

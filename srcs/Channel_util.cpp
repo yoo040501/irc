@@ -81,6 +81,7 @@ void	getUserName(std::string &str, std::vector<std::string> &USER){
 
 bool	isExistCH(std::string name, std::map<std::string, Channel> &channel){
 	bool	flag = true;
+	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 	std::map<std::string, Channel>::iterator it = channel.find(name);
 	if (it == channel.end())
 		flag = false;
@@ -89,6 +90,7 @@ bool	isExistCH(std::string name, std::map<std::string, Channel> &channel){
 
 bool	isExistUSER(std::string name, std::map<std::string, int>&nick){
 	bool	flag = true;
+	std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 	std::map<std::string, int>::iterator it = nick.find(name);
 	if (it == nick.end())
 		flag = false;
@@ -97,10 +99,11 @@ bool	isExistUSER(std::string name, std::map<std::string, int>&nick){
 
 bool	inCH(Channel &CH, std::string user){
 	bool	flag = false;
+	std::transform(user.begin(), user.end(), user.begin(), ::tolower);
 	std::map<int, Client> tmp = CH.getClient();
 	std::map<int, Client>::iterator it = tmp.begin();
 	while (it != tmp.end()){
-		if (it->second.getNick() == user){
+		if (it->second.getLowNick() == user){
 			flag = true;
 			break;
 		}

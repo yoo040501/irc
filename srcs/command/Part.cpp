@@ -15,11 +15,9 @@ void	Server::partCheck(std::string str, Client &cl){
 		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "PART"), cl.getfd());
 	else{
 		std::vector<std::string>	CH_name;
-		std::cout << str << std::endl;
 		getCHName(str, CH_name, cl);
 
 		for (std::vector<std::string>::iterator it = CH_name.begin(); it != CH_name.end();){ //ch 검사
-			std::cout << *it << std::endl;
 			if (it->empty())	it = CH_name.erase(it);
 			else if (!isExistCH(*it, channel)){
 				sendMsg(ERR_NOSUCHCHANNEL(cl.getNick(), *it), cl.getfd());

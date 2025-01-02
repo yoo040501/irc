@@ -225,6 +225,7 @@ void Server::modeCmd(std::string str, Client &cl){
     iss.str(str);
     getline(iss, tmp, ' ');
     if (tmp[0] == '#'){
+		std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
         std::map<std::string, Channel>::iterator it = channel.find(tmp);
         if (it == channel.end())
 			sendMsg(ERR_NOSUCHCHANNEL(cl.getNick(), tmp), cl.getfd());

@@ -20,11 +20,11 @@ void	getClientnick(std::vector<std::string> &client_nick, Channel &CH){
 	std::string nick;
 
 	while (it != tmp.end()){
-		nick = it->second.getNick();
+		nick = it->second.getLowNick();
 		if (CH.isOperator(nick) == true)
-			client_nick.push_back("@" + nick);
+			client_nick.push_back("@" + it->second.getNick());
 		else
-			client_nick.push_back(nick);	
+			client_nick.push_back(it->second.getNick());	
 		it++;
 	}
 }
@@ -61,11 +61,13 @@ void	Server::channelCheck(std::string str, Client &cl){
 	for (size_t i=0; i < CH_name.size(); i++){
 		if (CH_name[i].empty()) continue;
 		else{
-			std::vector<std::string> client_nick;
-			std::map<std::string, Channel>::iterator it = channel.find(CH_name[i]);
+			std::vector<std::string>	client_nick;
+			std::string					lowname = CH_name[i];
+			std::transform(lowname.begin(), lowname.end(), lowname.begin(), ::tolower);
+			std::map<std::string, Channel>::iterator it = channel.find(lowname);
 			if (it == channel.end()){ // 방이 처음 만들어질때 key값 필없음
 				Channel CH(CH_name[i], cl);
-				channel.insert(std::make_pair(CH_name[i], CH));
+				channel.insert(std::make_pair(lowname, CH));
 				client_nick.push_back("@" + cl.getNick());
 				sendMsg(RPL_JOIN(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), CH.getName()), cl.getfd());
 				sendMsg(RPL_NAMREPLY(cl.getNick(), "=", CH.getName(), client_nick), cl.getfd());
