@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/seungryk/Desktop/ft_irc/srcs",
-      "program": "/Users/seungryk/Desktop/ft_irc/srcs/build/Debug/outDebug"
+      "cwd": "/Users/seungryk/Desktop/ft_irc/srcs/command",
+      "program": "/Users/seungryk/Desktop/ft_irc/srcs/command/build/Debug/outDebug"
     }
   ]
 }

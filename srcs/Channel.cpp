@@ -2,9 +2,11 @@
 
 Channel::Channel() : ch_name(""), topic(""), key(""), limit(-1){
 	mode.push_back("t");
+	channel_time = time(NULL);
 }
 
 Channel::Channel(std::string name, Client &cl) : ch_name(name), topic(""), key(""){
+	channel_time = time(NULL);
 	client[cl.getfd()] = cl;
 	ch_operator.push_back(cl.getNick());
 	mode.push_back("t");
@@ -150,4 +152,11 @@ std::string Channel::getMode(std::string &flag) {
 
 long	Channel::getLimit(){
 	return limit;
+}
+
+void Channel::inviteClient(int fd) {
+    // 초대된 클라이언트를 별도로 관리하거나 추가 작업 수행 가능
+    if (client.find(fd) == client.end()) {
+        client[fd] = Client(); // 임시 객체 추가
+    }
 }

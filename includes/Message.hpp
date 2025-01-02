@@ -47,8 +47,14 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 // PART :asd!a@127.0.0.1 PART :#ch1
 #define RPL_PART(nickname, username, ipaddr, channel) (":" + nickname + "!" + username + "@" + ipaddr + " PART :" + channel + "\r\n")
 // INVITE
-#define ERR_USERONCHANNEL
-#define RPL_INVITING
+#define ERR_NOTREGISTERED(nick) (":" + nick + " :You have not registered\r\n")
+// #define ERR_NEEDMOREPARAMS(nick, command) (":" + nick + " :Not enough parameters for " + command + "\r\n")
+// #define ERR_NOSUCHCHANNEL(nick, channel) (":" + nick + " :No such channel: " + channel + "\r\n")
+// #define ERR_NOSUCHNICK(nick, invitee) (":" + nick + " :No such nick/channel: " + invitee + "\r\n")
+// #define ERR_NOTONCHANNEL(nick, channel) (":" + nick + " :You're not on that channel: " + channel + "\r\n")
+// #define ERR_CHANOPRIVSNEEDED(nick, channel) (":" + nick + " :You're not channel operator: " + channel + "\r\n")
+#define ERR_USERONCHANNEL(nick, invitee, channel) (":" + nick + " :User " + invitee + " is already on channel: " + channel + "\r\n")
+#define RPL_INVITING(nick, invitee, channel) (":" + nick + " :Inviting " + invitee + " to channel " + channel + "\r\n")
 
 // TOPIC
 #define ERR_NOTONCHANNEL(nickname, channel) (":localhost 442 " + nickname + " " + channel + " :You're not on that channel\r\n")
