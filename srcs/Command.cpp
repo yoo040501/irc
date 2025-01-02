@@ -31,7 +31,6 @@ void	Server::processAuth(std::string &str, Client &cl){
 	}
 	if (tmp == "USER"){
 		str.erase(0, tmp.size());
-		std::cout << "user:" << str << std::endl;
 		userCheck(trimSpace(str), cl);
 	}
 
@@ -92,6 +91,8 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 			modeCmd(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "TOPIC")
 			topicCheck(str.substr(tmp.size()), cl);
+		else if (tmp == "PART")
+			partCheck(str.substr(tmp.size()), cl);
 		else {
 			if (!str.empty()) //인증 절차가 끝난뒤에만 전송 10.15.3.7
 				sendMsg(ERR_UNKNOWNCOMMAND(cl.getNick(), tmp), cl.getfd());

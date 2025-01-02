@@ -42,7 +42,7 @@ static void keyFlag(Channel &ch, Client &cl, std::istringstream& iss, std::strin
         if (!getline(iss, argv, ' '))
             sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), "key", "<key>"), cl.getfd());
         else if (ch.getKey().empty())
-            changeMode(ch, successFlag, op, 'l');
+            changeMode(ch, successFlag, op, 'k');
             ch.setKey(argv);
             successFlag += (' ' + argv);
     }
@@ -51,7 +51,7 @@ static void keyFlag(Channel &ch, Client &cl, std::istringstream& iss, std::strin
         if (!getline(iss, argv, ' '))
             sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), "key", "<key>"), cl.getfd());
         else if (ch.findMode(flag) && argv == ch.getKey()){
-            changeMode(ch, successFlag, op, 'l');
+            changeMode(ch, successFlag, op, 'k');
             successFlag += (' ' + ch.getKey());
             argv = "";
             ch.setKey(argv);
@@ -187,7 +187,11 @@ void Server::channelMode(std::map<std::string, Channel>::iterator &it, std::istr
 void Server::modeCmd(std::string str, Client &cl){
     std::string         tmp;
 	std::istringstream	iss;
-	
+
+	if (str.empty()){
+		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "MODE"), cl.getfd());
+		return ;
+	}
     iss.str(str);
     getline(iss, tmp, ' ');
     if (tmp[0] == '#'){
