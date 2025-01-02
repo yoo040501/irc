@@ -27,7 +27,7 @@ void	Client::setfd(int f) {fd = f;}
 void	Client::setPass(bool flag) {pass = flag;}
 void	Client::setPassCheck(bool flag) {passcheck = flag;}
 void	Client::setAuth(bool flag) {auth = flag;}
-
+void	Client::setRealNick(std::string const &ni){realnick = ni;}
 void	Client::setNick(std::string const &ni){
 	oldnick = nick;
 	nick = ni;

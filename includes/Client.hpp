@@ -43,6 +43,7 @@ class Client
 		void	setPassCheck(bool flag);
 		void	setAuth(bool flag);
 		void	setNick(std::string const &ni);
+		void	setRealNick(std::string const &ni);
 		void	setUser(std::string const &un, std::string const &hn, std::string const &sn, std::string const &rn);
 		void	setaddr(struct sockaddr_in &tmp);
 

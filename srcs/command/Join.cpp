@@ -34,7 +34,7 @@ void	sendJoinMsg(Channel &CH, Client &cl){
 	std::map<int, Client>::iterator it = cl_tmp.begin();
 	while (it != cl_tmp.end())
 	{
-		sendMsg(RPL_JOIN(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), CH.getName()), it->second.getfd());
+		sendMsg(RPL_JOIN(cl.getRealNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), CH.getName()), it->second.getfd());
 		++it;
 	}
 }
@@ -45,8 +45,8 @@ void	joinChannel(Channel &CH, Client &cl, std::vector<std::string> &client_nick,
 	sendJoinMsg(CH, cl);
 	if (CH.getTopic() != "")
 		sendTopic(CH, cl, client);
-	sendMsg(RPL_NAMREPLY(cl.getNick(), "=", CH.getName(), client_nick), cl.getfd());
-	sendMsg(RPL_ENDOFNAMES(cl.getNick(), CH.getName()), cl.getfd());
+	sendMsg(RPL_NAMREPLY(cl.getRealNick(), "=", CH.getName(), client_nick), cl.getfd());
+	sendMsg(RPL_ENDOFNAMES(cl.getRealNick(), CH.getName()), cl.getfd());
 }
 
 void	Server::channelCheck(std::string str, Client &cl){
@@ -77,7 +77,7 @@ void	Server::channelCheck(std::string str, Client &cl){
 				if (it->second.getClientfd(cl.getfd()) > 0) continue; // 이미 들어가있는 경우 넘어감
 				if (it->second.findMode("k")) {// channel에 key값이 없을 경우 그냥 들어감
 					if (CH_key.empty() || CH_key[i].empty() || it->second.getKey() != CH_key[i])
-						sendMsg(ERR_BADCHANNELKEY(cl.getNick(), CH_name[i]), cl.getfd());
+						sendMsg(ERR_BADCHANNELKEY(cl.getRealNick(), CH_name[i]), cl.getfd());
 					else
 						joinChannel(it->second, cl, client_nick, client);
 				}
