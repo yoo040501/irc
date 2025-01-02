@@ -1,11 +1,13 @@
 #include "../includes/Channel.hpp"
 
 Channel::Channel() : ch_name(""), topic(""), key(""), limit(-1){
+	mode.push_back("t");
 }
 
 Channel::Channel(std::string name, Client &cl) : ch_name(name), topic(""), key(""){
 	client[cl.getfd()] = cl;
 	ch_operator.push_back(cl.getNick());
+	mode.push_back("t");
 	limit = -1;
 }
 
@@ -36,7 +38,7 @@ void	Channel::setLimit(long value){
 	limit = value;
 }
 
-bool	Channel::findMode(std::string &flag){
+bool	Channel::findMode(std::string flag){
     std::vector<std::string>::iterator it = std::find(mode.begin(), mode.end(), flag);
 	if (it != mode.end())
 		return true;

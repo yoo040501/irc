@@ -10,11 +10,6 @@ std::string	trimSpace(std::string str){
         ++it;
     }
     str.erase(str.begin(), it);
-    // it = str.end();										// 뒤 공백 제거
-    // while (it != str.begin() && (*(it) == ' ')) {
-    //     --it;
-    // }
-    // str.erase(it, str.end());
 	return str;
 }
 

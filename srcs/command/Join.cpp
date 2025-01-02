@@ -39,6 +39,16 @@ void	sendJoinMsg(Channel &CH, Client &cl){
 	}
 }
 
+void	joinChannel(Channel &CH, Client &cl, std::vector<std::string> &client_nick, std::map<int, Client> client){
+	CH.addClient(cl);
+	getClientnick(client_nick, CH);
+	sendJoinMsg(CH, cl);
+	if (CH.getTopic() != "")
+		sendTopic(CH, cl, client);
+	sendMsg(RPL_NAMREPLY(cl.getNick(), "=", CH.getName(), client_nick), cl.getfd());
+	sendMsg(RPL_ENDOFNAMES(cl.getNick(), CH.getName()), cl.getfd());
+}
+
 void	Server::channelCheck(std::string str, Client &cl){
 
 	std::string			tmp;
@@ -64,14 +74,23 @@ void	Server::channelCheck(std::string str, Client &cl){
 			}
 			else { //채널이 있을 경우 client만 저장
 				// mode는 나중에
-				if (it->second.getClientfd(cl.getfd()) > 0) continue;
-				it->second.addClient(cl);
-				getClientnick(client_nick, it->second);
-				sendJoinMsg(it->second, cl);
-				if (it->second.getTopic() != "")
-					sendTopic(it->second, cl, client);
-				sendMsg(RPL_NAMREPLY(cl.getNick(), "=", it->second.getName(), client_nick), cl.getfd());
-				sendMsg(RPL_ENDOFNAMES(cl.getNick(), it->second.getName()), cl.getfd());
+				if (it->second.getClientfd(cl.getfd()) > 0) continue; // 이미 들어가있는 경우 넘어감
+				if (it->second.findMode("k")) {// channel에 key값이 없을 경우 그냥 들어감
+					std::cout << "CHkey:" << CH_key[i] << std::endl;
+					if (it->second.getKey() == CH_key[i])
+						joinChannel(it->second, cl, client_nick, client);
+					else
+						sendMsg(ERR_BADCHANNELKEY(cl.getNick(), CH_name[i]), cl.getfd());
+				}
+				else
+					joinChannel(it->second, cl, client_nick, client);
+				// it->second.addClient(cl);
+				// getClientnick(client_nick, it->second);
+				// sendJoinMsg(it->second, cl);
+				// if (it->second.getTopic() != "")
+				// 	sendTopic(it->second, cl, client);
+				// sendMsg(RPL_NAMREPLY(cl.getNick(), "=", it->second.getName(), client_nick), cl.getfd());
+				// sendMsg(RPL_ENDOFNAMES(cl.getNick(), it->second.getName()), cl.getfd());}
 			}
 		}
 	}
