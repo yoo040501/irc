@@ -14,7 +14,7 @@ void	Server::openSocket(){
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     if (server_fd < 0)
 		throw std::bad_exception();
-    std::cout << "Server socket created successfully." << std::endl;
+    // std::cout << "Server socket created successfully." << std::endl;
 
     setSockaddr();
     if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) // 소켓 주소 할당
@@ -22,13 +22,13 @@ void	Server::openSocket(){
         close(server_fd);
         throw std::bad_exception();
     }
-    std::cout << "Server address structure created successfully." << std::endl;
+    // std::cout << "Server address structure created successfully." << std::endl;
 
     if (listen(server_fd, 5) < 0){                                                  // 소켓 연결요청
         close(server_fd);
         throw std::bad_exception();
     }
-    std::cout << "Server listening on port." << std::endl;
+    // std::cout << "Server listening on port." << std::endl;
     fcntl(server_fd, F_SETFL, O_NONBLOCK); // 서버가 여러 클라이언트와 동시에 통신해야 하는 경우, 비차단 모드는 필수적
     // 하나의 클라이언트 작업이 완료될 때까지 기다리지 않고 다른 클라이언트의 요청을 처리할 수 있다
 }
@@ -42,12 +42,14 @@ void	Server::active(){	//멀티플렉싱
     }
     eventList.resize(100); //이벤트 크기를 100으로 먼저 설정
     createEvent(server_fd);
-    std::cout << "Server kqueue created successfully." << std::endl;
+    // std::cout << "Server kqueue created successfully." << std::endl;
+	time_t	t = time(NULL);
+	servertime = ctime(&t);
 
     int new_events;
     while (1)
     {
-        std::cout << "Waiting for connection" << std::endl;
+        std::cout << "Waiting for client" << std::endl;
         new_events = kevent(kq, changeList.data(), changeList.size(), eventList.data(), eventList.size(), NULL);
         if (new_events < 0) // error
         {
@@ -79,8 +81,8 @@ void	Server::active(){	//멀티플렉싱
                     int recv_len = recv(eventList[i].ident, buffer, sizeof(buffer), 0);
                     if (recv_len <= 0)
                     {
-						closeClient("disconnected", client[eventList[i].ident]);
                         std::cout << "Client disconnected." << std::endl;
+						closeClient("disconnected", client[eventList[i].ident]);
                     }
                     else
                     {

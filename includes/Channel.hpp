@@ -56,7 +56,7 @@ class Channel
 		void	setMode(std::string &flag);
 		void	removeMode(std::string &flag);
 		
-		bool	findMode(std::string &flag);
+		bool	findMode(std::string flag);
 		void	printMode();
 		
 		bool	isChannelUser(std::string &user);

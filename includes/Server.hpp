@@ -33,7 +33,8 @@ class Server
 		struct	sockaddr_in				client_addr;
         std::string						password;
         int								port;
-        std::vector<struct kevent>		changeList; // vector로 안해도 될듯
+		std::string						servertime;
+        std::vector<struct kevent>		changeList;
         std::vector<struct kevent>		eventList;
         std::map<int, Client>			client; // clientfd , Client
         std::map<std::string, int>		nick;   // nickname, clientfd
@@ -46,6 +47,7 @@ class Server
 		bool	generateClient();
 
 		void	checkCommand(char *buffer, Client &cl);
+		void	processAuth(std::string &str, Client &cl);
 		void	nickCheck(std::string str, Client &cl);
 		bool	passCheck(std::string str, Client &cl);
 		void	closeClient(std::string msg, Client &cl);

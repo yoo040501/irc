@@ -29,6 +29,7 @@ void    Server::createEvent(int fd)
 bool	Server::generateClient(){
 	Client		cl;
 	socklen_t   client_len = sizeof(client_addr);
+	
 	cl.setfd(accept(server_fd,(struct sockaddr*)&client_addr, &client_len));  // 클라이언트 연결 허용 
 	if (cl.getfd() < 0)
 		return false;
