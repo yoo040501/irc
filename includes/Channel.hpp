@@ -29,6 +29,7 @@ class Channel
 		std::string					ch_name;
 		std::string					topic;
 		std::time_t					topic_time;
+		std::time_t					channel_time;
 		int							topic_user;
 		std::string					key;
 		std::vector<std::string>	ch_operator; //string으로 하면 nick변경될때 server의 channel iterator로 돌면서 client의 oldnick확인

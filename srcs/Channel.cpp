@@ -2,9 +2,11 @@
 
 Channel::Channel() : ch_name(""), topic(""), key(""), limit(-1){
 	mode.push_back("t");
+	channel_time = time(NULL);
 }
 
 Channel::Channel(std::string name, Client &cl) : ch_name(name), topic(""), key(""){
+	channel_time = time(NULL);
 	client[cl.getfd()] = cl;
 	ch_operator.push_back(cl.getNick());
 	mode.push_back("t");

@@ -37,12 +37,15 @@ static void changeMode(Channel &ch, std::string &successFlag, char op, char c){
 
 static bool checkColon(std::istringstream& iss, std::string &argv){
     bool flag = false;
+    std::string     tmp;
 
     if (argv[0] == ':'){
-        argv.erase(0, 1);
-        while (getline(iss, argv, ' '))
+        while (getline(iss, tmp, ' '))      
             flag = true;
         if (flag)
+            return false;
+        argv.erase(0, 1);
+        if (argv.empty() || argv[0] == ':')
             return false;
     }
     return true;
@@ -51,26 +54,27 @@ static bool checkColon(std::istringstream& iss, std::string &argv){
 static void keyFlag(Channel &ch, Client &cl, std::istringstream& iss, std::string &successFlag, char op){
     std::string argv;
 
-    if (op == '+'){
-        if (!getline(iss, argv, ' ') || argv == ":")
-            sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), "key", "<key>"), cl.getfd());
-        else if (ch.getKey().empty()){
-            if (!checkColon(iss, argv))
-                return ;
+    getline(iss, argv, ' ');
+    if (argv.empty() || argv == ":")
+        sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), "key", "<key>"), cl.getfd());
+    else if (!checkColon(iss, argv))
+        return ;
+    else if (!ch.isOperator(cl.getNick()))
+        sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), ch.getName()), cl.getfd());
+    else{
+        if (op == '+' && ch.getKey().empty()){
             changeMode(ch, successFlag, op, 'k');
             ch.setKey(argv);
             successFlag += (' ' + argv);
         }
-    }
-    else{
-        std::string flag = "k";
-        if (!getline(iss, argv, ' '))
-            sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), "key", "<key>"), cl.getfd());
-        else if (ch.findMode(flag) && argv == ch.getKey()){
-            changeMode(ch, successFlag, op, 'k');
-            successFlag += (' ' + ch.getKey());
-            argv = "";
-            ch.setKey(argv);
+        else{
+            std::string flag = "k";
+            if (ch.findMode(flag) && argv == ch.getKey()){
+                changeMode(ch, successFlag, op, 'k');
+                successFlag += (' ' + ch.getKey());
+                argv = "";
+                ch.setKey(argv);
+            }
         }
     }
 }
@@ -130,8 +134,11 @@ void Server::operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::
     std::string argv;
     bool        oper;
     
-    if (!getline(iss, argv, ' '))
+    getline(iss, argv, ' ');
+    if (argv.empty() || argv == ":")
         sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), "op", "<nick>"), cl.getfd());
+    else if (!checkColon(iss, argv))
+        return ;
     else if (!isServerUser(argv))
         sendMsg(ERR_NOSUCHNICK(cl.getNick(), argv), cl.getfd());
     else{
@@ -155,7 +162,7 @@ void    sendToChannelClient(Channel &ch, Client &cl, std::string& successFlag){
 	std::map<int, Client>	tmp = ch.getClient();
     std::map<int, Client>::iterator it = tmp.begin();
     while (it != tmp.end()){
-        sendMsg(RPL_MODE(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), ch.getName(), cl.getUser(), successFlag), it->second.getfd());
+        sendMsg(RPL_MODE(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), ch.getName(), successFlag), it->second.getfd());
         ++it;
     }
 }
@@ -180,7 +187,7 @@ void Server::channelMode(std::map<std::string, Channel>::iterator &it, std::istr
                     operateFlag(it->second, cl, iss, successFlag, oper);
             }
             else if (result == 3){
-                if (!it->second.isOper(cl.getNick()))
+                if (!it->second.isOperator(cl.getNick()))
                     sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), it->first), cl.getfd()); 
                 else
                     changeMode(it->second, successFlag, oper, target[i]); 

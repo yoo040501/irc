@@ -42,7 +42,7 @@ class Server
 		std::stack<std::string>			rebuffer;
 
         bool	isPort(char *pt);
-		void	setSockaddr();
+		void	setSockaddr(); //#CH1  ch1
 		void	createEvent(int fd);
 		bool	generateClient();
 
