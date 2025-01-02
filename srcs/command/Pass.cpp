@@ -3,6 +3,15 @@
 /* nick, user가 등록되있을때 pass등록하면 에러나야함 or pass가 틀렸을때 나오는 문구*/
 void	Server::closeClient(std::string msg, Client &cl){
 	sendMsg(msg, cl.getfd());
+	for (std::map<std::string, Channel>::iterator it = channel.begin(); it != channel.end();){ //채널에 들어가있는 경우에도 채널에서의 클라이언트 정보 삭제
+		if (inCH(it->second, cl.getNick())){
+			it->second.removeClient(cl.getNick());
+			it->second.removeOper(cl.getNick());
+		}
+		if (it->second.getClient().empty())
+			it = channel.erase(it);
+		else	it++;
+	}
 	close(cl.getfd());
 	createEvent(cl.getfd());
 	nick.erase(cl.getNick());

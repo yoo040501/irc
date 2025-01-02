@@ -1,27 +1,40 @@
 #include "../../includes/Server.hpp"
 
-/*
-Command: PART
-   Parameters: <channel>{,<channel>}
-
-   The PART message causes the client sending the message to be removed
-   from the list of active users for all given channels listed in the
-   parameter string.
-
-   Numeric Replies:
-           ERR_NEEDMOREPARAMS              ERR_NOSUCHCHANNEL
-           ERR_NOTONCHANNEL
-   Examples:
-
-   PART #twilight_zone             ; leave channel "#twilight_zone"
-
-   PART #oz-ops,&group5            ; leave both channels "&group5" and
-                                   "#oz-ops".*/
+void	sendPartMsg(Channel &CH, Client &cl){
+	std::map<int, Client> cl_tmp = CH.getClient();
+	std::map<int, Client>::iterator it = cl_tmp.begin();
+	while (it != cl_tmp.end())
+	{
+		sendMsg(RPL_PART(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), CH.getName()), it->second.getfd());
+		++it;
+	}
+}
 
 void	Server::partCheck(std::string str, Client &cl){
 	if (str.empty())
 		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "PART"), cl.getfd());
 	else{
-		getCMD(str);
+		std::vector<std::string>	CH_name;
+		std::cout << str << std::endl;
+		getCHName(str, CH_name, cl);
+
+		for (std::vector<std::string>::iterator it = CH_name.begin(); it != CH_name.end();){ //ch 검사
+			std::cout << *it << std::endl;
+			if (it->empty())	it = CH_name.erase(it);
+			else if (!isExistCH(*it, channel)){
+				sendMsg(ERR_NOSUCHCHANNEL(cl.getNick(), *it), cl.getfd());
+				it = CH_name.erase(it);
+			}
+			else if (!inCH(channel[*it], cl.getNick())){ // client가 채널에 있는지 확인
+					sendMsg(ERR_NOTONCHANNEL(cl.getNick(), *it), cl.getfd()); ++it;}
+			else{
+				sendPartMsg(channel[*it], cl);
+				channel[*it].removeClient(cl.getNick());
+				channel[*it].removeOper(cl.getNick());
+				if (channel[*it].getClient().empty())
+					channel.erase(*it);
+				++it;
+			}
+		}
 	}
 }

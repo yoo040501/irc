@@ -6,8 +6,6 @@
 
 #define WAITING() (":localhost NOTICE * :*** Looking up your hostname...\r\n")
 
-#define RPL_CAPLS(nickname) (":localhost 410 " + nickname +  "LS :Invalid CAP command\r\n")
-
 #define ERR_UNKNOWNCOMMAND(nickname, command) (":localhost 421 " + nickname + " " + command + " :Unknown command\r\n")
 // NICK
 #define ERR_NONICKNAMEGIVEN(nickname) (":localhost 431 " + nickname + " :No nickname given\r\n")
@@ -38,12 +36,6 @@
 #define ERR_TOOMANYCHANNELS(nickname, channel) (":localhost 405 " + nickname + " " + channel + " :you have joined too many channels\r\n")
 #define RPL_SETTOPIC(nickname, username, ipaddr, channel, topic) (":" + nickname + "!" + username + "@" + ipaddr + " TOPIC " + channel + " :" + topic + "\r\n")
 std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, const std::string &channel, const std::vector<std::string>& nick);
-/*=: 채널 타입
-	=: 공개 채널(public channel).
-	*: 비밀 채널(private channel).
-	@: 비공개 채널(secret channel).
-	private && secret -> @	
-	*/
 
 #define RPL_ENDOFNAMES(nickname, channel) (":localhost 366 " + nickname + " " + channel + " :End of /NAMES list.\r\n")
 #define ERR_USERNOTINCHANNEL(nickname, user, channel) (":localhost 441 " + nickname + " " + user + " " + channel + " :They aren't on that channel\r\n")
@@ -52,7 +44,8 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 #define RPL_MODE(nickname, username, ipaddr, channel, user, msg) (":" + nickname + "!" + username + "@" + ipaddr + " MODE " + channel + " " + user + " " + msg + "\r\n")
 // PING
 # define MSG_PONG(cmd) (":irc.local PONG irc.local :" + cmd + "\r\n")
-
+// PART :asd!a@127.0.0.1 PART :#ch1
+#define RPL_PART(nickname, username, ipaddr, channel) (":" + nickname + "!" + username + "@" + ipaddr + " PART :" + channel + "\r\n")
 // INVITE
 #define ERR_USERONCHANNEL
 #define RPL_INVITING
