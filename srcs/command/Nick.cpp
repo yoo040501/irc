@@ -40,9 +40,12 @@ void	Server::nickCheck(std::string str, Client &cl){
 	else if (isValidNickname(nick_tmp) == false || nick_tmp.size() > 29) //nickname은 최대29자, (문서에서는 9자라고 되있는데 inspircd는 29개까지 받음)
 		sendMsg(ERR_ERRONEUSNICKNAME(cl.getNick(), nick_tmp), cl.getfd());
 	else{
+		std::string	nicklower(nick_tmp.size(), '\0');
+		std::transform(nick_tmp.begin(), nick_tmp.end(), nicklower.begin(), ::tolower);
+
 		if (cl.getNick() == nick_tmp)									// 기존 nick이면 지나감
 			return;
-		std::map<std::string, int>::iterator it = nick.find(nick_tmp);
+		std::map<std::string, int>::iterator it = nick.find(nicklower);
 		if (it != nick.end()) 											// 닉이 중복되는 값이 있으면 에러
 			sendMsg(ERR_NICKNAMEINUSE(cl.getNick(), nick_tmp), cl.getfd());
 		else{
@@ -53,7 +56,7 @@ void	Server::nickCheck(std::string str, Client &cl){
 			if (cl.getAuth() == true){ 									// 서버 접속후 닉변경 알림
 				sendMsg(RPL_NICK(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), nick_tmp), cl.getfd());
 			}
-			nick[nick_tmp] = cl.getfd();
+			nick[nicklower] = cl.getfd();
 			cl.setNick(nick_tmp);
 			channelSet(channel, cl);
 		}

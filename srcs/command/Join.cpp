@@ -61,11 +61,13 @@ void	Server::channelCheck(std::string str, Client &cl){
 	for (size_t i=0; i < CH_name.size(); i++){
 		if (CH_name[i].empty()) continue;
 		else{
-			std::vector<std::string> client_nick;
-			std::map<std::string, Channel>::iterator it = channel.find(CH_name[i]);
+			std::vector<std::string> 	client_nick;
+			std::string					translower(CH_name[i].size(), '\0');
+			std::transform(CH_name[i].begin(), CH_name[i].end(), translower.begin(), ::tolower);
+			std::map<std::string, Channel>::iterator it = channel.find(translower);
 			if (it == channel.end()){ // 방이 처음 만들어질때 key값 필없음
 				Channel CH(CH_name[i], cl);
-				channel.insert(std::make_pair(CH_name[i], CH));
+				channel.insert(std::make_pair(translower, CH));
 				client_nick.push_back("@" + cl.getNick());
 				sendMsg(RPL_JOIN(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), CH.getName()), cl.getfd());
 				sendMsg(RPL_NAMREPLY(cl.getNick(), "=", CH.getName(), client_nick), cl.getfd());
