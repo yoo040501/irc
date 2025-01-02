@@ -49,7 +49,7 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 #define ERR_USERNOTINCHANNEL(nickname, user, channel) (":localhost 441 " + nickname + " " + user + " " + channel + " :They aren't on that channel\r\n")
 #define	RPL_JOIN(nickname, username, ipaddr, channel) (":" + nickname + "!" + username + "@" + ipaddr + " JOIN :" + channel + "\r\n")
 #define RPL_KICK(nickname, username, ipaddr, channel, user, msg) (":" + nickname + "!" + username + "@" + ipaddr + " KICK " + channel + " " + user + " :" + msg + "\r\n")
-#define RPL_MODE(nickname, username, ipaddr, channel, user, msg) (":" + nickname + "!" + username + "@" + ipaddr + " MODE " + channel + " " + user + " " + msg + "\r\n")
+#define RPL_MODE(nickname, username, ipaddr, channel, msg) (":" + nickname + "!" + username + "@" + ipaddr + " MODE " + channel + " " + msg + "\r\n")
 // PING
 # define MSG_PONG(cmd) (":irc.local PONG irc.local :" + cmd + "\r\n")
 
