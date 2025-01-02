@@ -169,7 +169,7 @@ void    sendToChannelClient(Channel &ch, Client &cl, std::string& successFlag){
 
 void Server::channelMode(std::map<std::string, Channel>::iterator &it, std::istringstream& iss, Client &cl){
     char        oper = '+';
-    int         result;
+    int         result = -1;
     std::string target;
 
     while (getline(iss, target, ' ')){
@@ -203,6 +203,13 @@ void Server::channelMode(std::map<std::string, Channel>::iterator &it, std::istr
                 successFlag.insert(0, ":");
             sendToChannelClient(it->second, cl, successFlag);
         }
+    }
+    if (result == -1){
+        std::ostringstream oss;
+        oss << it->second.getChTime();
+        std::string chTimeStr = oss.str();
+        sendMsg(RPL_CHANNELMODEIS(cl.getNick(), it->second.getName(), it->second.printMode()), cl.getfd());
+        sendMsg(RPL_CHANNELTIME(cl.getNick(), it->second.getName(), chTimeStr), cl.getfd());
     }
     it->second.printMode();
 }

@@ -64,7 +64,8 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 #define ERR_CHANOPRIVSNEEDED(nickname, channel) (":localhost 482 " + nickname + " " + channel + " :You're not channel operator\r\n")
 
 // MODE
-#define RPL_CHANNELMODEIS
+#define RPL_CHANNELMODEIS(nick, channel, params) (":localhost 324 " + nick + " " + channel + " :+" + params + "\r\n")
+#define RPL_CHANNELTIME(nick, channel, channeltime) (":localhost 329 " + nick + " " + channel + " :" + channeltime + "\r\n")
 #define ERR_KEYSET
 #define RPL_BANLIST
 #define RPL_ENDOFBANLIST

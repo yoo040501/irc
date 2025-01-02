@@ -9,12 +9,12 @@ OBJ_DIR = obj
 
 DEPS = $(SRCS:.cpp=.d)
 NAME = ircserv
-
+INCS = ./includes
 RMF = rm -rf
 
 all : $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJS) $(INCS)
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
 

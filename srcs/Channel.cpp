@@ -13,7 +13,7 @@ Channel::Channel(std::string name, Client &cl) : ch_name(name), topic(""), key("
 	limit = -1;
 }
 
-Channel::Channel(Channel const& copy): client(copy.client), ch_name(copy.ch_name),
+Channel::Channel(Channel const& copy): client(copy.client), ch_name(copy.ch_name), channel_time(copy.channel_time),
 										topic(copy.topic), key(copy.key), ch_operator(copy.ch_operator),
 										mode(copy.mode){}
 
@@ -59,12 +59,15 @@ void	Channel::removeMode(std::string &flag){
 		mode.erase(it);
 }
 
-void	Channel::printMode(){
+std::string	Channel::printMode(){
 	std::cout << "channel mode" << std::endl;
+	std::string params;
 	for(std::vector<std::string>::iterator it = mode.begin(); it < mode.end(); it++){
+		params += *it;
 		std::cout << *it << " ";
 	}
 	std::cout << std::endl;
+	return params;
 }
 
 void	Channel::setClient(int fd, Client &cl){
@@ -115,7 +118,7 @@ bool	Channel::isVoiceUser(std::string &user){
 		return false;
 }
 
-bool	Channel::isOperatorator(std::string &user){
+bool	Channel::isOperator(std::string &user){
 	std::vector<std::string>::iterator it = find(ch_operator.begin(), ch_operator.end(), user);
 	if (it != ch_operator.end())
 		return true;
@@ -152,6 +155,10 @@ std::string Channel::getMode(std::string &flag) {
 
 long	Channel::getLimit(){
 	return limit;
+}
+
+std::time_t	const &Channel::getChTime() const{
+	return this->channel_time;
 }
 
 void Channel::inviteClient(int fd) {

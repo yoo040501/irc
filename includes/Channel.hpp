@@ -27,9 +27,9 @@ class Channel
 	private:
 		std::map<int, Client>		client; 
 		std::string					ch_name;
-		std::string					topic;
-		std::time_t					topic_time;
 		std::time_t					channel_time;
+		std::time_t					topic_time;
+		std::string					topic;
 		int							topic_user;
 		std::string					key;
 		std::vector<std::string>	ch_operator; //string으로 하면 nick변경될때 server의 channel iterator로 돌면서 client의 oldnick확인
@@ -58,18 +58,17 @@ class Channel
 		void	removeMode(std::string &flag);
 		
 		bool	findMode(std::string flag);
-		void	printMode();
 		
 		bool	isChannelUser(std::string &user);
 		bool	isVoiceUser(std::string &user);
-		bool	isOperatorator(std::string &user);
-
 		int		getClientfd(int fd);
 		bool	isOperator(std::string &oper);
 		std::map<int, Client> getClient() const;
+		std::string	printMode();
 		std::string getName() const;
 		std::string getTopic() const;
 		std::time_t	const& getTPTime() const;
+		std::time_t	const& getChTime() const;
 		int			getTPUser() const;
 		std::string getKey() const;
 		std::string getMode(std::string &flag);
