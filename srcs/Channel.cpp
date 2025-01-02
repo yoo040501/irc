@@ -113,7 +113,7 @@ bool	Channel::isVoiceUser(std::string &user){
 		return false;
 }
 
-bool	Channel::isOperatorator(std::string &user){
+bool	Channel::isOperator(std::string &user){
 	std::vector<std::string>::iterator it = find(ch_operator.begin(), ch_operator.end(), user);
 	if (it != ch_operator.end())
 		return true;

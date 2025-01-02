@@ -21,7 +21,8 @@ class Client
 		bool				pass;		// pass가 맞으면 true
 		bool				passcheck; //pass를 한번이라도 건들였으면 true
 		bool				auth;
-        std::string 		nick;
+        std::string 		nick;		// 대소문자 상관없는 닉
+		std::string			realnick; // 처음에 지정된 닉
 		std::string			oldnick; //nick변경할때 channel operator 권한 변경때문에 사용했음
         std::string 		username;
         std::string 		hostname;
@@ -42,6 +43,7 @@ class Client
 		void	setPassCheck(bool flag);
 		void	setAuth(bool flag);
 		void	setNick(std::string const &ni);
+		void	setRealNick(std::string const &ni);
 		void	setUser(std::string const &un, std::string const &hn, std::string const &sn, std::string const &rn);
 		void	setaddr(struct sockaddr_in &tmp);
 
@@ -50,6 +52,7 @@ class Client
 		bool				getPassCheck() const;
 		bool				getAuth() const;
 		std::string&		getNick();
+		std::string&		getRealNick();
 		std::string&		getOldnick();
 		std::string&		getUser();
 		struct sockaddr_in	getaddr();

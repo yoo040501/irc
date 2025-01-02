@@ -27,7 +27,7 @@ void	Client::setfd(int f) {fd = f;}
 void	Client::setPass(bool flag) {pass = flag;}
 void	Client::setPassCheck(bool flag) {passcheck = flag;}
 void	Client::setAuth(bool flag) {auth = flag;}
-
+void	Client::setRealNick(std::string const &ni){realnick = ni;}
 void	Client::setNick(std::string const &ni){
 	oldnick = nick;
 	nick = ni;
@@ -50,6 +50,7 @@ bool	Client::getPass() const {return this->pass;}
 bool	Client::getPassCheck() const {return this->passcheck;}
 bool	Client::getAuth() const {return this->auth;}
 std::string& Client::getNick() {return this->nick;}
+std::string& Client::getRealNick() {return this->realnick;}
 std::string& Client::getOldnick() {return this->oldnick;}
 std::string& Client::getUser() {return this->username;}
 struct sockaddr_in	Client::getaddr() { return this->addr;}
