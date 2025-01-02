@@ -1,5 +1,8 @@
 #include "../includes/Server.hpp"
 
+std::map<int, Client> Server::clients;
+std::map<std::string, Channel> Server::channels;
+
 Server::Server(char *pt, char *pw){
 	if (isPort(pt) == false)
 		throw std::invalid_argument("check port number");
@@ -134,3 +137,7 @@ void Server::handleInviteErrors(Client &inviter, Channel *channel, Client *invit
         throw std::logic_error(ERR_USERONCHANNEL(inviter.getNick(), inviteeName, chanName));
     }
 }
+
+// invite
+std::map<std::string, Channel> &Server::getChannels() { return channels; }
+std::map<int, Client> &Server::getClients() { return clients; }

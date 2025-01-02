@@ -40,6 +40,8 @@ class Server
         std::map<std::string, int>		nick;   // nickname, clientfd
 		std::map<std::string, Channel>	channel; //channelname , Channel
 		std::stack<std::string>			rebuffer;
+		static std::map<int, Client> 	clients;
+  		static std::map<std::string, Channel> channels;
 
         bool	isPort(char *pt);
 		void	setSockaddr(); //#CH1  ch1
@@ -77,7 +79,8 @@ class Server
 
         void	openSocket();
         void	active();
-		void	inviteCommand(Client &cl, const std::string &params);
+		static std::map<int, Client>& getClients();
+  		static std::map<std::string, Channel>& getChannels();
 };
 
 std::string	trimSpace(std::string str);

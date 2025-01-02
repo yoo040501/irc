@@ -172,3 +172,18 @@ void Channel::inviteClient(int fd) {
         client[fd] = Client(); // 임시 객체 추가
     }
 }
+
+// invite
+bool Channel::isClientInvited(Client &client) {
+	return std::find(invitedClients_.begin(), invitedClients_.end(), &client) != invitedClients_.end();
+}
+
+void Channel::inviteClient(Client &client) {
+	if (std::find(invitedClients_.begin(), invitedClients_.end(), &client) == invitedClients_.end()) {
+		invitedClients_.push_back(&client);
+	}
+}
+
+std::vector<Client *> &Channel::getClientList() {
+	return clientList_;
+}
