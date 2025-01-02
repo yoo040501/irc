@@ -83,9 +83,8 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 		else if (tmp == "INVITE") {
 
 		}
-		else if (tmp == "MODE") {
+		else if (tmp == "MODE")
 			modeCmd(trimSpace(str.substr(tmp.size())), cl);
-		}
 		else if (tmp == "TOPIC")
 			topicCheck(str.substr(tmp.size()), cl);
 		else {
