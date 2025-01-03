@@ -1,4 +1,7 @@
 #include "../includes/Server.hpp"
+#include "../includes/Command.hpp"
+#include "../includes/Client.hpp"
+#include "../includes/Message.hpp"
 
 void	Server::processAuth(std::string &str, Client &cl){
 	std::string					 tmp;
@@ -105,3 +108,12 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 		}
 	}
 }
+
+std::string Command::NEEDMOREPARAMS(std::string nickname, std::string command) {
+    return ERR_NEEDMOREPARAMS(nickname, command);
+}
+
+// void Client::addToSendBuffer(const std::string &message) {
+// 	std::cout << ">> " << message << std::endl;
+// 	sendbuf_ += message + "\r\n";
+// }
