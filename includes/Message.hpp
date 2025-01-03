@@ -72,6 +72,7 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 #define RPL_ENDOFBANLIST
 #define ERR_UNKNOWNMODE(nick, c) (":localhost 472 "+ nick + " " + c + " :is an unknown mode character\r\n") 
 #define ERR_NOPARAMETER(nickname, channel, flag, mode, parameter) (":localhost 696 " + nickname + " " + channel + " " + flag + " * :You must specify a parameter for the " + mode + " mode. Syntax:" + parameter + "\r\n")
+#define ERR_CHANOPMODE(nickname, channel, mode) (":localhost 482 " + nickname + " " + channel + " :You must have channel op access or above to set channel mode " + mode + "\r\n")
 #define ERR_USERSDONTMATCH
 #define RPL_UMODEIS
 #define ERR_UMODEUNKNOWNFLAG
