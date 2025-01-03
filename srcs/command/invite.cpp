@@ -4,6 +4,7 @@
 
 // Command: INVITE
 // Parameters: <nickname> <channel>
+// 인자 3개가 아닌 경우 에러 처리
 
 void Command::invite(Client& client, std::vector<std::string> args) {
     if (args.size() < 3) {
@@ -18,7 +19,6 @@ void Command::invite(Client& client, std::vector<std::string> args) {
 		sendMsg(ERR_NOSUCHCHANNEL(client.getNickname(), channel_name), client.getfd());
 		return;
 	}
-
 	// channel안에 해당 client가 없으면 에러 처리
 	std::vector<Client *> &clients = it->second.getClientList();
 	bool client_found = false;
@@ -42,7 +42,6 @@ void Command::invite(Client& client, std::vector<std::string> args) {
 			break;
 		}
 	}
-
 	if (target_client == NULL) {
 		sendMsg(ERR_NOSUCHNICK(client.getNickname(), nickname), client.getfd());
 		return;
