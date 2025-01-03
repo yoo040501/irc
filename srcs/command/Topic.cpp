@@ -29,7 +29,7 @@ void	Server::topicCheck(std::string str, Client &cl){
 	std::string					topic_str;
 
 	if (str.empty()){
-		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "TOPIC"), cl.getfd());
+		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "TOPIC"), cl.getfd()); // t
 		return;
 	}
 	iss.str(str);
