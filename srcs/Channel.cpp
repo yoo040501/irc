@@ -2,6 +2,7 @@
 
 Channel::Channel() : ch_name(""), topic(""), key(""), limit(-1){
 	mode.push_back("t");
+	mode.push_back("o");
 	channel_time = time(NULL);
 }
 
@@ -10,6 +11,7 @@ Channel::Channel(std::string name, Client &cl) : ch_name(name), topic(""), key("
 	client[cl.getfd()] = cl;
 	ch_operator.push_back(cl.getLowNick());
 	mode.push_back("t");
+	mode.push_back("o");
 	limit = -1;
 }
 

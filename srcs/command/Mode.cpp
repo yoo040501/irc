@@ -56,7 +56,7 @@ static void keyFlag(Channel &ch, Client &cl, std::istringstream& iss, std::pair<
 
     getline(iss, argv, ' ');
     if (argv.empty() || argv == ":")
-        sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), "key", "<key>"), cl.getfd());
+        sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), 'k', "key", "<key>"), cl.getfd());
     else if (!checkColon(iss, argv))
         return ;
     else if (!ch.isOperator(cl.getNick()))
@@ -87,7 +87,7 @@ static void limitFlag(Channel &ch, Client &cl, std::istringstream& iss,  std::pa
     if (op == '+'){
         getline(iss, argv, ' ');
         if (argv.empty())
-            sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), "limit", "<limit>"), cl.getfd());
+            sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), 'l', "limit", "<limit>"), cl.getfd());
         else if (!checkColon(iss, argv))
             return ;
         else{
@@ -116,7 +116,7 @@ void Server::operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::
     
     getline(iss, argv, ' ');
     if (argv.empty() || argv == ":")
-        sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), "op", "<nick>"), cl.getfd());
+        sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), 'o', "op", "<nick>"), cl.getfd());
     else if (!checkColon(iss, argv))
         return ;
     else if (!isServerUser(argv))
@@ -147,46 +147,74 @@ void    sendToChannelClient(Channel &ch, Client &cl, std::string& successFlag){
     }
 }
 
-void Server::channelMode(std::map<std::string, Channel>::iterator &it, std::istringstream& iss, Client &cl){
+void Server::checkFlag(std::map<std::string, Channel>::iterator &it, std::istringstream& iss,  Client &cl, std::string& target){
+    int         result;
     char        oper = '+';
-    int         result = -1;
-    std::string target;
+    std::pair<std::string, std::string> success;
 
-    while (getline(iss, target, ' ')){
-        std::string successFlag;
-        std::pair<std::string, std::string> success;
-        for (size_t i = 0; i < target.size(); i++){
-            result = isValidChannelFlag(target[i]);
-            if (result == 1)
-                oper = target[i];
-            else if (result == 2){
-                if (target[i] == 'l')
-                    limitFlag(it->second, cl, iss, success, oper);
-                else if (target[i] == 'k')
-                    keyFlag(it->second, cl, iss, success, oper);
-                else if (target[i] == 'o')
-                    operateFlag(it->second, cl, iss, success, oper);
-            }
-            else if (result == 3){
-                if (!it->second.isOperator(cl.getNick()))
-                    sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), it->first), cl.getfd()); 
-                else
-                    changeMode(it->second, success.first, oper, target[i]); 
-            }
-            else
-                sendMsg(ERR_UNKNOWNMODE(cl.getNick(), std::string(1, target[i])), cl.getfd()); 
+    for (size_t i = 0; i < target.size(); i++){
+        result = isValidChannelFlag(target[i]);
+        if (result == 1)
+            oper = target[i];
+        else if (result == 2){
+            if (target[i] == 'l')
+                limitFlag(it->second, cl, iss, success, oper);
+            else if (target[i] == 'k')
+                keyFlag(it->second, cl, iss, success, oper);
+            else if (target[i] == 'o')
+                operateFlag(it->second, cl, iss, success, oper);
         }
-        if (!success.first.empty() || !success.second.empty()){
-            std::string ret = success.first + success.second;
-            size_t lastSpace = ret.find_last_of(' ');
-            if (lastSpace != std::string::npos)
-                ret.insert(lastSpace + 1, ":");
+        else if (result == 3){
+            if (!it->second.isOperator(cl.getNick()))
+                sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), it->first), cl.getfd()); 
             else
-                ret.insert(0, ":");
-            sendToChannelClient(it->second, cl, ret);
+                changeMode(it->second, success.first, oper, target[i]); 
+        }
+        else
+            sendMsg(ERR_UNKNOWNMODE(cl.getNick(), std::string(1, target[i])), cl.getfd()); 
+    }
+    if (!success.first.empty() || !success.second.empty()){
+        std::string ret = success.first + success.second;
+        size_t lastSpace = ret.find_last_of(' ');
+        if (lastSpace != std::string::npos)
+            ret.insert(lastSpace + 1, ":");
+        else
+            ret.insert(0, ":");
+        sendToChannelClient(it->second, cl, ret);
+    }
+}
+
+static void colonFlag(std::istringstream& iss, std::string& target, Client &cl){
+    std::vector<size_t> toRemove;
+    std::string         tmp;
+
+    if (target[0] == ':'){
+        target.erase(0, 1);
+        if (getline(iss, tmp)){
+            sendMsg(ERR_UNKNOWNMODE(cl.getNick(), std::string(1, ' ')), cl.getfd());
+            for (size_t i = 0; i < tmp.size(); i++){
+                if (tmp[i] != '+' && tmp[i] != '-' && tmp[i] != 'o' && tmp[i] != 'l' && tmp[i] != 'k' && tmp[i] != 'i' && tmp[i] != 't'){
+                    sendMsg(ERR_UNKNOWNMODE(cl.getNick(), std::string(1, tmp[i])), cl.getfd());
+                    toRemove.push_back(i);
+                }
+            }
+            for (std::vector<size_t>::reverse_iterator it = toRemove.rbegin(); it != toRemove.rend(); ++it)
+                tmp.erase(*it, 1);
+            target += tmp;
         }
     }
-    if (result == -1){
+}
+
+void Server::channelMode(std::map<std::string, Channel>::iterator &it, std::istringstream& iss, Client &cl){
+    std::string target;
+    bool        noFlag = true;
+
+    if (getline(iss, target, ' ')){
+        noFlag = false;
+        colonFlag(iss, target, cl);
+        checkFlag(it, iss, cl, target);
+    }
+    if (noFlag){
         std::ostringstream oss;
         oss << it->second.getChTime();
         std::string chTimeStr = oss.str();
