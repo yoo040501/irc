@@ -63,7 +63,7 @@ void	Server::channelCheck(std::string str, Client &cl){
 		else{
 			std::vector<std::string>	client_nick;
 			std::string					lowname = CH_name[i];
-			std::transform(lowname.begin(), lowname.end(), lowname.begin(), ::tolower);
+			std::transform(lowname.begin(), lowname.end(), lowname.begin(), ::tolower); //channel 이름 비교할때에는 다 소문자로 치환해서 비교
 			std::map<std::string, Channel>::iterator it = channel.find(lowname);
 			if (it == channel.end()){ // 방이 처음 만들어질때 key값 필없음
 				Channel CH(CH_name[i], cl);

@@ -41,7 +41,7 @@ void	Server::nickCheck(std::string str, Client &cl){
 		sendMsg(ERR_ERRONEUSNICKNAME(cl.getNick(), nick_tmp), cl.getfd());
 	else{
 		std::string	nick_low = nick_tmp;
-		std::transform(nick_low.begin(), nick_low.end(), nick_low.begin(), ::tolower);
+		std::transform(nick_low.begin(), nick_low.end(), nick_low.begin(), ::tolower); //닉네임 비교할때는 다 소문자로 치환해서 비교함
 
 		if (cl.getLowNick() == nick_low)									// 기존 nick이면 지나감
 			return;
