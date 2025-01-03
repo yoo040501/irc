@@ -9,6 +9,14 @@ bool	isValidCHname(std::string str){
 	return flag;
 }
 
+std::vector<std::string>	changeLowerChannelname(std::vector<std::string> CH_name){
+	std::vector<std::string> tmp = CH_name;
+	for (size_t i=0;i<tmp.size();i++){
+		std::transform(tmp[i].begin(), tmp[i].end(), tmp[i].begin(), ::tolower);
+	}
+	return tmp;
+}
+
 void	getCHName(std::string &str, std::vector<std::string> &CH_name, Client &cl){
 	std::string			channel_tmp;
 	std::istringstream	iss(str);

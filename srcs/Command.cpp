@@ -62,7 +62,13 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 		return;
 	while (str.find_first_of("\r\n") != std::string::npos) //개행문자 제거 \n으로 전송시킴
 		str.erase(str.find_first_of("\r\n"), 1);
+	str = trimSpace(str); // 처음 들어올때 앞 공백은 다 자름
 	std::string	tmp;
+	if (str[0] == ':') // :이 오면 공백오기전까지 다 자름
+	{
+		str.erase(0, str.find(' '));
+		str = trimSpace(str);
+	}
 	std::istringstream iss(str);
 	if (cl.getAuth() == false) //초기에 인증 절차 진행
 		processAuth(str, cl);

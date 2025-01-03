@@ -88,3 +88,5 @@ void		sendMsg(std::string msg, int fd);
 void		sendTopic(Channel &CH, Client &cl, std::map<int, Client> cl_tmp);
 bool		isExistCH(std::string name, std::map<std::string, Channel> &channel);
 bool		isExistUSER(std::string name, std::map<std::string, int>&nick);
+std::vector<std::string>	changeLowerChannelname(std::vector<std::string> CH_name);
+

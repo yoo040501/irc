@@ -56,18 +56,17 @@ void	Server::channelCheck(std::string str, Client &cl){
 	std::vector<std::string> CH_key;
 	
 	getCHName(str, CH_name, cl);
+	std::vector<std::string> CH_LowName = changeLowerChannelname(CH_name);
 	getKey(trimSpace(str), CH_key);
 
 	for (size_t i=0; i < CH_name.size(); i++){
 		if (CH_name[i].empty()) continue;
 		else{
 			std::vector<std::string>	client_nick;
-			std::string					lowname = CH_name[i];
-			std::transform(lowname.begin(), lowname.end(), lowname.begin(), ::tolower); //channel 이름 비교할때에는 다 소문자로 치환해서 비교
-			std::map<std::string, Channel>::iterator it = channel.find(lowname);
+			std::map<std::string, Channel>::iterator it = channel.find(CH_LowName[i]);
 			if (it == channel.end()){ // 방이 처음 만들어질때 key값 필없음
 				Channel CH(CH_name[i], cl);
-				channel.insert(std::make_pair(lowname, CH));
+				channel.insert(std::make_pair(CH_LowName[i], CH));
 				client_nick.push_back("@" + cl.getNick());
 				sendMsg(RPL_JOIN(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), CH.getName()), cl.getfd());
 				sendMsg(RPL_NAMREPLY(cl.getNick(), "=", CH.getName(), client_nick), cl.getfd());
