@@ -60,7 +60,7 @@ static void keyFlag(Channel &ch, Client &cl, std::istringstream& iss, std::pair<
     else if (!checkColon(iss, argv))
         return ;
     else if (!ch.isOperator(cl.getNick()))
-        sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), ch.getName()), cl.getfd());
+        sendMsg(ERR_CHANOPMODE(cl.getNick(), ch.getName(), 'k'), cl.getfd());
     else{
         if (op == '+' && ch.getKey().empty()){
             changeMode(ch, success.first, op, 'k');
@@ -90,6 +90,8 @@ static void limitFlag(Channel &ch, Client &cl, std::istringstream& iss,  std::pa
             sendMsg(ERR_NOPARAMETER(cl.getNick(), ch.getName(), 'l', "limit", "<limit>"), cl.getfd());
         else if (!checkColon(iss, argv))
             return ;
+        else if (!ch.isOperator(cl.getNick()))
+            sendMsg(ERR_CHANOPMODE(cl.getNick(), ch.getName(), 'l'), cl.getfd());
         else{
             value = strtol(argv.c_str(), &end, 10);
             if (ch.getLimit() != value){
@@ -102,6 +104,10 @@ static void limitFlag(Channel &ch, Client &cl, std::istringstream& iss,  std::pa
         }
     }
     else{
+        if (!ch.isOperator(cl.getNick())){
+            sendMsg(ERR_CHANOPMODE(cl.getNick(), ch.getName(), 'l'), cl.getfd());
+            return ;
+        }
         std::string flag = "l";     
         if (ch.findMode(flag)){
             changeMode(ch, success.first, op, 'l');
@@ -121,6 +127,8 @@ void Server::operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::
         return ;
     else if (!isServerUser(argv))
         sendMsg(ERR_NOSUCHNICK(cl.getNick(), argv), cl.getfd());
+    else if (!ch.isOperator(cl.getNick()))
+        sendMsg(ERR_CHANOPMODE(cl.getNick(), ch.getName(), 'o'), cl.getfd());
     else{
         if (ch.isChannelUser(argv)){
             oper = ch.isOperator(argv);
@@ -166,7 +174,7 @@ void Server::checkFlag(std::map<std::string, Channel>::iterator &it, std::istrin
         }
         else if (result == 3){
             if (!it->second.isOperator(cl.getNick()))
-                sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), it->first), cl.getfd()); 
+                sendMsg(ERR_CHANOPMODE(cl.getNick(), it->first, target[i]), cl.getfd()); 
             else
                 changeMode(it->second, success.first, oper, target[i]); 
         }
