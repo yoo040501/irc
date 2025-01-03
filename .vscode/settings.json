@@ -68,7 +68,8 @@
     "vector": "cpp",
     "filesystem": "cpp",
     "__functional_03": "cpp",
-    "queue": "cpp"
+    "queue": "cpp",
+    "memory_resource": "cpp"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "clang",

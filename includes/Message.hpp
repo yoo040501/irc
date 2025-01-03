@@ -46,6 +46,7 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 # define MSG_PONG(cmd) (":irc.local PONG irc.local :" + cmd + "\r\n")
 // PART :asd!a@127.0.0.1 PART :#ch1
 #define RPL_PART(nickname, username, ipaddr, channel) (":" + nickname + "!" + username + "@" + ipaddr + " PART :" + channel + "\r\n")
+
 // INVITE
 #define ERR_NOTREGISTERED(nick) (":" + nick + " :You have not registered\r\n")
 // #define ERR_NEEDMOREPARAMS(nick, command) (":" + nick + " :Not enough parameters for " + command + "\r\n")
