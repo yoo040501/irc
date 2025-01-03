@@ -60,8 +60,10 @@ class Server
 		void	topicCheck(std::string str, Client &cl);
 		void	partCheck(std::string str, Client &cl);
 		void	operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::pair<std::string, std::string>& success, char op);
-		void	modeCmd(std::string str, Client &cl);
 		
+		// Mode
+		void	modeCmd(std::string str, Client &cl);
+		void	checkFlag(std::map<std::string, Channel>::iterator &it, std::istringstream& iss,  Client &cl, std::string& target);
 		void	channelMode(std::map<std::string, Channel>::iterator &it, std::istringstream& iss, Client &cl);
 		bool	isServerUser(std::string &user);
 
