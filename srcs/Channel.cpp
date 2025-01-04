@@ -1,23 +1,23 @@
 #include "../includes/Channel.hpp"
 
-Channel::Channel() : ch_name(""), topic(""), key(""), limit(-1){
+Channel::Channel() : ch_name(""), low_name(""), topic_time(0), topic(""), topic_user(-1), key(""), limit(-1){
 	mode.push_back("t");
 	mode.push_back("o");
 	channel_time = time(NULL);
 }
 
-Channel::Channel(std::string name, Client &cl) : ch_name(name), topic(""), key(""){
+Channel::Channel(std::string name, Client &cl) : ch_name(name), low_name(""), topic_time(0), topic(""), topic_user(-1), key(""), limit(-1){
 	channel_time = time(NULL);
 	client[cl.getfd()] = cl;
 	ch_operator.push_back(cl.getLowNick());
 	mode.push_back("t");
 	mode.push_back("o");
-	limit = -1;
 }
 
-Channel::Channel(Channel const& copy): client(copy.client), ch_name(copy.ch_name), channel_time(copy.channel_time),
-										topic(copy.topic), key(copy.key), ch_operator(copy.ch_operator),
-										mode(copy.mode){}
+Channel::Channel(Channel const& copy): client(copy.client), ch_name(copy.ch_name), low_name(copy.low_name), channel_time(copy.channel_time),
+										topic_time(copy.topic_time), topic(copy.topic), topic_user(copy.topic_user),
+										key(copy.key), ch_operator(copy.ch_operator), mode(copy.mode), limit(copy.limit)
+										{}
 
 Channel::~Channel() {
 	client.clear();

@@ -93,18 +93,18 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 			sendMsg(MSG_PONG(trimSpace(str.substr(tmp.size()))), cl.getfd());
 		else if (tmp == "KICK")
 			kickCheck(trimSpace(str.substr(tmp.size())), cl);
-		else if (tmp == "INVITE") {
-			std::string argsStr = str.substr(tmp.size());
-			argsStr = trimSpace(argsStr);
-    		std::vector<std::string> args;
-    		std::istringstream argStream(argsStr);
-    		std::string token;
-			while (argStream >> token) {
-				args.push_back(token);
-			}
-			Command cmd(*this);
-			cmd.invite(cl, args);
-		}
+		// else if (tmp == "INVITE") {
+		// 	std::string argsStr = str.substr(tmp.size());
+		// 	argsStr = trimSpace(argsStr);
+    	// 	std::vector<std::string> args;
+    	// 	std::istringstream argStream(argsStr);
+    	// 	std::string token;
+		// 	while (argStream >> token) {
+		// 		args.push_back(token);
+		// 	}
+		// 	Command cmd(*this);
+		// 	cmd.invite(cl, args);
+		// }
 		else if (tmp == "MODE")
 			modeCmd(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "TOPIC")

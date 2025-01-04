@@ -49,6 +49,16 @@ void	joinChannel(Channel &CH, Client &cl, std::vector<std::string> &client_nick,
 	sendMsg(RPL_ENDOFNAMES(cl.getNick(), CH.getName()), cl.getfd());
 }
 
+bool	alreadyFull(Channel &CH){
+	long	limit_cnt = CH.getLimit();
+	long	user_cnt = CH.getClient().size();
+	bool	flag = false;
+
+	if (user_cnt >= limit_cnt) // 이미 채널에 사람이 가득 차있다면 true
+		flag = true;
+	return flag;
+}
+
 void	Server::channelCheck(std::string str, Client &cl){
 
 	std::string			tmp;
@@ -74,13 +84,19 @@ void	Server::channelCheck(std::string str, Client &cl){
 			}
 			else { //채널이 있을 경우 client만 저장
 				if (it->second.getClientfd(cl.getfd()) > 0) continue; // 이미 들어가있는 경우 넘어감
-				if (it->second.findMode("k")) {// channel에 key값이 없을 경우 그냥 들어감
+				if (it->second.findMode("k")) {// channel k mode active
 					if (CH_key.empty() || CH_key[i].empty() || it->second.getKey() != CH_key[i])
 						sendMsg(ERR_BADCHANNELKEY(cl.getNick(), CH_name[i]), cl.getfd());
 					else
 						joinChannel(it->second, cl, client_nick, client);
 				}
-				else if (it->second.findMode("i")){} //invite mode 활성화
+				else if (it->second.getLimit() != -1){ // channel limit active
+					if (alreadyFull(it->second))
+						sendMsg(ERR_CHANNELISFULL(cl.getNick(), CH_name[i]), cl.getfd());
+					else
+						joinChannel(it->second, cl, client_nick, client);
+				}
+				else if (it->second.findMode("i")){} //invite mode active
 				else
 					joinChannel(it->second, cl, client_nick, client);
 			}

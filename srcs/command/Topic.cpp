@@ -66,7 +66,7 @@ void	Server::topicCheck(std::string str, Client &cl){
 				sendTopic(channel[CH], cl, client);
 		}
 		else{
-			if (!channel[CH].isOperator(cl.getNick()))
+			if (!channel[CH].isOperator(cl.getNick()) && channel[CH].findMode("t"))
 				sendMsg(ERR_CHANOPRIVSNEEDED(cl.getNick(), CH), cl.getfd());
 			else{
 				topic_str = topic[0];
