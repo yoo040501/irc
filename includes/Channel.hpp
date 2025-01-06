@@ -26,7 +26,7 @@ class Channel
 {
 	private:
 		std::map<int, Client>		client; 
-		std::string					ch_name;
+		std::string					ch_name; //original name
 		std::string					low_name;
 		std::time_t					channel_time;
 		std::time_t					topic_time;

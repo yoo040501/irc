@@ -37,8 +37,8 @@ class Server
         std::vector<struct kevent>		changeList;
         std::vector<struct kevent>		eventList;
         std::map<int, Client>			client; // clientfd , Client
-        std::map<std::string, int>		nick;   // nickname, clientfd
-		std::map<std::string, Channel>	channel; //channelname , Channel
+        std::map<std::string, int>		nick;   // nickname(lower), clientfd
+		std::map<std::string, Channel>	channel; //channelname(lower), Channel
 		std::stack<std::string>			rebuffer;
 		static std::map<int, Client> 	clients;
   		static std::map<std::string, Channel> channels;
@@ -66,6 +66,12 @@ class Server
 		void	checkFlag(std::map<std::string, Channel>::iterator &it, std::istringstream& iss,  Client &cl, std::string& target);
 		void	channelMode(std::map<std::string, Channel>::iterator &it, std::istringstream& iss, Client &cl);
 		bool	isServerUser(std::string &user);
+
+		// Privmsg
+		void    	privmsgCmd(std::string str, Client &cl);
+		bool		isValidChname(std::string& chName);
+		Channel& 	getChannel(std::string& chName);
+		Client&		getClient(std::string &clName);
 
 		// Invite
 		void	handleInviteErrors(Client &inviter, Channel *channel, Client *invitee, const std::string &chanName, const std::string &inviteeName);

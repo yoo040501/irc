@@ -111,6 +111,36 @@ bool Server::isServerUser(std::string &user){
     return false;
 }
 
+bool Server::isValidChname(std::string &chName){
+    std::map<std::string, Channel>::iterator it;
+
+    for (it = channel.begin(); it != channel.end(); ++it){
+        if (it->first == chName)
+            return true;
+    }
+    return false;
+}
+
+Channel& Server::getChannel(std::string &chName){
+    std::map<std::string, Channel>::iterator it;
+
+    for (it = channel.begin(); it != channel.end(); ++it){
+        if (it->first == chName)
+            break;
+    }
+    return it->second;
+}
+
+Client& Server::getClient(std::string &clName){
+    std::map<int, Client>::iterator it;
+
+    for (it = client.begin(); it != client.end(); ++it){
+        if (it->second.getNick() == clName)
+            break;
+    }
+    return it->second;
+}
+
 void Server::sendInviteMsg(Channel &channel, Client &inviter, Client &invitee) {
     sendMsg(RPL_INVITING(inviter.getNick(), invitee.getNick(), channel.getName()), inviter.getfd());
     sendMsg(":localhost INVITE " + invitee.getNick() + " " + channel.getName() + "\r\n", invitee.getfd());

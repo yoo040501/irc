@@ -85,8 +85,8 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 			nickCheck(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "USER") 
 			userCheck(trimSpace(str.substr(tmp.size())), cl);
-		// else if (tmp == "PRIVMSG")
-		// 	msgCheck(trimSpace(str.substr(tmp.size())), cl);
+		else if (tmp == "PRIVMSG")
+		 	privmsgCmd(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "JOIN")
 			channelCheck(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "PING")

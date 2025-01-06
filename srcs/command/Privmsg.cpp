@@ -52,7 +52,7 @@ PRIVMSG #*.edu :NSFNet is undergoing work, expect interruptions
 // /* 1. str에 :가 있을 경우
 // 		1) :로 시작하면 noreceiver 에러
 // 		2) :전에 공백이 없으면 receiver로 처리
-// 		3) :전전에 공백이 있으면 거기부터 공백 포함 x send message ex) a, b :hello ->  a한테만 b :hello로 메세지 보냄
+// 		3) :전전에 공백이 있으면 거기부터 공백 포함 x send messag       e ex) a, b :hello ->  a한테만 b :hello로 메세지 보냄
 // 	2. :가 없을 경우
 // 		1) */
 // void	Server::msgCheck(std::string str, Client &cl){ // ,이랑 공백이 :보다 우선순위
@@ -79,3 +79,96 @@ PRIVMSG #*.edu :NSFNet is undergoing work, expect interruptions
 
 // 	}
 // }
+
+static void     splitReceiver(std::vector<std::string>& receiverList, std::string& str){
+        std::istringstream              iss(str);
+        std::string                     tmp;
+
+        while (getline(iss, tmp, ','))
+                receiverList.push_back(tmp);
+}
+
+static std::string    removeSpace(std::string& msg){
+        bool isSpace = false;
+        std::string     ret;
+
+        for (size_t i = 0; i < msg.size(); i++){
+                if (msg[i] == ' '){
+                        if (isSpace == false){
+                                ret += ' ';
+                                isSpace = true;
+                        }
+                }
+                else{
+                        ret += msg[i];
+                        isSpace = false;
+                }
+        }
+        return ret;
+}
+
+static std::string     messageParser(std::string& msg){
+        size_t          colon;
+        size_t          pos;
+        std::string     ret;
+
+        colon = count(msg.begin(), msg.end(), ':');
+        if (colon){
+                pos = msg.find(':');
+                std::string remain = msg.substr(0, pos);
+                ret += removeSpace(remain);
+                ret += msg.substr(pos + 1);
+                return ret;
+        }
+        else
+                return msg;
+}
+
+static void    sendPrivmsgToChannelClient(Channel &ch, Client &cl, std::string& msg){
+        std::map<int, Client>	tmp = ch.getClient();
+    std::map<int, Client>::iterator it = tmp.begin();
+    while (it != tmp.end()){
+        sendMsg(RPL_AWAY(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), msg), it->second.getfd());
+        ++it;
+    }
+}
+
+void    Server::privmsgCmd(std::string str, Client &cl){
+        std::string                     tmp;
+        std::istringstream              iss(str);
+        std::vector<std::string>        receiver;
+        std::string                     msg;
+
+        if (str.empty()){
+                sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "PRIVMSG"), cl.getfd());
+                return ;
+	}
+
+        if (!getline(iss, tmp, ' ') || tmp[0] == ':'){
+                sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "PRIVMSG"), cl.getfd());
+                return ;
+        };
+        splitReceiver(receiver, tmp);
+        
+        if (!getline(iss, tmp)){
+                sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "PRIVMSG"), cl.getfd());
+                return ;
+        }
+        msg = messageParser(tmp);
+        
+        for (std::vector<std::string>::iterator it = receiver.begin(); it != receiver.end(); it++){
+                if ((*it)[0] == '#'){
+                        std::transform(it->begin(), it->end(), it->begin(), ::tolower);
+                        if (isValidChname(*it))
+                                sendPrivmsgToChannelClient(getChannel(*it), cl, msg);
+                        else
+                                sendMsg(ERR_NOSUCHCHANNEL(cl.getNick(), *it), cl.getfd());
+                }
+                else{
+                        if (isServerUser(*it))
+                                sendMsg(RPL_AWAY(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), msg), getClient(*it).getfd());
+                        else
+                                sendMsg(ERR_NOSUCHNICK(cl.getNick(), *it), cl.getfd());
+                }
+        }
+}
