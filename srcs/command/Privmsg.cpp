@@ -85,7 +85,10 @@ static void     splitReceiver(std::vector<std::string>& receiverList, std::strin
         std::string                     tmp;
 
         while (getline(iss, tmp, ','))
-                receiverList.push_back(tmp);
+        {
+                if (!tmp.empty())
+                        receiverList.push_back(tmp);
+        }
 }
 
 static std::string    removeSpace(std::string& msg){
@@ -111,13 +114,19 @@ static std::string     messageParser(std::string& msg){
         size_t          colon;
         size_t          pos;
         std::string     ret;
+        std::string     remove;
 
         colon = count(msg.begin(), msg.end(), ':');
         if (colon){
                 pos = msg.find(':');
-                std::string remain = msg.substr(0, pos);
-                ret += removeSpace(remain);
-                ret += msg.substr(pos + 1);
+                remove = msg.substr(0, pos);
+                ret += removeSpace(remove);
+                if (pos != 0 && msg[pos - 1] != ' '){
+                        remove = msg.substr(pos + 1);
+                        ret += removeSpace(remove);
+                }
+                else
+                        ret += msg.substr(pos + 1);
                 return ret;
         }
         else
@@ -128,26 +137,31 @@ static void    sendPrivmsgToChannelClient(Channel &ch, Client &cl, std::string& 
         std::map<int, Client>	tmp = ch.getClient();
     std::map<int, Client>::iterator it = tmp.begin();
     while (it != tmp.end()){
-        sendMsg(RPL_AWAY(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), msg), it->second.getfd());
+        if (it->second.getNick() != cl.getNick())
+                sendMsg(RPL_AWAY(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), msg), it->second.getfd());
         ++it;
     }
+}
+
+static bool hasDuplicate(std::vector<std::string>& success, std::string& target){
+        std::vector<std::string>::iterator it = find(success.begin(), success.end(), target);
+        if (it != success.end())
+                return true;
+        else
+                return false;
 }
 
 void    Server::privmsgCmd(std::string str, Client &cl){
         std::string                     tmp;
         std::istringstream              iss(str);
         std::vector<std::string>        receiver;
+        std::vector<std::string>        success;
         std::string                     msg;
 
-        if (str.empty()){
+        if (str.empty() || !getline(iss, tmp, ' ') || tmp[0] == ':'){
                 sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "PRIVMSG"), cl.getfd());
                 return ;
 	}
-
-        if (!getline(iss, tmp, ' ') || tmp[0] == ':'){
-                sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "PRIVMSG"), cl.getfd());
-                return ;
-        };
         splitReceiver(receiver, tmp);
         
         if (!getline(iss, tmp)){
@@ -159,14 +173,22 @@ void    Server::privmsgCmd(std::string str, Client &cl){
         for (std::vector<std::string>::iterator it = receiver.begin(); it != receiver.end(); it++){
                 if ((*it)[0] == '#'){
                         std::transform(it->begin(), it->end(), it->begin(), ::tolower);
-                        if (isValidChname(*it))
+                        if (hasDuplicate(success, *it))
+                                return ;
+                        else if (isValidChname(*it)){
                                 sendPrivmsgToChannelClient(getChannel(*it), cl, msg);
+                                success.push_back(*it);
+                        }
                         else
                                 sendMsg(ERR_NOSUCHCHANNEL(cl.getNick(), *it), cl.getfd());
                 }
                 else{
-                        if (isServerUser(*it))
+                        if (hasDuplicate(success, *it))
+                                return ;
+                        else if (isServerUser(*it)){
                                 sendMsg(RPL_AWAY(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), msg), getClient(*it).getfd());
+                                success.push_back(*it);
+                        }
                         else
                                 sendMsg(ERR_NOSUCHNICK(cl.getNick(), *it), cl.getfd());
                 }
