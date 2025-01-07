@@ -92,3 +92,5 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 						":localhost 372 " + nickname + " :- *  questions or issues.                          *\r\n" + \
 						":localhost 372 " + nickname + " :- **************************************************\r\n" + \
 						":localhost 376 " + nickname + " :End of message of the day.\r\n")
+
+void		sendMsg(std::string msg, int fd);

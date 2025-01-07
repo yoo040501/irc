@@ -115,8 +115,10 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 			partCheck(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "QUIT")
 			quitCheck(trimSpace(str.substr(tmp.size())), cl);
+		else if (tmp == "BOT")
+			bot->botMode(trimSpace(str.substr(tmp.size())), cl);
 		else {
-			if (!str.empty()) //인증 절차가 끝난뒤에만 전송 10.15.3.7
+			if (!str.empty())
 				sendMsg(ERR_UNKNOWNCOMMAND(cl.getNick(), tmp), cl.getfd());
 		}
 	}

@@ -9,16 +9,16 @@ Server::Server(char *pt, char *pw){
     password = std::string (pw); //패스워드값이 무엇인지 아직 확인 X
 }
 
-Server::~Server(){}
+Server::~Server(){delete bot;}
 
 void	Server::openSocket(){
     server_fd = socket(AF_INET, SOCK_STREAM, 0); // 소켓 생성
     int optval = 1; //sockopt 포트 재사용
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     if (server_fd < 0)
-		throw SocoketFailException();
+		throw SocketFailException();
 
-    setSockaddr();
+    setSockaddr(this->server_addr);
     if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) // 소켓 주소 할당
     {
         close(server_fd);
@@ -44,6 +44,7 @@ void	Server::active(){	//멀티플렉싱
 	time_t	t = time(NULL);
 	servertime = ctime(&t);
 
+	generateBot();
     int new_events;
     while (1)
     {
@@ -96,11 +97,12 @@ void	Server::active(){	//멀티플렉싱
     }
 }
 
-bool Server::isServerUser(std::string &user){
+bool Server::isServerUser(std::string user){
+	std::transform(user.begin(), user.end(), user.begin(), ::tolower);
     std::map<int, Client>::iterator it;
 
     for (it = client.begin(); it != client.end(); ++it){
-        if (it->second.getNick() == user)
+        if (it->second.getLowNick() == user)
             return true;
     }
     return false;

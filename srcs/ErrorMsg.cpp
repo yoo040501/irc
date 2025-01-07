@@ -1,6 +1,6 @@
 #include "../includes/ErrorMsg.hpp"
 
-const char* SocoketFailException::what() const throw() {
+const char* SocketFailException::what() const throw() {
     return "\033[0;31mSocket Created Fail.\033[0m";
 }
 

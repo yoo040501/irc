@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-class SocoketFailException: public std::exception{
+class SocketFailException: public std::exception{
 	public:
 		virtual const char* what() const throw();
 };

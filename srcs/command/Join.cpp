@@ -96,7 +96,9 @@ void	Server::channelCheck(std::string str, Client &cl){
 					else
 						joinChannel(it->second, cl, client_nick, client);
 				}
-				else if (it->second.findMode("i")){} //invite mode active
+				else if (it->second.findMode("i")){
+					// sendMsg(ERR_INVITEONLYCHAN(cl.getNick(), CH_name[i]), cl.getfd());
+				} //invite mode active
 				else
 					joinChannel(it->second, cl, client_nick, client);
 			}

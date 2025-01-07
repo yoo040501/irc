@@ -54,7 +54,7 @@ static std::string     messageParser(std::string& msg){
 }
 
 static void    sendPrivmsgToChannelClient(Channel &ch, Client &cl, std::string& msg){
-        std::map<int, Client>	tmp = ch.getClient();
+    std::map<int, Client>	tmp = ch.getClient();
     std::map<int, Client>::iterator it = tmp.begin();
     while (it != tmp.end()){
         if (it->second.getNick() != cl.getNick())

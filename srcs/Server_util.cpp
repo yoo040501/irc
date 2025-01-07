@@ -12,11 +12,11 @@ bool Server::isPort(char *pt) // 1 ~ 65535
     return true;
 }
 
-void    Server::setSockaddr(){
-    memset(&server_addr, 0, sizeof(server_addr));
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_addr.s_addr = INADDR_ANY;
-    server_addr.sin_port = htons(port);
+void    Server::setSockaddr(struct  sockaddr_in &_server_addr){
+    memset(&_server_addr, 0, sizeof(_server_addr));
+    _server_addr.sin_family = AF_INET;
+    _server_addr.sin_addr.s_addr = INADDR_ANY;
+    _server_addr.sin_port = htons(port);
 }
 
 void    Server::createEvent(int fd)
@@ -39,4 +39,30 @@ bool	Server::generateClient(){
 	client.insert(std::make_pair(cl.getfd(), cl));
 	sendMsg(WAITING(), cl.getfd());
 	return true;
+}
+
+void	Server::generateBot(){
+	Bot					*_bot = new Bot();
+    struct sockaddr_in	bot_addr;
+    socklen_t			bot_len = sizeof(bot_addr);
+
+    // 봇 클라이언트 소켓 생성
+    int bot_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (bot_fd < 0) {
+        throw SocketFailException();
+    }
+
+	setSockaddr(bot_addr);
+    if (connect(bot_fd, (struct sockaddr*)&bot_addr, bot_len) < 0) {
+        close(bot_fd);
+        throw SocketFailException();
+    }
+    fcntl(bot_fd, F_SETFL, O_NONBLOCK);
+
+    _bot->setfd(bot_fd);
+    _bot->setaddr(bot_addr);
+
+    createEvent(_bot->getfd());
+    bot = _bot;
+    std::cout << "Bot making Successfully\n";
 }
