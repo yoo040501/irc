@@ -16,22 +16,18 @@ void	Server::openSocket(){
     int optval = 1; //sockopt 포트 재사용
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     if (server_fd < 0)
-		throw std::bad_exception();
-    // std::cout << "Server socket created successfully." << std::endl;
+		throw SocoketFailException();
 
     setSockaddr();
     if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) // 소켓 주소 할당
     {
         close(server_fd);
-        throw std::bad_exception();
+        throw BindFailException();
     }
-    // std::cout << "Server address structure created successfully." << std::endl;
-
     if (listen(server_fd, 5) < 0){                                                  // 소켓 연결요청
         close(server_fd);
-        throw std::bad_exception();
+        throw ListenFailException();
     }
-    // std::cout << "Server listening on port." << std::endl;
     fcntl(server_fd, F_SETFL, O_NONBLOCK); // 서버가 여러 클라이언트와 동시에 통신해야 하는 경우, 비차단 모드는 필수적
     // 하나의 클라이언트 작업이 완료될 때까지 기다리지 않고 다른 클라이언트의 요청을 처리할 수 있다
 }
@@ -41,11 +37,10 @@ void	Server::active(){	//멀티플렉싱
     if (kq < 0)
     {
         close(server_fd);
-        throw std::bad_exception();
+        throw KqueueFailException();
     }
     eventList.resize(100); //이벤트 크기를 100으로 먼저 설정
     createEvent(server_fd);
-    // std::cout << "Server kqueue created successfully." << std::endl;
 	time_t	t = time(NULL);
 	servertime = ctime(&t);
 
@@ -58,7 +53,7 @@ void	Server::active(){	//멀티플렉싱
         {
             close(server_fd);
             close(kq);
-            throw std::bad_exception();
+            throw KeventFailException();
         }
         changeList.clear(); //kevent 함수를 호출할 때마다 changeList를 비워줘야 함
 		//비우지않으면 이전에 등록된 이벤트가 다시 등록될수 있음

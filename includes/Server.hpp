@@ -21,6 +21,7 @@
 #include "Client.hpp"
 #include "Message.hpp"
 #include "Channel.hpp"
+#include "ErrorMsg.hpp"
 
 class Client;
 class Channel;
