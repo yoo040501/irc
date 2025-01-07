@@ -11,6 +11,8 @@ void	sendPartMsg(Channel &CH, Client &cl){
 }
 
 void	Server::partCheck(std::string str, Client &cl){
+	std::vector<std::string>	success;
+
 	if (str.empty())
 		sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "PART"), cl.getfd());
 	else{
@@ -19,6 +21,8 @@ void	Server::partCheck(std::string str, Client &cl){
 		CH_name = changeLowerChannelname(CH_name);
 
 		for (std::vector<std::string>::iterator it = CH_name.begin(); it != CH_name.end();){ //ch 검사
+			if (hasDuplicate(success, *it))
+                continue;
 			if (it->empty())	it = CH_name.erase(it);
 			else if (!isExistCH(*it, channel)){
 				sendMsg(ERR_NOSUCHCHANNEL(cl.getNick(), *it), cl.getfd());
@@ -32,6 +36,7 @@ void	Server::partCheck(std::string str, Client &cl){
 				channel[*it].removeOper(cl.getNick());
 				if (channel[*it].getClient().empty())
 					channel.erase(*it);
+				success.push_back(*it);
 				++it;
 			}
 		}

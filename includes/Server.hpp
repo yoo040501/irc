@@ -55,11 +55,11 @@ class Server
 		bool	passCheck(std::string str, Client &cl);
 		void	closeClient(std::string msg, Client &cl);
 		void	userCheck(std::string str, Client &cl);
-		void	msgCheck(std::string str, Client &cl);
 		void	channelCheck(std::string str, Client &cl);
 		void	kickCheck(std::string str, Client &cl);
 		void	topicCheck(std::string str, Client &cl);
 		void	partCheck(std::string str, Client &cl);
+		void	quitCheck(std::string str, Client &cl);
 		void	operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::pair<std::string, std::string>& success, char op);
 		
 		// Mode
@@ -99,5 +99,6 @@ void		sendMsg(std::string msg, int fd);
 void		sendTopic(Channel &CH, Client &cl, std::map<int, Client> cl_tmp);
 bool		isExistCH(std::string name, std::map<std::string, Channel> &channel);
 bool		isExistUSER(std::string name, std::map<std::string, int>&nick);
+bool		hasDuplicate(std::vector<std::string>& success, std::string& target);
 std::vector<std::string>	changeLowerChannelname(std::vector<std::string> CH_name);
 

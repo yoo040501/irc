@@ -9,7 +9,9 @@ void	Server::processAuth(std::string &str, Client &cl){
 
 	tmp = str.substr(0, del);
 	std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
-
+	if (tmp == "QUIT"){
+		quitCheck(trimSpace(str.substr(tmp.size())), cl);
+		return; }
 	if (tmp == "PASS"){
 		if (del != std::string::npos)
 			str.erase(0, del);
@@ -40,7 +42,7 @@ void	Server::processAuth(std::string &str, Client &cl){
 	if (cl.getPassCheck() == true && cl.getUser() != "" && cl.getNick() != "*") //절차를 다 했을경우
 	{
 		if (cl.getPass() == false){
-			closeClient(ERR_CLOSE(), cl);
+			closeClient(ERR_CLOSE(cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), "Access denied by configuration"), cl);
 			return ;
 		}
 		else if (cl.getAuth() == false){
@@ -111,6 +113,8 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 			topicCheck(trimSpace(str.substr(tmp.size())), cl);
 		else if (tmp == "PART")
 			partCheck(trimSpace(str.substr(tmp.size())), cl);
+		else if (tmp == "QUIT")
+			quitCheck(trimSpace(str.substr(tmp.size())), cl);
 		else {
 			if (!str.empty()) //인증 절차가 끝난뒤에만 전송 10.15.3.7
 				sendMsg(ERR_UNKNOWNCOMMAND(cl.getNick(), tmp), cl.getfd());
