@@ -56,6 +56,8 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 // #define ERR_CHANOPRIVSNEEDED(nick, channel) (":" + nick + " :You're not channel operator: " + channel + "\r\n")
 #define ERR_USERONCHANNEL(nick, invitee, channel) (":" + nick + " :User " + invitee + " is already on channel: " + channel + "\r\n")
 #define RPL_INVITING(nick, invitee, channel) (":" + nick + " :Inviting " + invitee + " to channel " + channel + "\r\n")
+#define ERR_INVALIDDURATION(nick) (":irc.local NOTICE " + nick + " :*** Invalid duration for invite\r\n")
+#define ERR_ALREADYONCHANNEL(nick, invitee, channel) (":irc.local 443 " + nick + " " + invitee + " " + channel + " :is already on channel\r\n")
 
 // TOPIC
 #define ERR_NOTONCHANNEL(nickname, channel) (":localhost 442 " + nickname + " " + channel + " :You're not on that channel\r\n")

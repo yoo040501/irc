@@ -13,20 +13,23 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
+class Server;
+class Client;
+class Channel;
+
 class Command {
   public:
 	Command(Server &server);
 	~Command();
 
-    void invite(Client &client, std::vector<std::string> args);
+    void invite(Client& client, std::vector<std::string> args);
 	std::string NEEDMOREPARAMS(std::string nickname, std::string command);
   
   private:
 	Command &operator=(const Command&);
 	Command(const Command&);
 	
-	Server		&server_;
-	
+	Server	&server_;
 };
 
 #endif

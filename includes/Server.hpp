@@ -21,9 +21,11 @@
 #include "Client.hpp"
 #include "Message.hpp"
 #include "Channel.hpp"
+#include "Command.hpp"
 
 class Client;
 class Channel;
+class Command;
 
 class Server
 {
@@ -80,6 +82,8 @@ class Server
         Server();
         Server(Server const& copy);
         Server& operator=(Server const& oth);
+		Command command_;
+
     public:
         Server(char *pt, char *pw);
         ~Server();
@@ -88,6 +92,10 @@ class Server
         void	active();
 		static std::map<int, Client>& getClients();
   		static std::map<std::string, Channel>& getChannels();
+    	Client* findClient(const std::string &nick);
+   		Channel* findChannel(const std::string &channelName);
+    	void handleInviteCommand(Client &cl, const std::string &argsStr);
+		void 	invite(Client& client, std::vector<std::string> args);
 };
 
 std::string	trimSpace(std::string str);
