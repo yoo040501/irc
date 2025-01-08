@@ -22,9 +22,50 @@ Bot::~Bot(){
 
 }
 
+std::string	Bot::getFortune(){
+	std::string Fortunes[10] = {
+		"If you overlook it, you might miss something big.\r\n",
+		"Worrying won't change anything, so be confident.\r\n",
+		"Good fortune will come if you wait patiently.\r\n",
+		"Positive thoughts lead to positive outcomes.\r\n",
+		"Helping others will bring rewards in the future.\r\n",
+		"Your sincerity and dedication will earn praise from others.\r\n",
+		"You might hear unexpected news, so stay prepared.\r\n",
+		"Strive to gain recognition from your superiors.\r\n",
+		"Sticking to the basics is the right answer.\r\n",
+		"Unexpected luck will find you when you least expect it.\r\n"
+	};
+	int	idx = rand() % 10;
+	return Fortunes[idx];
+}
+
+bool	Bot::isMode(std::string str){
+	std::transform(str.begin(), str.end(), str.begin(), ::tolower);
+	if (str == "1" || str == "fortune")
+		return true;
+	return false;
+}
+
 void	Bot::botMode(std::string str, Client &cl){
-	if (str.empty()){
-		return sendMsg("This bot provides 1.Today's fortune cookie, 2.Rock-Scissors-Paper Games\r\nplease enter Number or Mode(cookie, game)\r\n", cl.getfd());
+	if (cl.getBot() == false){ // bot mode 처음 들어올때
+		cl.setBot(true);
+		if (str.empty()){
+			sendMsg("Hello " + cl.getNick() + "!!!\r\n", cl.getfd());
+			sendMsg("This bot provides 1.Today's fortune.\r\nplease enter Number or Mode(fortune)\r\n", cl.getfd());
+		}
+		else if (str == "1" || str == "fortune"){
+			std::string message = getFortune();
+			sendMsg(message, cl.getfd());
+			cl.setBot(false);
+		}
+	}
+	else{
+		if (!isMode(str))
+			sendMsg("This bot only takes 1 and fortune. Try again!\r\n", cl.getfd());
+		else{
+			std::string message = getFortune();
+			sendMsg(message, cl.getfd());
+			cl.setBot(false);
+		}
 	}
 }
-// bot

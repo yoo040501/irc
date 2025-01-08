@@ -75,8 +75,11 @@ void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 		str = trimSpace(str);
 	}
 	std::istringstream iss(str);
+	
 	if (cl.getAuth() == false) //초기에 인증 절차 진행
 		processAuth(str, cl);
+	else if (cl.getBot() == true)
+		bot->botMode(str, cl); // bot active
 	else{
 		getline(iss, tmp, ' '); // 스페이스바로 나누고 첫 문장 가져옴
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper); //tmp 대문자 변환

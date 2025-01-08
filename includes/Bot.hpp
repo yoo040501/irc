@@ -2,14 +2,12 @@
 
 #include "Client.hpp"
 #include "Message.hpp"
-// #include "Server.hpp"
-
-// class Server;
 
 class Bot : public Client
 {
 	private:
-		std::vector<Client *> cl;
+		bool		isMode(std::string str);
+		std::string	getFortune();
 	public:
 		Bot();
 		Bot(Bot const& copy);
