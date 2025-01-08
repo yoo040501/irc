@@ -15,9 +15,10 @@
 
 class Client
 {
-    private:
+    protected:
         int         		fd;
 		int					ch_cnt;
+		bool				bot_active;
 		bool				pass;		// pass가 맞으면 true
 		bool				passcheck; //pass를 한번이라도 건들였으면 true
 		bool				auth;
@@ -41,20 +42,21 @@ class Client
 		Client();
         Client(Client const& copy);
 		Client& operator=(Client const& oth);
-        ~Client();
+        virtual~Client();
 
 		void	setfd(int f);
 		void	setPass(bool flag);
 		void	setPassCheck(bool flag);
+		void	setBot(bool flag);
 		void	setAuth(bool flag);
 		void	setNick(std::string const &ni);
-		void	setRealNick(std::string const &ni);
 		void	setUser(std::string const &un, std::string const &hn, std::string const &sn, std::string const &rn);
 		void	setaddr(struct sockaddr_in &tmp);
 		void 	addToSendBuffer(const std::string &message);
 
 		int					getfd() const;
 		bool				getPass() const;
+		bool				getBot() const;
 		bool				getPassCheck() const;
 		bool				getAuth() const;
 		std::string&		getNick();

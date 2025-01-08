@@ -229,7 +229,7 @@ void Server::channelMode(std::map<std::string, Channel>::iterator &it, std::istr
         sendMsg(RPL_CHANNELMODEIS(cl.getNick(), it->second.getName(), it->second.printMode()), cl.getfd());
         sendMsg(RPL_CHANNELTIME(cl.getNick(), it->second.getName(), chTimeStr), cl.getfd());
     }
-    it->second.printMode();
+    //it->second.printMode();
 }
 
 void Server::modeCmd(std::string str, Client &cl){
@@ -250,6 +250,8 @@ void Server::modeCmd(std::string str, Client &cl){
         else
             channelMode(it, iss, cl);
     }
+    else if (tmp == cl.getNick())
+        return ;
     else
         sendMsg(ERR_NOSUCHNICK(cl.getNick(), str), cl.getfd());
 } 

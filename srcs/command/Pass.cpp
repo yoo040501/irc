@@ -28,7 +28,7 @@ bool	Server::passCheck(std::string str, Client &cl){
 	else{
 		if (cl.getUser() != "" && cl.getNick() != "*") // user와 nick이 우선 등록되있을 경우
 		{
-			closeClient(ERR_CLOSE(), cl);
+			closeClient(ERR_CLOSE(cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), "Access denied by configuration"), cl);
 			return false;
 		}
 		cl.setPassCheck(true); //pass 입력을 한번이라도 할 경우 true

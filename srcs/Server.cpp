@@ -20,15 +20,15 @@ void Server::openSocket() {
     if (server_fd < 0)
         throw std::bad_exception();
 
-    setSockaddr();
+    setSockaddr(server_addr);
     if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
         close(server_fd);
-        throw std::bad_exception();
+        throw BindFailException();
     }
 
     if (listen(server_fd, 5) < 0) {
         close(server_fd);
-        throw std::bad_exception();
+        throw ListenFailException();
     }
     fcntl(server_fd, F_SETFL, O_NONBLOCK);
 }
@@ -37,13 +37,14 @@ void Server::active() {
     int kq = kqueue();
     if (kq < 0) {
         close(server_fd);
-        throw std::bad_exception();
+        throw KqueueFailException();
     }
     eventList.resize(100);
     createEvent(server_fd);
     time_t t = time(NULL);
     servertime = ctime(&t);
 
+	generateBot();
     int new_events;
     while (1) {
         std::cout << "Waiting for client" << std::endl;
@@ -51,7 +52,7 @@ void Server::active() {
         if (new_events < 0) {
             close(server_fd);
             close(kq);
-            throw std::bad_exception();
+            throw KeventFailException();
         }
         changeList.clear();
         for (int i = 0; i < new_events; i++) {
@@ -93,11 +94,11 @@ Channel& Server::getChannel(std::string &chName){
     return it->second;
 }
 
-bool Server::isServerUser(std::string &user){
+bool Server::isServerUser(std::string user){
     std::map<int, Client>::iterator it;
 
     for (it = client.begin(); it != client.end(); ++it){
-        if (it->second.getNick() == user)
+        if (it->second.getLowNick() == user)
             return true;
     }
     return false;

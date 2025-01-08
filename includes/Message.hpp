@@ -12,8 +12,9 @@
 #define ERR_ERRONEUSNICKNAME(nickname, command) (":localhost 432 " + nickname + " " + command + " :Erroneus nickname\r\n")
 #define ERR_NICKNAMEINUSE(nickname, command) (":localhost 433 " + nickname + " " + command + " :Nickname is already in use.\r\n")
 #define RPL_NICK(oldnick, username, ipaddr, newnick) (":" + oldnick + "!" + username + "@"+ ipaddr + " NICK :" + newnick + "\r\n")
+// Quit
+#define ERR_CLOSE(username, ipaddr, msg) ("ERROR :Closing link: (" + username + "@" + ipaddr + ") [" + msg + "]\r\n")
 // PASS, USER
-#define ERR_CLOSE() ("ERROR :Closing link: (a@127.0.0.1) [Access denied by configuration]\r\n")
 #define ERR_NEEDMOREPARAMS(nickname, command) (":localhost 461 " + nickname + " " + command + " :Not enough parameters\r\n")
 #define ERR_ALREADYREGISTRED(nickname) (":localhost 462 " + nickname + " : You may not reregister\r\n")
 #define ERR_ERRONEUSUSER(nickname) (":localhost 468 " + nickname + " :Your username is not valid\r\n")
@@ -79,6 +80,8 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 #define RPL_UMODEIS
 #define ERR_UMODEUNKNOWNFLAG
 
+//BOT
+#define ERR_BOTSTART() ("BOT NEED START\r\n")
 
 // PASS, NICK, USER 입력후 서버 접속 메세지
 #define MSG_WELCOME(Time, nickname) (":localhost 001 " + nickname + " : Welcome to the Localnet IRC Network\r\n" + \
@@ -93,3 +96,5 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 						":localhost 372 " + nickname + " :- *  questions or issues.                          *\r\n" + \
 						":localhost 372 " + nickname + " :- **************************************************\r\n" + \
 						":localhost 376 " + nickname + " :End of message of the day.\r\n")
+
+void		sendMsg(std::string msg, int fd);
