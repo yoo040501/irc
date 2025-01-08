@@ -9,7 +9,9 @@ void Server::processAuth(std::string &str, Client &cl) {
 
     tmp = str.substr(0, del);
     std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
-
+	if (tmp == "QUIT"){
+		quitCheck(trimSpace(str.substr(tmp.size())), cl);
+		return; }
     if (tmp == "PASS") {
         if (del != std::string::npos)
             str.erase(0, del);
@@ -22,6 +24,7 @@ void Server::processAuth(std::string &str, Client &cl) {
             tmp = str.substr(0, del);
         }
     }
+	std::cout << str << std::endl;
     if (tmp == "NICK") {
         if (del != std::string::npos)
             str.erase(0, del);
@@ -40,7 +43,7 @@ void Server::processAuth(std::string &str, Client &cl) {
 
     if (cl.getPassCheck() == true && cl.getUser() != "" && cl.getNick() != "*") {
         if (cl.getPass() == false) {
-            closeClient(ERR_CLOSE(), cl);
+            closeClient(ERR_CLOSE(cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), "Access denied by configuration"), cl);
             return;
         } else if (cl.getAuth() == false) {
             sendMsg(MSG_WELCOME(servertime, cl.getNick()), cl.getfd());
@@ -80,14 +83,16 @@ void Server::checkCommand(char *buffer, Client &cl) {
         getline(iss, tmp, ' ');
         std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
 
-        if (tmp == "PASS")
+        if (tmp == "PRIVMSG")
+            privmsgCmd(trimSpace(str.substr(tmp.size())), cl);
+		else if (cl.getBot() == true)
+			bot->botMode(str, cl); // bot active
+        else if (tmp == "PASS")
             passCheck(trimSpace(str.substr(tmp.size())), cl);
         else if (tmp == "NICK")
             nickCheck(trimSpace(str.substr(tmp.size())), cl);
         else if (tmp == "USER")
             userCheck(trimSpace(str.substr(tmp.size())), cl);
-        else if (tmp == "PRIVMSG")
-            privmsgCmd(trimSpace(str.substr(tmp.size())), cl);
         else if (tmp == "JOIN")
             channelCheck(trimSpace(str.substr(tmp.size())), cl);
         else if (tmp == "PING")
@@ -111,6 +116,10 @@ void Server::checkCommand(char *buffer, Client &cl) {
             topicCheck(trimSpace(str.substr(tmp.size())), cl);
         else if (tmp == "PART")
             partCheck(trimSpace(str.substr(tmp.size())), cl);
+		else if (tmp == "QUIT")
+			quitCheck(trimSpace(str.substr(tmp.size())), cl);
+		else if (tmp == "BOT")
+			bot->botMode(trimSpace(str.substr(tmp.size())), cl);
         else {
             if (!str.empty())
                 sendMsg(ERR_UNKNOWNCOMMAND(cl.getNick(), tmp), cl.getfd());

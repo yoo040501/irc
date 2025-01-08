@@ -64,6 +64,7 @@ void	Bot::botMode(std::string str, Client &cl){
 		else{
 			std::string message = getFortune();
 			sendMsg(message, cl.getfd());
+			sendMsg("Good Luck!!\r\n", cl.getfd());
 			cl.setBot(false);
 		}
 	}

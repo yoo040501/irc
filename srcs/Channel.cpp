@@ -189,3 +189,9 @@ void Channel::inviteClient(Client &client) {
 std::vector<Client *> &Channel::getClientList() {
 	return clientList_;
 }
+
+void		Channel::removeinviteClient(Client &client){
+	std::vector<Client *>::iterator it = std::find(invitedClients_.begin(), invitedClients_.end(), &client);
+	if (it != invitedClients_.end())
+		invitedClients_.erase(it);
+}

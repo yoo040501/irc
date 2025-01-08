@@ -80,6 +80,7 @@ class Channel
 		long		getLimit();
 		void 		inviteClient(int fd); // 초대 클라이언트 관리용 메서드 추가
 		void        inviteClient(Client &client);
+		void		removeinviteClient(Client &client);
 		bool        isClientInvited(Client &client);
 		std::vector<Client *> &getClientList();
 
