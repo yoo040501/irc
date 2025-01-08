@@ -19,7 +19,6 @@ Bot&	Bot::operator=(Bot const& oth){
 }
 
 Bot::~Bot(){
-
 }
 
 std::string	Bot::getFortune(){
@@ -49,14 +48,14 @@ bool	Bot::isMode(std::string str){
 void	Bot::botMode(std::string str, Client &cl){
 	if (cl.getBot() == false){ // bot mode 처음 들어올때
 		cl.setBot(true);
-		if (str.empty()){
-			sendMsg("Hello " + cl.getNick() + "!!!\r\n", cl.getfd());
-			sendMsg("This bot provides 1.Today's fortune.\r\nplease enter Number or Mode(fortune)\r\n", cl.getfd());
-		}
-		else if (str == "1" || str == "fortune"){
+		if (str == "1" || str == "fortune"){
 			std::string message = getFortune();
 			sendMsg(message, cl.getfd());
 			cl.setBot(false);
+		}
+		else {
+			sendMsg("Hello " + cl.getNick() + "!!!\r\n", cl.getfd());
+			sendMsg("This bot provides 1.Today's fortune.\r\nplease enter Number or Mode(fortune)\r\n", cl.getfd());
 		}
 	}
 	else{

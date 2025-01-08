@@ -78,6 +78,8 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 #define RPL_UMODEIS
 #define ERR_UMODEUNKNOWNFLAG
 
+//BOT
+#define ERR_BOTSTART() ("BOT NEED START\r\n")
 
 // PASS, NICK, USER 입력후 서버 접속 메세지
 #define MSG_WELCOME(Time, nickname) (":localhost 001 " + nickname + " : Welcome to the Localnet IRC Network\r\n" + \

@@ -71,6 +71,25 @@ bool hasDuplicate(std::vector<std::string>& success, std::string& target){
                 return false;
 }
 
+bool    Server::isBot(std::istringstream& iss, Client &cl, std::string& str){
+        std::string tmp;
+
+        tmp = str;
+        std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
+        if (tmp == "BOT"){
+                if (getline(iss, tmp, ' ') && tmp[0] == ':')
+                        tmp.erase(0, 1);
+                std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
+                if (tmp == "START" || cl.getBot())
+                        bot->botMode(tmp, cl);
+                else
+                        sendMsg(ERR_BOTSTART(), cl.getfd());
+                return true;
+        }
+        else
+                return false;
+}
+
 void    Server::privmsgCmd(std::string str, Client &cl){
         std::string                     tmp;
         std::istringstream              iss(str);
@@ -82,6 +101,8 @@ void    Server::privmsgCmd(std::string str, Client &cl){
                 sendMsg(ERR_NEEDMOREPARAMS(cl.getNick(), "PRIVMSG"), cl.getfd());
                 return ;
 	}
+        if (isBot(iss, cl, tmp))
+                return ;
         splitReceiver(receiver, tmp);
         
         if (!getline(iss, tmp)){

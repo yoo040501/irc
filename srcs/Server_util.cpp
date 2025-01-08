@@ -7,7 +7,7 @@ bool Server::isPort(char *pt) // 1 ~ 65535
 	iss >> std::noskipws >> port;
     if (!iss.eof() || iss.fail())
         return false;
-    if (port < 1 || port > 65535)
+    if (port < 1024 || port > 65535)
         return false;
     return true;
 }

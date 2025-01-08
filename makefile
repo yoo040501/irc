@@ -12,9 +12,9 @@ NAME = ircserv
 INCS = ./includes
 RMF = rm -rf
 
-all : $(NAME)
+all : $(NAME) $(INCS)
 
-$(NAME): $(OBJS) $(INCS)
+$(NAME): $(OBJS) 
 	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
 
 

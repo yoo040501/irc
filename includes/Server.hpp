@@ -72,6 +72,9 @@ class Server
 		void	channelMode(std::map<std::string, Channel>::iterator &it, std::istringstream& iss, Client &cl);
 		bool	isServerUser(std::string user);
 
+		// Bot
+		bool    isBot(std::istringstream& iss, Client &cl, std::string& str);
+		
 		// Privmsg
 		void    	privmsgCmd(std::string str, Client &cl);
 		bool		isValidChname(std::string& chName);
