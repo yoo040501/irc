@@ -98,8 +98,8 @@ class Server
 
         void	openSocket();
         void	active();
-		static std::map<int, Client>& getClients();
-  		static std::map<std::string, Channel>& getChannels();
+		std::map<int, Client> getClients();
+  		std::map<std::string, Channel> getChannels();
     	Client* findClient(const std::string &nick);
    		Channel* findChannel(const std::string &channelName);
     	void handleInviteCommand(Client &cl, const std::string &argsStr);

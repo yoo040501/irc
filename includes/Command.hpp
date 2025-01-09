@@ -24,12 +24,12 @@ class Command {
 
     void invite(Client& client, std::vector<std::string> args);
 	std::string NEEDMOREPARAMS(std::string nickname, std::string command);
-  
+	Server	&server_;
+
   private:
 	Command &operator=(const Command&);
 	Command(const Command&);
 	
-	Server	&server_;
 };
 
 #endif

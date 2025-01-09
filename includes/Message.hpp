@@ -44,26 +44,22 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 #define RPL_KICK(nickname, username, ipaddr, channel, user, msg) (":" + nickname + "!" + username + "@" + ipaddr + " KICK " + channel + " " + user + " :" + msg + "\r\n")
 #define RPL_MODE(nickname, username, ipaddr, channel, msg) (":" + nickname + "!" + username + "@" + ipaddr + " MODE " + channel + " " + msg + "\r\n")
 // PING
-# define MSG_PONG(cmd) (":irc.local PONG irc.local :" + cmd + "\r\n")
+# define MSG_PONG(cmd) (":localhost PONG localhost :" + cmd + "\r\n")
 // PART :asd!a@127.0.0.1 PART :#ch1
 #define RPL_PART(nickname, username, ipaddr, channel) (":" + nickname + "!" + username + "@" + ipaddr + " PART :" + channel + "\r\n")
 
 // INVITE
 #define ERR_NOTREGISTERED(nick) (":" + nick + " :You have not registered\r\n")
-// #define ERR_NEEDMOREPARAMS(nick, command) (":" + nick + " :Not enough parameters for " + command + "\r\n")
-// #define ERR_NOSUCHCHANNEL(nick, channel) (":" + nick + " :No such channel: " + channel + "\r\n")
-// #define ERR_NOSUCHNICK(nick, invitee) (":" + nick + " :No such nick/channel: " + invitee + "\r\n")
-// #define ERR_NOTONCHANNEL(nick, channel) (":" + nick + " :You're not on that channel: " + channel + "\r\n")
-// #define ERR_CHANOPRIVSNEEDED(nick, channel) (":" + nick + " :You're not channel operator: " + channel + "\r\n")
-#define ERR_USERONCHANNEL(nick, invitee, channel) (":" + nick + " :User " + invitee + " is already on channel: " + channel + "\r\n")
-#define RPL_INVITING(nick, invitee, channel) (":" + nick + " :Inviting " + invitee + " to channel " + channel + "\r\n")
-#define ERR_INVALIDDURATION(nick) (":irc.local NOTICE " + nick + " :*** Invalid duration for invite\r\n")
-#define ERR_ALREADYONCHANNEL(nick, invitee, channel) (":irc.local 443 " + nick + " " + invitee + " " + channel + " :is already on channel\r\n")
+#define ERR_USERONCHANNEL(nick, invitee, channel) (":localhost 443 " + nick + " " + invitee + " " + channel + " :is already on channel\r\n")
+#define RPL_INVITING(nick, invitee, channel) (":localhost 341 " + nick + " " + invitee + " :" + channel + "\r\n")
+#define RPL_AWAY_INVITE(nick, user, invitee, ipaddr, channel) (":" + nick + "!" + user + "@" + ipaddr + " INVITE " + invitee + " :" + channel + "\r\n")
+#define ERR_INVALIDDURATION(nick) (":localhost NOTICE " + nick + " :*** Invalid duration for invite\r\n")
+#define ERR_ALREADYONCHANNEL(nick, invitee, channel) (":localhost 443 " + nick + " " + invitee + " " + channel + " :is already on channel\r\n")
 
 // TOPIC
 #define ERR_NOTONCHANNEL(nickname, channel) (":localhost 442 " + nickname + " " + channel + " :You're not on that channel\r\n")
 #define RPL_NOTOPIC(nickname, channel) (":localhost 331 " + nickname + " " + channel + " :No topic is set.\r\n")
-#define RPL_TOPIC(nickname, channel, topic) (":localhost 332 " + nickname + " " + channel + " :" + topic + "\r\n") //:irc.local 333 hello #ch1 aaaa!1@127.0.0.1 :1735550135
+#define RPL_TOPIC(nickname, channel, topic) (":localhost 332 " + nickname + " " + channel + " :" + topic + "\r\n")
 #define	RPL_TIMETOPIC(nickname, channel, setnick, setuser, ipaddr, settime) (":localhost 333 " + nickname + " " + channel + " " + setnick + "!" + setuser + "@" + ipaddr + " :" + settime + "\r\n")
 #define ERR_CHANOPRIVSNEEDED(nickname, channel) (":localhost 482 " + nickname + " " + channel + " :You're not channel operator\r\n")
 

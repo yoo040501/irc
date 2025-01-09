@@ -125,6 +125,8 @@ void Server::checkCommand(char *buffer, Client &cl) {
                 sendMsg(ERR_UNKNOWNCOMMAND(cl.getNick(), tmp), cl.getfd());
         }
     }
+	// std::cout << "This is Server: " << cl.getNick() << std::endl;
+	// std::cout << "This is Command: " << command_.server_.getClient(cl.getNick()).getNick() << std::endl;
 }
 
 std::string Command::NEEDMOREPARAMS(std::string nickname, std::string command) {
