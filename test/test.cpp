@@ -20,8 +20,28 @@ int main(int ac, char **av)
 	// trimSpace(str.substr(3));
 	// if (str.size() > 9)
 	// 	str = str.substr(0,9);
-	std::string str = "abcd";
+	std::string arg = "he :hel    l    o";
+	std::vector<std::string> args;
+	std::istringstream argStream(arg);
+	std::string token;
+	bool foundColon = false;
 
-	std::cout << str.substr(1) << std::endl;
+	while (std::getline(argStream, token, ' ')) {
+		if (!foundColon && token[0] == ':') {
+			foundColon = true;
+			std::string remaining;
+			while (std::getline(argStream, remaining, ' ')) {
+				token += " " + remaining;
+			}
+			token.erase(0, 1);
+			args.push_back(token);
+			break;
+		} else {
+			args.push_back(token);
+		}
+	}
+	for (size_t i=0;i<args.size();i++){
+		std::cout << args[i] << std::endl;
+	}
 	return 0;
 }

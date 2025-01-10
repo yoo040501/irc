@@ -66,3 +66,48 @@ void	Server::generateBot(){
     bot = _bot;
     std::cout << "Bot making Successfully\n";
 }
+
+// 원래 구현되어 있던 Server.cpp 코드
+Channel& Server::getChannel(std::string &chName){
+    std::map<std::string, Channel>::iterator it;
+
+    for (it = channel.begin(); it != channel.end(); ++it){
+        if (it->first == chName)
+            break;
+    }
+    return it->second;
+}
+
+bool Server::isServerUser(std::string user){
+    std::map<int, Client>::iterator it;
+
+    for (it = client.begin(); it != client.end(); ++it){
+        if (it->second.getLowNick() == user)
+            return true;
+    }
+    return false;
+}
+
+bool Server::isValidChname(std::string &chName){
+    std::map<std::string, Channel>::iterator it;
+
+    for (it = channel.begin(); it != channel.end(); ++it){
+        if (it->first == chName)
+            return true;
+    }
+    return false;
+}
+
+Client& Server::getClient(std::string &clName){
+    std::map<int, Client>::iterator it;
+
+    for (it = client.begin(); it != client.end(); ++it){
+        if (it->second.getNick() == clName)
+            break;
+    }
+    return it->second;
+}
+
+std::map<std::string, int>	Server::getNicks()	{return this->nick;}
+std::map<std::string, Channel> Server::getChannels() { return this->channel; }
+std::map<int, Client> Server::getClients() { return this->client; }

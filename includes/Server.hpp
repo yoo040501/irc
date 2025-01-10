@@ -13,8 +13,8 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <vector>
+#include <stack>
 #include <map>
-#include <queue>
 #include <algorithm>
 #include <fstream>
 #include <sstream>
@@ -22,11 +22,12 @@
 #include "Client.hpp"
 #include "Message.hpp"
 #include "Channel.hpp"
-#include "ErrorMsg.hpp"
+#include "ExceptionMsg.hpp"
 
 class Bot;
 class Client;
 class Channel;
+class Command;
 
 class Server
 {
@@ -64,6 +65,7 @@ class Server
 		void	topicCheck(std::string str, Client &cl);
 		void	partCheck(std::string str, Client &cl);
 		void	quitCheck(std::string str, Client &cl);
+		void	invite(Client& client, std::string arg);
 		void	operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::pair<std::string, std::string>& success, char op);
 		
 		// Mode
@@ -81,21 +83,19 @@ class Server
 		Channel& 	getChannel(std::string& chName);
 		Client&		getClient(std::string &clName);
 
-		// Invite
-		void	handleInviteErrors(Client &inviter, Channel *channel, Client *invitee, const std::string &chanName, const std::string &inviteeName);
-		void	sendInviteMsg(Channel &channel, Client &inviter, Client &invitee);
-
         Server();
         Server(Server const& copy);
         Server& operator=(Server const& oth);
+
     public:
         Server(char *pt, char *pw);
         ~Server();
 
         void	openSocket();
         void	active();
-		static std::map<int, Client>& getClients();
-  		static std::map<std::string, Channel>& getChannels();
+		std::map<int, Client> getClients();
+		std::map<std::string, int> getNicks();
+  		std::map<std::string, Channel> getChannels();
 };
 
 std::string	trimSpace(std::string str);

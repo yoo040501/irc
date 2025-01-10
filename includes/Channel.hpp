@@ -38,7 +38,6 @@ class Channel
 		std::vector<std::string>	mode; // o|p|s|i|t|n|b|v|l|k
 		long						limit;
 		Channel& operator=(Channel const& oth);
-		std::vector<Client *> clientList_;
 		std::vector<Client *> invitedClients_;
 
 	public:
@@ -80,10 +79,8 @@ class Channel
 		long		getLimit();
 		void 		inviteClient(int fd); // 초대 클라이언트 관리용 메서드 추가
 		void        inviteClient(Client &client);
+		void		removeinviteClient(Client &client);
 		bool        isClientInvited(Client &client);
-		std::vector<Client *> &getClientList();
-
-
 
 };
 

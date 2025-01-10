@@ -31,9 +31,7 @@ class Client
         std::string 		realname;
         std::string 		mode;
 		// invite
-		std::string 		nickname_;
-		std::string 		username_;
-		std::string 		hostname_;
+		std::vector<std::string>	Invited_channel;
 		std::string 		sendbuf_;
 		struct sockaddr_in	addr;
 		socklen_t			len;
@@ -52,7 +50,8 @@ class Client
 		void	setNick(std::string const &ni);
 		void	setUser(std::string const &un, std::string const &hn, std::string const &sn, std::string const &rn);
 		void	setaddr(struct sockaddr_in &tmp);
-		void 	addToSendBuffer(const std::string &message);
+		void	addInviteChannel(std::string channel);
+		void	removeInviteChannel(std::string channel);
 
 		int					getfd() const;
 		bool				getPass() const;
@@ -64,6 +63,7 @@ class Client
 		std::string&		getOldnick();
 		std::string&		getUser();
 		struct sockaddr_in	getaddr();
+		const std::vector<std::string>& getInvitedChannel();
 
 		const std::string &getHostname() const;
 		const std::string &getUsername() const;
