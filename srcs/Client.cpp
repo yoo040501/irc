@@ -68,7 +68,16 @@ const std::string &Client::getHostname() const {
 	return this->hostname;
 }
 
-void Client::addToSendBuffer(const std::string &message) {
-	std::cout << ">> " << message << std::endl;
-	sendbuf_ += message + "\r\n";
+void	Client::addInviteChannel(std::string channel){
+	Invited_channel.push_back(channel);
+}
+
+void	Client::removeInviteChannel(std::string channel){
+	std::vector<std::string>::iterator it = Invited_channel.begin();
+	while (it != Invited_channel.end()){
+		if (*it == channel)
+			it = Invited_channel.erase(it);
+		else
+			it++;
+	}
 }

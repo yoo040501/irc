@@ -177,17 +177,17 @@ void Channel::inviteClient(int fd) {
 
 // invite
 bool Channel::isClientInvited(Client &client) {
+	if (!invitedClients_.empty())
+		std::cout << invitedClients_[0]->getNick() << std::endl;
 	return std::find(invitedClients_.begin(), invitedClients_.end(), &client) != invitedClients_.end();
 }
 
 void Channel::inviteClient(Client &client) {
 	if (std::find(invitedClients_.begin(), invitedClients_.end(), &client) == invitedClients_.end()) {
 		invitedClients_.push_back(&client);
+		client.addInviteChannel(this->getName());
+		std::cout << invitedClients_[0]->getNick() << std::endl;
 	}
-}
-
-std::vector<Client *> &Channel::getClientList() {
-	return clientList_;
 }
 
 void		Channel::removeinviteClient(Client &client){

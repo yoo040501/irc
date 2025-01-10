@@ -24,7 +24,6 @@ void Server::processAuth(std::string &str, Client &cl) {
             tmp = str.substr(0, del);
         }
     }
-	std::cout << str << std::endl;
     if (tmp == "NICK") {
         if (del != std::string::npos)
             str.erase(0, del);
@@ -100,15 +99,8 @@ void Server::checkCommand(char *buffer, Client &cl) {
         else if (tmp == "KICK")
             kickCheck(trimSpace(str.substr(tmp.size())), cl);
         else if (tmp == "INVITE") {
-            // Command 객체의 invite 함수 호출
-            std::istringstream argStream(trimSpace(str.substr(tmp.size())));
-            std::vector<std::string> args;
-            std::string token;
 
-            while (argStream >> token)
-                args.push_back(token);
-
-            command_.invite(cl, args);
+            invite(cl, trimSpace(str.substr(tmp.size())));
         }
         else if (tmp == "MODE")
             modeCmd(trimSpace(str.substr(tmp.size())), cl);
@@ -125,6 +117,8 @@ void Server::checkCommand(char *buffer, Client &cl) {
                 sendMsg(ERR_UNKNOWNCOMMAND(cl.getNick(), tmp), cl.getfd());
         }
     }
+	if (!cl.getInvitedChannel().empty())
+		std::cout << "hhhhhhhhhhhh\r\n";
 	// std::cout << "This is Server: " << cl.getNick() << std::endl;
 	// std::cout << "This is Command: " << command_.server_.getClient(cl.getNick()).getNick() << std::endl;
 }

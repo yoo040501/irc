@@ -22,7 +22,6 @@
 #include "Client.hpp"
 #include "Message.hpp"
 #include "Channel.hpp"
-#include "Command.hpp"
 #include "ExceptionMsg.hpp"
 
 class Bot;
@@ -66,6 +65,7 @@ class Server
 		void	topicCheck(std::string str, Client &cl);
 		void	partCheck(std::string str, Client &cl);
 		void	quitCheck(std::string str, Client &cl);
+		void	invite(Client& client, std::string arg);
 		void	operateFlag(Channel &ch, Client &cl, std::istringstream& iss, std::pair<std::string, std::string>& success, char op);
 		
 		// Mode
@@ -83,14 +83,9 @@ class Server
 		Channel& 	getChannel(std::string& chName);
 		Client&		getClient(std::string &clName);
 
-		// Invite
-		void	handleInviteErrors(Client &inviter, Channel *channel, Client *invitee, const std::string &chanName, const std::string &inviteeName);
-		void	sendInviteMsg(Channel &channel, Client &inviter, Client &invitee);
-
         Server();
         Server(Server const& copy);
         Server& operator=(Server const& oth);
-		Command command_;
 
     public:
         Server(char *pt, char *pw);
@@ -99,11 +94,8 @@ class Server
         void	openSocket();
         void	active();
 		std::map<int, Client> getClients();
+		std::map<std::string, int> getNicks();
   		std::map<std::string, Channel> getChannels();
-    	Client* findClient(const std::string &nick);
-   		Channel* findChannel(const std::string &channelName);
-    	void handleInviteCommand(Client &cl, const std::string &argsStr);
-		void 	invite(Client& client, std::vector<std::string> args);
 };
 
 std::string	trimSpace(std::string str);

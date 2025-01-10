@@ -50,7 +50,8 @@ class Client
 		void	setNick(std::string const &ni);
 		void	setUser(std::string const &un, std::string const &hn, std::string const &sn, std::string const &rn);
 		void	setaddr(struct sockaddr_in &tmp);
-		void 	addToSendBuffer(const std::string &message);
+		void	addInviteChannel(std::string channel);
+		void	removeInviteChannel(std::string channel);
 
 		int					getfd() const;
 		bool				getPass() const;

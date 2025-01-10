@@ -38,7 +38,6 @@ class Channel
 		std::vector<std::string>	mode; // o|p|s|i|t|n|b|v|l|k
 		long						limit;
 		Channel& operator=(Channel const& oth);
-		std::vector<Client *> clientList_;
 		std::vector<Client *> invitedClients_;
 
 	public:
@@ -82,9 +81,6 @@ class Channel
 		void        inviteClient(Client &client);
 		void		removeinviteClient(Client &client);
 		bool        isClientInvited(Client &client);
-		std::vector<Client *> &getClientList();
-
-
 
 };
 

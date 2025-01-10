@@ -108,31 +108,6 @@ Client& Server::getClient(std::string &clName){
     return it->second;
 }
 
-Channel* Server::findChannel(const std::string &channelName) {
-    std::map<std::string, Channel>::iterator it = channels.find(channelName);
-    if (it == channels.end()) {
-        return NULL;  // 채널을 찾지 못한 경우 nullptr 반환
-    }
-    return &(it->second);  // 채널 객체의 주소 반환
-}
-
-Client* Server::findClient(const std::string &nick) {
-    std::map<int, Client>::iterator it = clients.begin();
-    while (it != clients.end()) {
-        std::string tmpnick = it->second.getNick();
-        if (tmpnick == nick) {
-            return &(it->second); // Client 객체의 주소 반환
-        }
-        ++it;
-    }
-    return NULL; // 클라이언트를 찾지 못한 경우 nullptr 반환
-}
-
-void Server::sendInviteMsg(Channel &channel, Client &inviter, Client &invitee) {
-    sendMsg(RPL_INVITING(inviter.getNick(), invitee.getNick(), channel.getName()), inviter.getfd());
-    sendMsg(":localhost INVITE " + invitee.getNick() + " " + channel.getName() + "\r\n", invitee.getfd());
-    channel.addClient(invitee);
-}
-
+std::map<std::string, int>	Server::getNicks()	{return this->nick;}
 std::map<std::string, Channel> Server::getChannels() { return this->channel; }
 std::map<int, Client> Server::getClients() { return this->client; }
