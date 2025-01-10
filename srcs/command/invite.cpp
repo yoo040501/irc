@@ -54,34 +54,12 @@ void Server::invite(Client& clien, std::string arg) {
 	std::transform(nickname.begin(), nickname.end(), nickname.begin(), ::tolower);
 	std::transform(channel_name.begin(), channel_name.end(), channel_name.begin(), ::tolower);    
 
-    // // 채널명이 유효하지 않은 경우 처리 밑에 코드에서 다 찾을수 있지 않은지??
-    // if (channel_name.empty() || channel_name[0] != '#') {
-    //     sendMsg(ERR_NOSUCHCHANNEL(client.getNickname(), channel_name), client.getfd());
-    //     return;
-    // }
-
-	// std::map<std::string, Channel> channels = server_.getChannels();
     std::map<std::string, Channel>::iterator it = channel.find(channel_name);
     // 채널 존재 여부 확인
     if (it == channel.end()) {
         sendMsg(ERR_NOSUCHCHANNEL(clien.getNickname(), channel_name), clien.getfd());
         return;
     }
-
-    // 채널 내 클라이언트 존재 여부 확인
-	// std::map<int, Client> clients = it->second.getClient(); 
-    // bool client_found = false;
-	// std::map<int, Client>::iterator it_client;
-    // for (it_client = clients.begin(); it_client != clients.end(); it_client++) {
-    //     if ((it_client->second).getNickname() == client.getNickname()) {
-    //         client_found = true;
-    //         break;
-    //     }
-    // }
-    // if (!client_found) {
-    //     sendMsg(ERR_NOTONCHANNEL(client.getNickname(), channel_name), client.getfd());
-    //     return;
-    // }
 
 	if (!isExistUSER(clien.getNickname(), nick)){
 		sendMsg(ERR_NOTONCHANNEL(clien.getNickname(), it->second.getName()), clien.getfd());
@@ -106,14 +84,6 @@ void Server::invite(Client& clien, std::string arg) {
         return;
     }
 
-    // 대상 클라이언트가 이미 채널에 있는지 확인
-    // for (std::vector<Client *>::iterator it_client = clients.begin(); it_client != clients.end(); ++it_client) {
-    //     if ((*it_client)->getNickname() == nickname) {
-    //         sendMsg(ERR_USERONCHANNEL(client.getNickname(), nickname, channel_name), client.getfd());
-    //         return;
-    //     }
-    // }
-
     //대상 클라이언트가 초대할 채널에 이미 존재하는지 확인 위에랑 중복된 코드인지???
     if (it->second.isChannelUser(nickname)) {
         sendMsg(ERR_ALREADYONCHANNEL(clien.getNickname(), nickname, it->second.getName()), clien.getfd());
@@ -126,7 +96,6 @@ void Server::invite(Client& clien, std::string arg) {
     }
 
     // 초대 메시지 전송
-    //clien.addToSendBuffer(":" + clien.getNickname() + " INVITE " + nickname + " " + channel_name);
 	sendMsg(RPL_INVITING(clien.getNick(), target_client->getNick(), it->second.getName()), clien.getfd());
 	sendMsg(RPL_AWAY_INVITE(clien.getNick(), clien.getUser(), target_client->getNick(), inet_ntoa(clien.getaddr().sin_addr), it->second.getName()), target_client->getfd());
 }

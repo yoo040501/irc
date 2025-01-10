@@ -116,8 +116,4 @@ void Server::checkCommand(char *buffer, Client &cl) {
                 sendMsg(ERR_UNKNOWNCOMMAND(cl.getNick(), tmp), cl.getfd());
         }
     }
-	if (!cl.getInvitedChannel().empty())
-		std::cout << "hhhhhhhhhhhh\r\n";
-	// std::cout << "This is Server: " << cl.getNick() << std::endl;
-	// std::cout << "This is Command: " << command_.server_.getClient(cl.getNick()).getNick() << std::endl;
 }
