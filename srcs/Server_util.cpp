@@ -64,7 +64,6 @@ void	Server::generateBot(){
 
     createEvent(_bot->getfd());
     bot = _bot;
-    std::cout << "Bot making Successfully\n";
 }
 
 // 원래 구현되어 있던 Server.cpp 코드

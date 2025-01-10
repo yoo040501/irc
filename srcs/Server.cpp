@@ -46,7 +46,6 @@ void Server::active() {
 
     int new_events;
     while (1) {
-        std::cout << "Waiting for client" << std::endl;
         new_events = kevent(kq, changeList.data(), changeList.size(), eventList.data(), eventList.size(), NULL);
         if (new_events < 0) {
             close(server_fd);
@@ -69,7 +68,6 @@ void Server::active() {
                     memset(buffer, 0, sizeof(buffer));
                     int recv_len = recv(eventList[i].ident, buffer, sizeof(buffer), 0);
                     if (recv_len <= 0) {
-                        std::cout << "Client disconnected." << std::endl;
 						closeClient("disconnected", client[eventList[i].ident]);
                     }
                     else
