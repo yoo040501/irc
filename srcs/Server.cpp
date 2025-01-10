@@ -4,7 +4,7 @@
 std::map<int, Client> Server::clients;
 std::map<std::string, Channel> Server::channels;
 
-Server::Server(char *pt, char *pw): command_(*this) {  // Command 객체를 초기화하면서 Server 객체 참조 전달
+Server::Server(char *pt, char *pw) {  // Command 객체를 초기화하면서 Server 객체 참조 전달
     if (isPort(pt) == false)
         throw std::invalid_argument("check port number");
     password = std::string(pw);

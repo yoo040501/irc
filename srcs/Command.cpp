@@ -1,5 +1,4 @@
 #include "../includes/Server.hpp"
-#include "../includes/Command.hpp"
 #include "../includes/Client.hpp"
 #include "../includes/Message.hpp"
 
@@ -121,27 +120,4 @@ void Server::checkCommand(char *buffer, Client &cl) {
 		std::cout << "hhhhhhhhhhhh\r\n";
 	// std::cout << "This is Server: " << cl.getNick() << std::endl;
 	// std::cout << "This is Command: " << command_.server_.getClient(cl.getNick()).getNick() << std::endl;
-}
-
-std::string Command::NEEDMOREPARAMS(std::string nickname, std::string command) {
-    return ERR_NEEDMOREPARAMS(nickname, command);
-}
-
-Command::Command(const Command &other) : server_(other.server_) {
-    std::cerr << "Copy constructor is not allowed for Command class." << std::endl;
-}
-
-Command &Command::operator=(const Command &other) {
-    if (this != &other) {
-        std::cerr << "Assignment operator is not allowed for Command class." << std::endl;
-    }
-    return *this;
-}
-
-Command::Command(Server &server)
-    : server_(server) {
-    // 생성자: Server 객체 참조 초기화
-}
-
-Command::~Command() {
 }

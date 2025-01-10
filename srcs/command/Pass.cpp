@@ -13,9 +13,7 @@ void	Server::closeClient(std::string msg, Client &cl){
 		else	it++;
 	}
 	close(cl.getfd());
-	struct kevent ev;
-    EV_SET(&ev, cl.getfd(), EVFILT_READ, EV_DELETE, 0, 0, NULL);
-	//createEvent(cl.getfd());
+	createEvent(cl.getfd());
 	nick.erase(cl.getNick());
 	client.erase(cl.getfd());
 }
