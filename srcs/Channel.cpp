@@ -63,13 +63,11 @@ void	Channel::removeMode(std::string &flag){
 }
 
 std::string	Channel::printMode(){
-	std::cout << "channel mode" << std::endl;
 	std::string params;
 	for(std::vector<std::string>::iterator it = mode.begin(); it < mode.end(); it++){
 		params += *it;
 		std::cout << *it << " ";
 	}
-	std::cout << std::endl;
 	return params;
 }
 
