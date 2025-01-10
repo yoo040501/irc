@@ -45,7 +45,6 @@ void Server::active() {
     time_t t = time(NULL);
     servertime = ctime(&t);
 
-	//generateBot();
     int new_events;
     while (1) {
         std::cout << "Waiting for client" << std::endl;

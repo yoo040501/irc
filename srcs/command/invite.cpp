@@ -7,18 +7,22 @@
 // invite만 입력할 경우 리스트
 
 void Command::invite(Client& client, std::vector<std::string> args) {
-    // 인자 개수가 3개보다 적을 경우 처리
+    // 인자 개수가 2개보다 적을 경우 처리
     if (args.size() < 2) {
-        client.addToSendBuffer(ERR_UNKNOWNCOMMAND(client.getNick(), "INVITE"));
+		std::vector<std::string> List = client.getInvitedChannel();
+		std::vector<std::string>::iterator it = List.begin();
+		while (it != List.end()){
+			sendMsg(RPL_INVITELIST(client.getNickname(), *it), client.getfd());
+			++it;
+		}
+        sendMsg(RPL_INVITEEND(client.getNickname()), client.getfd());
         return;
     }
-
-    // 인자 개수가 3개보다 많을 경우 처리
+    // 인자 개수가 2개보다 많을 경우 처리
     if (args.size() > 2) {
-        client.addToSendBuffer(ERR_INVALIDDURATION(client.getNick()));
+        sendMsg(ERR_INVALIDDURATION(client.getNick()), client.getfd());
         return;
     }
-
     std::string nickname = args[1];
     std::string channel_name = args[2];
 

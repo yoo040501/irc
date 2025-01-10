@@ -55,6 +55,8 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 #define RPL_AWAY_INVITE(nick, user, invitee, ipaddr, channel) (":" + nick + "!" + user + "@" + ipaddr + " INVITE " + invitee + " :" + channel + "\r\n")
 #define ERR_INVALIDDURATION(nick) (":localhost NOTICE " + nick + " :*** Invalid duration for invite\r\n")
 #define ERR_ALREADYONCHANNEL(nick, invitee, channel) (":localhost 443 " + nick + " " + invitee + " " + channel + " :is already on channel\r\n")
+#define RPL_INVITELIST(nick, channel) (":localhost 346 " + nick + " :" + channel + "\r\n")
+#define RPL_INVITEEND(nick) (":localhost 347 " + nick + " :End of INVITE list\r\n")
 
 // TOPIC
 #define ERR_NOTONCHANNEL(nickname, channel) (":localhost 442 " + nickname + " " + channel + " :You're not on that channel\r\n")
@@ -66,15 +68,9 @@ std::string RPL_NAMREPLY(const std::string &nickname, const std::string &type, c
 // MODE
 #define RPL_CHANNELMODEIS(nick, channel, params) (":localhost 324 " + nick + " " + channel + " :+" + params + "\r\n")
 #define RPL_CHANNELTIME(nick, channel, channeltime) (":localhost 329 " + nick + " " + channel + " :" + channeltime + "\r\n")
-#define ERR_KEYSET
-#define RPL_BANLIST
-#define RPL_ENDOFBANLIST
 #define ERR_UNKNOWNMODE(nick, c) (":localhost 472 "+ nick + " " + c + " :is an unknown mode character\r\n") 
 #define ERR_NOPARAMETER(nickname, channel, flag, mode, parameter) (":localhost 696 " + nickname + " " + channel + " " + flag + " * :You must specify a parameter for the " + mode + " mode. Syntax:" + parameter + "\r\n")
 #define ERR_CHANOPMODE(nickname, channel, mode) (":localhost 482 " + nickname + " " + channel + " :You must have channel op access or above to set channel mode " + mode + "\r\n")
-#define ERR_USERSDONTMATCH
-#define RPL_UMODEIS
-#define ERR_UMODEUNKNOWNFLAG
 
 //BOT
 #define ERR_BOTSTART() ("BOT NEED START\r\n")

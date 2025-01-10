@@ -56,14 +56,16 @@ std::string& Client::getNick() {return this->nick;}
 std::string& Client::getLowNick() {return this->lownick;}
 std::string& Client::getOldnick() {return this->oldnick;}
 std::string& Client::getUser() {return this->username;}
+const std::vector<std::string>& Client::getInvitedChannel() {return this->Invited_channel;}
+
 struct sockaddr_in	Client::getaddr() { return this->addr;}
 
-const std::string &Client::getNickname() const { return nickname_; }
+const std::string &Client::getNickname() const { return this->nick; }
 
-const std::string &Client::getUsername() const { return username_; }
+const std::string &Client::getUsername() const { return this->username; }
 
 const std::string &Client::getHostname() const {
-	return hostname_;
+	return this->hostname;
 }
 
 void Client::addToSendBuffer(const std::string &message) {

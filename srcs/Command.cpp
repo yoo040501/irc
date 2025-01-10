@@ -121,7 +121,7 @@ void Server::checkCommand(char *buffer, Client &cl) {
 		else if (tmp == "BOT")
 			bot->botMode(trimSpace(str.substr(tmp.size())), cl);
         else {
-            if (!str.empty())
+            if (!str.empty() && tmp != "WHO")
                 sendMsg(ERR_UNKNOWNCOMMAND(cl.getNick(), tmp), cl.getfd());
         }
     }

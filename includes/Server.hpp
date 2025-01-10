@@ -13,8 +13,8 @@
 #include <netinet/in.h>
 #include <fcntl.h>
 #include <vector>
+#include <stack>
 #include <map>
-#include <queue>
 #include <algorithm>
 #include <fstream>
 #include <sstream>
@@ -23,7 +23,7 @@
 #include "Message.hpp"
 #include "Channel.hpp"
 #include "Command.hpp"
-#include "ErrorMsg.hpp"
+#include "ExceptionMsg.hpp"
 
 class Bot;
 class Client;
