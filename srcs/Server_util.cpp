@@ -1,6 +1,6 @@
 #include "../includes/Server.hpp"
 
-bool Server::isPort(char *pt) // 1 ~ 65535
+bool Server::isPort(char *pt) // 0 ~ 65535, 0 ~ 1023 Well-known port
 {
     std::string tmp(pt);
 	std::istringstream iss(tmp);

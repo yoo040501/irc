@@ -54,7 +54,7 @@ void	Server::processAuth(std::string &str, Client &cl){
 
 void	Server::checkCommand(char *buffer, Client &cl){ //ctrl + D finsh
 	std::string str(buffer);
-	
+	std::cout << cl.getfd() << std::endl;
 	rebuffer.push(str); //일단 스택에 저장 -> 개행문자가 있다? 합침
 	if (str.find_first_of("\r\n") != std::string::npos){
 		str.clear();

@@ -18,7 +18,8 @@
 #define ERR_NEEDMOREPARAMS(nickname, command) (":localhost 461 " + nickname + " " + command + " :Not enough parameters\r\n")
 #define ERR_ALREADYREGISTRED(nickname) (":localhost 462 " + nickname + " : You may not reregister\r\n")
 #define ERR_ERRONEUSUSER(nickname) (":localhost 468 " + nickname + " :Your username is not valid\r\n")
-//PRIVMEG
+
+//PRIVMSG
 #define ERR_NORECIPIENT(nickname, command) (":localhost 411 " + nickname + " :No recipient given (" + command + ")\r\n")
 #define ERR_NOTEXTTOSEND(nickname) (":localhost 412 " + nickname + " :No text to send\r\n")
 #define ERR_CANNOTSENDTOCHAN(nickname, channel) (":localhost 404 " + nickname + " " + channel + " :Cannot send to channel\r\n")
@@ -27,6 +28,7 @@
 #define ERR_TOOMANYTARGETS(nickname, target) (":localhost 407 " + nickname +"<target> :Duplicate recipients. No message delivered\r\n")
 #define ERR_NOSUCHNICK(nickname, nick) (":localhost 401 " + nickname + " " + nick + " :No such nick/channel\r\n")
 #define RPL_AWAY(nickname, username, ipaddr, message) (":" + nickname + "!" + username + "@" + ipaddr + " PRIVMSG " + nickname + " :" + message + "\r\n")
+#define RPL_AWAYCH(nickname, username, ipaddr, channel, message) (":" + nickname + "!" + username + "@" + ipaddr + " PRIVMSG " + channel + " :" + message + "\r\n")
 
 // JOIN
 #define ERR_CHANNELISFULL(nickname, channel) (":localhost 471 " + nickname + " " + channel + " :Cannot join channel (l)\r\n")

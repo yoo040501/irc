@@ -58,7 +58,7 @@ static void    sendPrivmsgToChannelClient(Channel &ch, Client &cl, std::string& 
     std::map<int, Client>::iterator it = tmp.begin();
     while (it != tmp.end()){
         if (it->second.getNick() != cl.getNick())
-                sendMsg(RPL_AWAY(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), msg), it->second.getfd());
+                sendMsg(RPL_AWAYCH(cl.getNick(), cl.getUser(), inet_ntoa(cl.getaddr().sin_addr), ch.getName(), msg), it->second.getfd());
         ++it;
     }
 }

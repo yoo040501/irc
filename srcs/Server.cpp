@@ -17,7 +17,6 @@ void	Server::openSocket(){
     setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
     if (server_fd < 0)
 		throw SocketFailException();
-
     setSockaddr(this->server_addr);
     if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) // 소켓 주소 할당
     {
@@ -44,7 +43,7 @@ void	Server::active(){	//멀티플렉싱
 	time_t	t = time(NULL);
 	servertime = ctime(&t);
 
-	generateBot();
+	//generateBot();
     int new_events;
     while (1)
     {
@@ -87,6 +86,7 @@ void	Server::active(){	//멀티플렉싱
                     {
 						if (client.find(eventList[i].ident) == client.end())
 							client[eventList[i].ident] = Client(); // Client 객체를 생성
+                        std::cout << eventList[i].ident << std::endl;
 						checkCommand(buffer, client[eventList[i].ident]); // 명령어 확인 / 인자로 클라이언트 정보 넣어줌
                     }
                 }
