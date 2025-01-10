@@ -1,7 +1,7 @@
 #include "../includes/Server.hpp"
 
 void	sendMsg(std::string msg, int fd){
-	ssize_t result = send(fd, msg.c_str(), msg.length(), 0);
+	send(fd, msg.c_str(), msg.length(), 0);
 }
 
 std::string	trimSpace(std::string str){
