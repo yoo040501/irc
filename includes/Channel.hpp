@@ -63,7 +63,6 @@ class Channel
 		bool	findMode(std::string flag);
 		
 		bool	isChannelUser(std::string &user);
-		bool	isVoiceUser(std::string &user);
 
 		int		getClientfd(int fd);
 		bool	isOperator(std::string &oper);
